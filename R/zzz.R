@@ -2,6 +2,7 @@
 #'
 #' @noRd
 .onLoad <- function(libname, pkgname) {
+    requireNamespace("opentimsr", quietly = TRUE)
     so <- getOption("TIMSTOF_LIB", default = NA)
     if (is.na(so))
         so <- Sys.getenv("TIMSTOF_LIB", unset = NA)
@@ -10,5 +11,5 @@
                 "use 'opentimsr::setup_bruker_so' to set/load this library ",
                 "in order to be able to read TimsTOF files. See the package ",
                 "vignette for more information.")
-    else setup_bruker_so(so)
+    else opentimsr::setup_bruker_so(so)
 }
