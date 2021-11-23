@@ -1,0 +1,47 @@
+Package: MsBackendTimsTof
+Title: Mass Spectrometry Data Backend for MassBank record Files
+Version: 0.0.1
+Authors@R:
+    c(person(given = "RforMassSpectrometry Package Maintainer",
+             email = "maintainer@rformassspectrometry.org",
+             role = "cre"),
+      person(given = "Johannes", family = "Rainer",
+             email = "Johannes.Rainer@eurac.edu",
+             role = "aut",
+             comment = c(ORCID = "0000-0002-6977-7147")),
+      person(given = "Andrea", family = "Vicini",
+             email = "andrea.vicini@eurac.edu",
+	     role = aut"),
+      person(given = "Steffen", family = "Neumann",
+             email = "sneumann@ipb-halle.de",
+	     role = "ctb",
+             comment = c(ORCID = "0000-0002-7899-7192")))
+Description: Mass spectrometry (MS) data backend supporting import and
+             export of (ion mobility) MS data from Bruker TimsTOF files.
+             The backend uses the opentimsr package which relies on the
+             proprietory vendor C++ library for raw data access. The
+             backend thus supports import of MS data from the original
+             raw data files.
+Depends:
+    R (>= 4.1),
+    Spectra (>= 1.0)
+Imports:
+    BiocParallel,
+    S4Vectors,
+    methods,
+    ProtGenerics,
+    opentimsr
+Suggests:
+    testthat,
+    knitr (>= 1.1.0),
+    roxygen2,
+    BiocStyle (>= 2.5.19),
+    rmarkdown
+License: Artistic-2.0
+LazyData: yes
+Encoding: UTF-8
+VignetteBuilder: knitr
+BugReports: https://github.com/RforMassSpectrometry/MsBackendTimsTof/issues
+URL: https://github.com/RforMassSpectrometry/MsBackendTimsTof
+biocViews: Infrastructure, MassSpectrometry, Metabolomics, DataImport
+Roxygen: list(markdown=TRUE)
