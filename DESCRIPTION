@@ -11,10 +11,10 @@ Authors@R:
              comment = c(ORCID = "0000-0002-6977-7147")),
       person(given = "Andrea", family = "Vicini",
              email = "andrea.vicini@eurac.edu",
-	     role = aut"),
+             role = "aut"),
       person(given = "Steffen", family = "Neumann",
              email = "sneumann@ipb-halle.de",
-	     role = "ctb",
+             role = "ctb",
              comment = c(ORCID = "0000-0002-7899-7192")))
 Description: Mass spectrometry (MS) data backend supporting import and
              export of (ion mobility) MS data from Bruker TimsTOF files.
