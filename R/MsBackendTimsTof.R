@@ -10,15 +10,24 @@
 setClass("MsBackendTimsTof",
          contains = "MsBackend",
          slots = c(frames = "data.frame",
-                   indexes = "matrix"),
+                   indices = "matrix",
+                   fileNames = "character"),
          prototype = prototype(frames = data.frame(), # or DataFrame?
-                               indexes = matrix(),
+                               indices = matrix(),
+                               fileNames = character(),
                                readonly = TRUE,
                                version = "0.1"))
 
+# setValidity("MsBackendTimsTof", function(object) {
+#   # msg <- .valid_spectra_data_required_columns(object@spectraData,
+#   #                                             c("dataStorage", "scanIndex"))
+#   msg <- c(msg, .valid_ms_backend_files_exist(unique(object@fileNames)))
+#   if (length(msg)) msg
+#   else TRUE
+# })
 
 setMethod("backendInitialize", signature = "MsBackendTimsTof",
-          function(object, files, ...) {
+          function(object, files, ..., BPPARAM = bpparam()) {
             if (missing(files) || !length(files))
               stop("Parameter 'files' is mandatory for 'MsBackendMzR'")
             if (!is.character(files))
@@ -29,18 +38,31 @@ setMethod("backendInitialize", signature = "MsBackendTimsTof",
             msg <- Spectra:::.valid_ms_backend_files_exist(files)
             if (length(msg))
               stop(msg)
-            # despite the code above I assume that files is a character(1) 
-            # because maybe it's better to discuss the multiple files case 
-            # before.
-            object <- .header(object, files) 
+            object <- .initialize(object, files, BPPARAM) 
             # validObject(object)
             object
           })
-
 
 #' @exportMethod length
 #'
 #' @rdname MsBackendTimsTof
 setMethod("length", "MsBackendTimsTof", function(x) {
-  nrow(x@indexes)
+  nrow(x@indices)
 })
+
+
+#' @importFrom MsCoreUtils i2index
+#'
+#' @rdname hidden_aliases
+setMethod("[", "MsBackendTimsTof", function(x, i, j, ..., drop = FALSE) {
+  if (missing(i))
+    return(x)
+  i <- i2index(i, length(x))
+  slot(x, "indices", check = FALSE) <- x@indices[i, , drop = drop]
+  slot(x, "frames", check = FALSE) <- 
+    x@frames[match(unique(paste0(x@indices[, "frame"], 
+                                 x@fileNames[x@indices[, "file"]])),
+                   paste0(x@frames$Id, x@frames$dataStorage)), , drop = drop]
+  slot(x, "fileNames", check = FALSE) <- unique(x@frames$dataStorage)
+  x
+}) 
