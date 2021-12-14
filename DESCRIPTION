@@ -30,7 +30,8 @@ Imports:
     S4Vectors,
     methods,
     ProtGenerics,
-    opentimsr
+    opentimsr,
+    MsCoreUtils
 Suggests:
     testthat,
     knitr (>= 1.1.0),

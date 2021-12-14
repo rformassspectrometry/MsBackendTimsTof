@@ -39,7 +39,7 @@ setMethod("backendInitialize", signature = "MsBackendTimsTof",
             if (length(msg))
               stop(msg)
             object <- .initialize(object, files, BPPARAM) 
-            # validObject(object)
+            validObject(object)
             object
           })
 

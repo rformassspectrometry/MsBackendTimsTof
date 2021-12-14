@@ -2,4 +2,6 @@
 
 exportClasses(MsBackendTimsTof)
 exportMethods(length)
+importFrom(MsCoreUtils,i2index)
+importFrom(MsCoreUtils,rbindFill)
 importFrom(opentimsr,setup_bruker_so)

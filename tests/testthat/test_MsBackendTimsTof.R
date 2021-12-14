@@ -23,24 +23,18 @@ test_that("[,MsBackendTimsTof works", {
   be <- MsBackendTimsTof()
   expect_error(be[1])
   
-  # 2 files with 2 and 3 frames respectively (each frame has 3 spectra)
-  be@frames <- data.frame(Id = c(1L:2L, 1:3), 
-                          file = rep(c(1L, 2L), c(2, 3)))
-  be@fileNames <- c("file1", "file2")
-  be@indices <- cbind(frame = c(rep(1L:2L, each = 3), rep(1L:3L, each = 3)),
-                      scan = rep(1L:3L, 5),
-                      file = c(rep(1L, 2*3), rep(2L, 3*3)))
-  
+  file <- "Methanolpos-1-TIMS_108_1_2007.d/"
+  be <- backendInitialize(new("MsBackendTimsTof"), file)
   res <- be[1]
-  # expect_true(validObject(res))
+  expect_true(validObject(res))
   expect_equal(res@indices, be@indices[1, , drop = FALSE])
   expect_equal(res@frames, be@frames[1, , drop = FALSE])
-  expect_equal(res@fileNames, "file1")
+  expect_equal(res@fileNames, normalizePath(file))
   
-  res <- be[c(5, 1, 1)]
-  # expect_true(validObject(res))
-  expect_equal(be@indices[c(5, 1, 1), ], res@indices)
+  res <- be[c(600, 1, 1)]
+  expect_true(validObject(res))
+  expect_equal(res@indices, be@indices[c(600, 1, 1), ])
   expect_equal(res@frames$Id, c(2, 1))
   expect_equal(res@frames$file, c(1L, 1L))
-  expect_equal(res@fileNames, "file1")
+  expect_equal(res@fileNames, normalizePath(file))
 })
