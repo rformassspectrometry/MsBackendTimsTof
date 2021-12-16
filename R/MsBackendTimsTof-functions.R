@@ -23,11 +23,6 @@
   x
 }
 
-
- 
-# basically this is the same as Spectra:::.valid_spectra_data_required_columns. 
-# Maybe it is possible to use directly that one or maybe then the name is
-# misleading?
 #' @description
 #'
 #' Check if a matrix/data.frame has all required columns.
@@ -67,11 +62,11 @@
 .valid_indices <- function(x) {
   msg <- .valid_required_columns(x@indices, c("frame", "file"))
   if ("file" %in% colnames(x@indices) &&
-      any(!x@indices[, "file"] %in% seq_along(length(x@fileNames)))) # or unique(x@fileNames) if we don't want to have the same file twice
+      any(!x@indices[, "file"] %in% seq_along(length(x@fileNames))))
     msg <- c(msg, "Some file indices are not valid")
-  # if (any(!paste0(x@indices[, "frame"], x@indices[, "file"]) %in% 
-  #         paste0(x@frames$Id, x@frames$file)))
-  #   msg <- c(msg, "Some indices in x@indices are not compatible with x@frame")
+  if (any(!paste0(x@indices[, "frame"], x@indices[, "file"]) %in%
+          paste0(x@frames$Id, x@frames$file)))
+    msg <- c(msg, "Some indices in x@indices are not compatible with x@frames")
   msg
 }
 
@@ -83,7 +78,7 @@
 #'
 #' @param x character with file names
 .valid_fileNames <- function(x) {
-  msg <- character(0)
+  msg <- NULL
   if (anyNA(x))
     msg <- "'NA' values in fileNames are not allowed."
   msg <- c(msg, Spectra:::.valid_ms_backend_files_exist(unique(x)))

@@ -66,8 +66,6 @@ setMethod("[", "MsBackendTimsTof", function(x, i, j, ..., drop = FALSE) {
   x
 }) 
 
-# Not sure about this but maybe this needed because the setValidity of MsBackend 
-# will call dataStorage
 #' @rdname hidden_aliases
 setMethod("dataStorage", "MsBackendTimsTof", function(object) {
   if("file" %in% colnames(object@indices))

@@ -9,9 +9,6 @@ test_that("backendInitialize,MsBackendTimsTof works", {
   expect_equal(be@frames, expected_frames)
   
   files <- rep("Methanolpos-1-TIMS_108_1_2007.d/", 2)
-  # this was to test initializing an object with two files but in this case if 
-  # the files have the same name maybe I should add them only once by taking 
-  # unique(files) in .initialize function?
   be <- backendInitialize(new("MsBackendTimsTof"), files)
   expected_frames <- rbind(cbind(tms@frames, file = 1), cbind(tms@frames, file = 2))
   rownames(expected_frames) <- seq_len(nrow(expected_frames))
