@@ -53,24 +53,38 @@ setMethod("length", "MsBackendTimsTof", function(x) {
 ## show?
 
 #' @rdname hidden_aliases
+# setMethod("peaksData", "MsBackendTimsTof", function(object) {
+#   do.call(c, lapply(object@fileNames, FUN = .timstof_peaks))
+# })
 setMethod("peaksData", "MsBackendTimsTof", function(object) {
-  do.call(c, lapply(object@fileNames, FUN = .timstof_peaks))
+  do.call(c, lapply(object@fileNames, 
+                    function(x) .read_frame_col(x, c("mz", "intensity"))))
 })
+
 
 #' @importFrom IRanges NumericList
 #' 
 #' @rdname hidden_aliases
+# setMethod("mz", "MsBackendTimsTof", function(object) {
+#   NumericList(lapply(peaksData(object), "[", , 1), compress = FALSE)
+# })
 setMethod("mz", "MsBackendTimsTof", function(object) {
-  NumericList(lapply(peaksData(object), "[", , 1), compress = FALSE)
+  NumericList(do.call(c, lapply(object@fileNames, 
+                                function(x) .read_frame_col(x, "mz"))),
+              compress = FALSE)
 })
 
 #' @importFrom IRanges NumericList
 #' 
 #' @rdname hidden_aliases
+# setMethod("intensity", "MsBackendTimsTof", function(object) {
+#   NumericList(lapply(peaksData(object), "[", , 2), compress = FALSE)
+# })
 setMethod("intensity", "MsBackendTimsTof", function(object) {
-  NumericList(lapply(peaksData(object), "[", , 2), compress = FALSE)
+  NumericList(do.call(c, lapply(object@fileNames, 
+                                function(x) .read_frame_col(x, "intensity"))),
+              compress = FALSE)
 })
-
 
 #' @importFrom MsCoreUtils i2index
 #'

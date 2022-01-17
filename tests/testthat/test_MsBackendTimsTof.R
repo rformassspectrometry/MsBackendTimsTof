@@ -35,3 +35,9 @@ test_that("[,MsBackendTimsTof works", {
   expect_equal(res@frames$file, c(1L, 1L))
   expect_equal(res@fileNames, normalizePath(file))
 })
+
+# file <- "Methanolpos-1-TIMS_108_1_2007.d/"
+# be <- backendInitialize(new("MsBackendTimsTof"), file)
+# mz <- mz(be)
+# intensity <- intensity(be)
+# peaks <- peaksData(be)

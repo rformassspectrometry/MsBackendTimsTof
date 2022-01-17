@@ -92,12 +92,31 @@ MsBackendTimsTof <- function() {
 
 #' Read peaks from a single .d folder.
 #'
-#' @param x `character(1)` with the file to read from.
+#' @param x `character(1)` indicating the file to read from.
 #'
 #' @noRd
-.timstof_peaks <- function(x) {
+# .timstof_peaks <- function(x) {
+#   tms <- OpenTIMS(x)
+#   tmp <- query(tms, tms@frames$Id, c("frame", "scan", "mz", "intensity"))
+#   # the result below should be a list of matrices (and not data.frames), right?
+#   unname(split.data.frame(as.matrix(tmp[, c("mz", "intensity")]), 
+#                           factor(paste(tmp$frame, tmp$scan))))
+# }
+
+#' Read columns (mz, intensity or both) from a single file
+#' 
+#' @param x `character(1)` indicating the file to read from.
+#'
+#' @noRd
+.read_frame_col <- function(x, columns) {
   tms <- OpenTIMS(x)
-  tmp <- query(tms, tms@frames$Id, c("frame", "scan", "mz", "intensity")) #40 sec
-  res <- split(tmp[, c("mz", "intensity")], factor(paste(tmp$frame, tmp$scan))) # 3.7 min
-  res
+  if (any(!columns %in% tms@all_columns))
+    stop("Invalid value for columns")
+  if (!length(sd <-setdiff(columns, c("frame", "scan"))))
+    stop("At least one column value different from 'frame' and 'scan' required")
+  tmp <- query(tms, tms@frames$Id, c("frame", "scan", sd))
+  f <- factor(paste(tmp$frame, tmp$scan))
+  if (length(sd) == 1)
+    unname(split(tmp[, sd], f))
+  else unname(split.data.frame(as.matrix(tmp[, sd]), f))
 }
