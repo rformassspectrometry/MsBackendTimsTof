@@ -89,3 +89,15 @@
 MsBackendTimsTof <- function() {
   new("MsBackendTimsTof")
 }
+
+#' Read peaks from a single .d folder.
+#'
+#' @param x `character(1)` with the file to read from.
+#'
+#' @noRd
+.timstof_peaks <- function(x) {
+  tms <- OpenTIMS(x)
+  tmp <- query(tms, tms@frames$Id, c("frame", "scan", "mz", "intensity")) #40 sec
+  res <- split(tmp[, c("mz", "intensity")], factor(paste(tmp$frame, tmp$scan))) # 3.7 min
+  res
+}

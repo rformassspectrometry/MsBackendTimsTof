@@ -50,6 +50,27 @@ setMethod("length", "MsBackendTimsTof", function(x) {
   nrow(x@indices)
 })
 
+## show?
+
+#' @rdname hidden_aliases
+setMethod("peaksData", "MsBackendTimsTof", function(object) {
+  do.call(c, lapply(object@fileNames, FUN = .timstof_peaks))
+})
+
+#' @importFrom IRanges NumericList
+#' 
+#' @rdname hidden_aliases
+setMethod("mz", "MsBackendTimsTof", function(object) {
+  NumericList(lapply(peaksData(object), "[", , 1), compress = FALSE)
+})
+
+#' @importFrom IRanges NumericList
+#' 
+#' @rdname hidden_aliases
+setMethod("intensity", "MsBackendTimsTof", function(object) {
+  NumericList(lapply(peaksData(object), "[", , 2), compress = FALSE)
+})
+
 
 #' @importFrom MsCoreUtils i2index
 #'
@@ -72,3 +93,4 @@ setMethod("dataStorage", "MsBackendTimsTof", function(object) {
     return (object@fileNames[object@indices[, "file"]])
   character(0)
 })
+
