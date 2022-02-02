@@ -1,10 +1,11 @@
 #' @title TimsTOF data backend
 #'
 #' @name MsBackendTimsTof
-#'
+#' 
 #' @author Andrea Vicini, Johannes Rainer
 #'
 #' @noRd
+#'
 #'
 #' @exportClass MsBackendTimsTof
 setClass("MsBackendTimsTof",
@@ -12,7 +13,7 @@ setClass("MsBackendTimsTof",
          slots = c(frames = "data.frame",
                    indices = "matrix",
                    fileNames = "character"),
-         prototype = prototype(frames = data.frame(), # or DataFrame?
+         prototype = prototype(frames = data.frame(),
                                indices = matrix(),
                                fileNames = character(),
                                readonly = TRUE,
@@ -50,53 +51,57 @@ setMethod("length", "MsBackendTimsTof", function(x) {
   nrow(x@indices)
 })
 
-## show?
-
 #' @rdname hidden_aliases
-# setMethod("peaksData", "MsBackendTimsTof", function(object) {
-#   do.call(c, lapply(object@fileNames, FUN = .timstof_peaks))
-# })
 setMethod("peaksData", "MsBackendTimsTof", function(object) {
-  do.call(c, lapply(object@fileNames, 
-                    function(x) .read_frame_col(x, c("mz", "intensity"))))
+  do.call(c, lapply(seq_len(length(object@fileNames)), function(i)
+    .read_frame_col(object@fileNames[i], c("mz", "intensity"),
+                    object@indices[object@indices[, "file"] == i, ])))
 })
 
 
 #' @importFrom IRanges NumericList
 #' 
 #' @rdname hidden_aliases
-# setMethod("mz", "MsBackendTimsTof", function(object) {
-#   NumericList(lapply(peaksData(object), "[", , 1), compress = FALSE)
-# })
 setMethod("mz", "MsBackendTimsTof", function(object) {
-  NumericList(do.call(c, lapply(object@fileNames, 
-                                function(x) .read_frame_col(x, "mz"))),
-              compress = FALSE)
+  NumericList(do.call(c, lapply(seq_len(length(object@fileNames)), function(i)
+    .read_frame_col(object@fileNames[i], "mz",
+                    object@indices[object@indices[, "file"] == i, ]))),
+    compress = FALSE)
 })
 
 #' @importFrom IRanges NumericList
 #' 
 #' @rdname hidden_aliases
-# setMethod("intensity", "MsBackendTimsTof", function(object) {
-#   NumericList(lapply(peaksData(object), "[", , 2), compress = FALSE)
-# })
 setMethod("intensity", "MsBackendTimsTof", function(object) {
-  NumericList(do.call(c, lapply(object@fileNames, 
-                                function(x) .read_frame_col(x, "intensity"))),
-              compress = FALSE)
+  NumericList(do.call(c, lapply(seq_len(length(object@fileNames)), function(i)
+    .read_frame_col(object@fileNames[i], "intensity",
+                    object@indices[object@indices[, "file"] == i, ]))),
+    compress = FALSE)
+})
+
+#' @rdname hidden_aliases
+setMethod("rtime", "MsBackendTimsTof", function(object) {
+  object@frames[match(paste(object@indices[, "frame"], object@indices[, "file"]),
+                      paste(object@frames$Id, object@frames$file)) , "Time"]
 })
 
 #' @importFrom MsCoreUtils i2index
 #'
 #' @rdname hidden_aliases
+#' 
+#' Note that subsetting doesn't update MaxIntensity, SummedIntensities, NumScans
+#' and NumPeaks columns in `object@frames`.
+#' 
 setMethod("[", "MsBackendTimsTof", function(x, i, j, ..., drop = FALSE) {
   if (missing(i))
     return(x)
   i <- i2index(i, length(x))
   slot(x, "indices", check = FALSE) <- x@indices[i, , drop = FALSE]
-  slot(x, "frames", check = FALSE) <- 
-    x@frames[match(unique(paste0(x@indices[, "frame"], x@indices[, "file"])),
-                   paste0(x@frames$Id, x@frames$file)), , drop = FALSE]
+  ff_indices <- paste(x@indices[, "frame"], x@indices[, "file"])
+  slot(x, "frames", check = FALSE) <-
+    x@frames[match(unique(ff_indices),
+                   paste(x@frames$Id, x@frames$file)), , drop = FALSE]
+  # x@frames$NumScans <- unname(table(ff_indices)) should we update NumScans?
   slot(x, "fileNames", check = FALSE) <- x@fileNames[unique(x@frames$file)]
   x
 }) 

@@ -1,10 +1,12 @@
-#' Initialize the MsBackendTimsTOF object `x`
+#' Initialize the `MsBackendTimsTOF` object `x`
 #'
 #' @author Andrea Vicini, Johannes Rainer
 #'
 #' @importFrom MsCoreUtils rbindFill
+#' 
+#' @importFrom opentimsr OpenTIMS CloseTIMS
 #'
-#' @return initialized MsBackendTimsTOF object
+#' @return initialized `MsBackendTimsTOF` object
 #'
 #' @noRd
 .initialize <- function(x, file = character(), BPPARAM = bpparam()) {
@@ -15,6 +17,7 @@
       frame = rep(tms@frames$Id, tms@frames$NumScans),
       scan = unlist(lapply(tms@frames$NumScans, seq_len)),
       file = fl_idx)
+    #CloseTIMS(tms)
     list(frames, indices)
   }, BPPARAM = BPPARAM)
   x@frames <- do.call(rbindFill, lapply(L, "[[", 1))
@@ -62,7 +65,7 @@
 .valid_indices <- function(x) {
   msg <- .valid_required_columns(x@indices, c("frame", "file"))
   if ("file" %in% colnames(x@indices) &&
-      any(!x@indices[, "file"] %in% seq_along(length(x@fileNames))))
+      any(!x@indices[, "file"] %in% seq_len(length(x@fileNames))))
     msg <- c(msg, "Some file indices are not valid")
   if (any(!paste0(x@indices[, "frame"], x@indices[, "file"]) %in%
           paste0(x@frames$Id, x@frames$file)))
@@ -90,33 +93,49 @@ MsBackendTimsTof <- function() {
   new("MsBackendTimsTof")
 }
 
-#' Read peaks from a single .d folder.
-#'
-#' @param x `character(1)` indicating the file to read from.
-#'
-#' @noRd
-# .timstof_peaks <- function(x) {
-#   tms <- OpenTIMS(x)
-#   tmp <- query(tms, tms@frames$Id, c("frame", "scan", "mz", "intensity"))
-#   # the result below should be a list of matrices (and not data.frames), right?
-#   unname(split.data.frame(as.matrix(tmp[, c("mz", "intensity")]), 
-#                           factor(paste(tmp$frame, tmp$scan))))
-# }
-
-#' Read columns (mz, intensity or both) from a single file
+#' Read columns (mz, intensity or both) from a single .d folder
 #' 
-#' @param x `character(1)` indicating the file to read from.
+#' @param x `character(1)` path to the .d folder to read from.
+#' 
+#' @param columns `character` with the names of the columns to extract
+#' 
+#' @param indices `matrix` of indices of TimsTof object.
+#' 
+#' @importFrom opentimsr OpenTIMS CloseTIMS
 #'
 #' @noRd
-.read_frame_col <- function(x, columns) {
+.read_frame_col <- function(x, columns, indices) {
   tms <- OpenTIMS(x)
+  #on.exit(CloseTIMS(tms)) #I haven't manage to use CloseTIMS yet (actually I
+  # get message that the function cannot be found)
   if (any(!columns %in% tms@all_columns))
     stop("Invalid value for columns")
-  if (!length(sd <-setdiff(columns, c("frame", "scan"))))
+  if (!length(sd <- setdiff(columns, c("frame", "scan"))))
     stop("At least one column value different from 'frame' and 'scan' required")
-  tmp <- query(tms, tms@frames$Id, c("frame", "scan", sd))
-  f <- factor(paste(tmp$frame, tmp$scan))
+  tmp <- query(tms, unique(indices[, "frame"]), c("frame", "scan", sd))
+  f <- factor(paste(tmp$frame, tmp$scan),
+              levels = paste(indices[, "frame"], indices[, "scan"]))
   if (length(sd) == 1)
     unname(split(tmp[, sd], f))
   else unname(split.data.frame(as.matrix(tmp[, sd]), f))
 }
+
+# .read_frame_col <- function(x, columns, indices) {
+#   tms <- OpenTIMS(x)
+#   #on.exit(CloseTIMS(tms)) #I haven't manage to use CloseTIMS yet (actually I
+#   # get message that the function cannot be found)
+#   if (any(!columns %in% tms@all_columns))
+#     stop("Invalid value for columns")
+#   if (!length(sd <- setdiff(columns, c("frame", "scan"))))
+#     stop("At least one column value different from 'frame' and 'scan' required")
+#   tmp <- query(tms, unique(indices[, "frame"]), c("frame", "scan", sd))
+#   do.call(c, lapply(split(seq_len(nrow(tmp)), tmp$frame), function(v) {
+#     levels = indices[indices[, "frame"] == tmp[v[1], "frame"], "scan"]
+#     f <- factor(tmp[v, "scan"], levels)
+#     if (length(sd) == 1)
+#       unname(split(tmp[v, sd], f))
+#     else unname(split.data.frame(as.matrix(tmp[v, sd]), f))
+#   }))
+# }
+
+
