@@ -14,8 +14,6 @@ test_that(".valid_frames works", {
 })
 
 test_that(".valid_indices works", {
-  file <- "Methanolpos-1-TIMS_108_1_2007.d/"
-  be <- backendInitialize(new("MsBackendTimsTof"), file)
   expect_null(.valid_indices(be))
   
   be2 <- be
