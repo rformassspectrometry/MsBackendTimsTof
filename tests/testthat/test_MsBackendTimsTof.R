@@ -22,6 +22,12 @@ test_that("[,MsBackendTimsTof works", {
   expect_equal(res@frames, be@frames[1, , drop = FALSE])
   expect_equal(res@fileNames, normalizePath(path_d_folder))
   
+  res <- be[c(TRUE, rep(FALSE, length(be) - 1))]
+  expect_true(validObject(res))
+  expect_equal(res@indices, be@indices[1, , drop = FALSE])
+  expect_equal(res@frames, be@frames[1, , drop = FALSE])
+  expect_equal(res@fileNames, normalizePath(path_d_folder))
+  
   res <- be[c(600, 1, 1)]
   expect_true(validObject(res))
   expect_equal(res@indices, be@indices[c(600, 1, 1), ])

@@ -1,11 +1,71 @@
 #' @title TimsTOF data backend
 #'
 #' @name MsBackendTimsTof
+#'
+#' @aliases MsBackendTimsTof MsBackendTimsTof-class
+#'
+#' @description
+#' The `MsBackendTimsTof` class supports Bruker TimsTOF data files. New objects 
+#' are created with the `MsBackendTimsTof` function. 
 #' 
+#' @section Available methods:
+#' 
+#' The following methods are implemented:
+#'
+#' - `[`: subset the backend. Only subsetting by element (*row*/`i`) is
+#'   allowed. First the `@indices` slot of `object` is subsetted and then the
+#'   `frames` and `fileNames` slots are subsetted accordingly. Note that `[`
+#'   does not update the values of `frames` variables (such as `"MaxIntensity"`,
+#'   `"SummedIntensities"`, `"NumScans"` and `"NumPeaks"`).
+#'
+#' - `backendInitialize`: initializes `object` (the `MsBackendTimsTof` object)
+#'   using TimsTOF data files whose path is specified by `files`. This method
+#'   is supposed to be called right after creating a `MsBackendTimsTof` object
+#'   with `MsBackendTimsTof` function.
+#'
+#' - `dataStorage`: gets a `character` of length equal to the number of spectra
+#'   in `object` with the names of the '*.d' folders where each spectrum is
+#'   stored.
+#'
+#' - `intensity`: gets the intensity values from the spectra in the backend.
+#'   Returns a [NumericList()] of `numeric` vectors (intensity values for each
+#'   spectrum). The length of the list is equal to the number of
+#'   spectra in `object`.
+#'
+#' - `mz`: gets the mass-to-charge ratios (m/z) from the spectra in the backend.
+#'   Returns a [NumericList()] of `numeric` vectors (m/z values for each
+#'   spectrum). The length of the list is equal to the number of spectra in
+#'   `object`.
+#'
+#' - `peaksData`: gets the peak matrices of the spectra in the backend.
+#'   Returns a `list` of `matrix` with columns `"mz"` and `"intensity"`.
+#'   The length of the `list` is equal to the number of spectra in `object`.
+#'
+#' - `rtime`: gets the retention times for each spectrum. Returns a `numeric`
+#'   vector (length equal to the number of spectra) with the retention time
+#'   for each spectrum.
+#'
+#' @param BPPARAM Parameter object defining the parallel processing
+#' setup to import data in parallel. Defaults to `BPPARAM = bpparam()`. 
+#' See [bpparam()] for more information.
+#'
+#' @param drop For `[`: not considered.
+#'
+#' @param files `character` specifying TimsTOF ’*.d’ folders names.
+#'
+#' @param i For `[`: `integer`, `logical` to subset the object.
+#'
+#' @param j For `[`: not supported.
+#'
+#' @param object `MsBackendTimsTof` object.
+#'
+#' @param x `MsBackendTimsTof` object.
+#'
+#' @param ... Additional arguments.
+#'
 #' @author Andrea Vicini, Johannes Rainer
 #'
-#' @noRd
-#'
+#' @rdname MsBackendTimsTof
 #'
 #' @exportClass MsBackendTimsTof
 setClass("MsBackendTimsTof",
@@ -19,6 +79,7 @@ setClass("MsBackendTimsTof",
                                readonly = TRUE,
                                version = "0.1"))
 
+#' @importFrom methods validObject
 setValidity("MsBackendTimsTof", function(object) {
   msg <- .valid_fileNames(object@fileNames)
   msg <- c(msg, .valid_frames(object@frames))
@@ -27,6 +88,9 @@ setValidity("MsBackendTimsTof", function(object) {
   else TRUE
 })
 
+#' @importFrom BiocParallel bplapply
+#'
+#' @rdname MsBackendTimsTof
 setMethod("backendInitialize", signature = "MsBackendTimsTof",
           function(object, files, ..., BPPARAM = bpparam()) {
             if (missing(files) || !length(files))
@@ -51,7 +115,7 @@ setMethod("length", "MsBackendTimsTof", function(x) {
   nrow(x@indices)
 })
 
-#' @rdname hidden_aliases
+#' @rdname MsBackendTimsTof
 setMethod("peaksData", "MsBackendTimsTof", function(object) {
   do.call(c, lapply(seq_len(length(object@fileNames)), function(i)
     .read_frame_col(object@fileNames[i], c("mz", "intensity"),
@@ -60,8 +124,8 @@ setMethod("peaksData", "MsBackendTimsTof", function(object) {
 
 
 #' @importFrom IRanges NumericList
-#' 
-#' @rdname hidden_aliases
+#'
+#' @rdname MsBackendTimsTof
 setMethod("mz", "MsBackendTimsTof", function(object) {
   NumericList(do.call(c, lapply(seq_len(length(object@fileNames)), function(i)
     .read_frame_col(object@fileNames[i], "mz",
@@ -70,8 +134,8 @@ setMethod("mz", "MsBackendTimsTof", function(object) {
 })
 
 #' @importFrom IRanges NumericList
-#' 
-#' @rdname hidden_aliases
+#'
+#' @rdname MsBackendTimsTof
 setMethod("intensity", "MsBackendTimsTof", function(object) {
   NumericList(do.call(c, lapply(seq_len(length(object@fileNames)), function(i)
     .read_frame_col(object@fileNames[i], "intensity",
@@ -79,19 +143,17 @@ setMethod("intensity", "MsBackendTimsTof", function(object) {
     compress = FALSE)
 })
 
-#' @rdname hidden_aliases
+#' @rdname MsBackendTimsTof
 setMethod("rtime", "MsBackendTimsTof", function(object) {
   object@frames[match(paste(object@indices[, "frame"], object@indices[, "file"]),
                       paste(object@frames$Id, object@frames$file)) , "Time"]
 })
 
+#' @importFrom methods "slot<-"
+#'
 #' @importFrom MsCoreUtils i2index
 #'
-#' @rdname hidden_aliases
-#' 
-#' Note that subsetting doesn't update MaxIntensity, SummedIntensities, NumScans
-#' and NumPeaks columns in `object@frames`.
-#' 
+#' @rdname MsBackendTimsTof
 setMethod("[", "MsBackendTimsTof", function(x, i, j, ..., drop = FALSE) {
   if (missing(i))
     return(x)
@@ -106,7 +168,7 @@ setMethod("[", "MsBackendTimsTof", function(x, i, j, ..., drop = FALSE) {
   x
 }) 
 
-#' @rdname hidden_aliases
+#' @rdname MsBackendTimsTof
 setMethod("dataStorage", "MsBackendTimsTof", function(object) {
   if("file" %in% colnames(object@indices))
     return (object@fileNames[object@indices[, "file"]])

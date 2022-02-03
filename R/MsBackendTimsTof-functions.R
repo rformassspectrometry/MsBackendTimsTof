@@ -2,8 +2,10 @@
 #'
 #' @author Andrea Vicini, Johannes Rainer
 #'
+#' @importFrom BiocParallel bplapply
+#'
 #' @importFrom MsCoreUtils rbindFill
-#' 
+#'
 #' @importFrom opentimsr OpenTIMS CloseTIMS
 #'
 #' @return initialized `MsBackendTimsTOF` object
@@ -28,11 +30,14 @@
 
 #' @description
 #'
-#' Check if a matrix/data.frame has all required columns.
+#' Check if a `matrix`/`data.frame` has all required columns.
+#'
+#' @param x `matrix`/`data.frame`.
+#'
+#' @param columns `character` specifying the required columns.
 #'
 #' @noRd
 #'
-#' @param x matrix/data.frame
 .valid_required_columns <- function(x, columns = character(0)) {
   if (nrow(x)) {
     missing_cn <- setdiff(columns, colnames(x))
@@ -46,22 +51,23 @@
 
 #' @description
 #'
-#' Check the frames slot of the MsBakendTimsTof object.
+#' Checks if `data.frame` `x` is compatible to be the `@frames` slot of a
+#' `MsBackendTimsTof` object.
+#' 
+#' @param x `data.frame`.
 #'
 #' @noRd
-#'
-#' @param x frames data.frame
 .valid_frames <- function(x) {
   .valid_required_columns(x, c("Id", "file"))
 }
 
 #' @description
 #'
-#' Check the indices slot of the MsBakendTimsTof object.
+#' Checks if the `@indices` slot in `x` is valid.
+#'
+#' @param x `MsBakendTimsTof` object.
 #'
 #' @noRd
-#'
-#' @param x MsBakendTimsTof object
 .valid_indices <- function(x) {
   msg <- .valid_required_columns(x@indices, c("frame", "file"))
   if ("file" %in% colnames(x@indices) &&
@@ -75,11 +81,12 @@
 
 #' @description
 #'
-#' Check the fileNames slot of the MsBakendTimsTof object.
+#' Checks if the `character` `x` is compatible to be the `@fileNames` slot of a
+#' `MsBackendTimsTof` object.
+#'
+#' @param x `character` with folder names.
 #'
 #' @noRd
-#'
-#' @param x character with file names
 .valid_fileNames <- function(x) {
   msg <- NULL
   if (anyNA(x))
@@ -88,20 +95,28 @@
   msg
 }
 
-
+#' @importFrom methods new
 MsBackendTimsTof <- function() {
   new("MsBackendTimsTof")
 }
 
-#' Read columns (mz, intensity or both) from a single .d folder
-#' 
-#' @param x `character(1)` path to the .d folder to read from.
-#' 
-#' @param columns `character` with the names of the columns to extract
-#' 
-#' @param indices `matrix` of indices of TimsTof object.
-#' 
-#' @importFrom opentimsr OpenTIMS CloseTIMS
+#' Read variables from the `OpenTIMS` object (`OpenTIMS(x)`) created from data
+#' stored in folder `x`. At least one variable in `OpenTIMS(x)@all_columns`
+#' different from `"frame"` and "`scan`" has to be provided via `columns`
+#' parameter.
+#'
+#' @param x `character(1)` path to the '*.d' folder to read from.
+#'
+#' @param columns `character` with the names of the columns to extract.
+#'
+#' @param indices `matrix` of indices. It contains columns `"frame"` and
+#' `"scan"` to select which rows of data to read from `OpenTIMS(x)`.
+#'
+#' @return `list` of `numeric` (if a single variable is read) or `list`
+#' of `matrix` (otherwise). Each element of the list corresponds to certain
+#' `"frame"` and `"scan"` indeces from `indeces`.
+#'
+#' @importFrom opentimsr OpenTIMS CloseTIMS query
 #'
 #' @noRd
 .read_frame_col <- function(x, columns, indices) {
@@ -119,23 +134,5 @@ MsBackendTimsTof <- function() {
     unname(split(tmp[, sd], f))
   else unname(split.data.frame(as.matrix(tmp[, sd]), f))
 }
-
-# .read_frame_col <- function(x, columns, indices) {
-#   tms <- OpenTIMS(x)
-#   #on.exit(CloseTIMS(tms)) #I haven't manage to use CloseTIMS yet (actually I
-#   # get message that the function cannot be found)
-#   if (any(!columns %in% tms@all_columns))
-#     stop("Invalid value for columns")
-#   if (!length(sd <- setdiff(columns, c("frame", "scan"))))
-#     stop("At least one column value different from 'frame' and 'scan' required")
-#   tmp <- query(tms, unique(indices[, "frame"]), c("frame", "scan", sd))
-#   do.call(c, lapply(split(seq_len(nrow(tmp)), tmp$frame), function(v) {
-#     levels = indices[indices[, "frame"] == tmp[v[1], "frame"], "scan"]
-#     f <- factor(tmp[v, "scan"], levels)
-#     if (length(sd) == 1)
-#       unname(split(tmp[v, sd], f))
-#     else unname(split.data.frame(as.matrix(tmp[v, sd]), f))
-#   }))
-# }
 
 
