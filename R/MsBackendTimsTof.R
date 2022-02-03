@@ -119,7 +119,7 @@ setMethod("length", "MsBackendTimsTof", function(x) {
 setMethod("peaksData", "MsBackendTimsTof", function(object) {
   do.call(c, lapply(seq_len(length(object@fileNames)), function(i)
     .read_frame_col(object@fileNames[i], c("mz", "intensity"),
-                    object@indices[object@indices[, "file"] == i, ])))
+                    object@indices[object@indices[, "file"] == i, 1:2])))
 })
 
 
@@ -129,7 +129,7 @@ setMethod("peaksData", "MsBackendTimsTof", function(object) {
 setMethod("mz", "MsBackendTimsTof", function(object) {
   NumericList(do.call(c, lapply(seq_len(length(object@fileNames)), function(i)
     .read_frame_col(object@fileNames[i], "mz",
-                    object@indices[object@indices[, "file"] == i, ]))),
+                    object@indices[object@indices[, "file"] == i, 1:2]))),
     compress = FALSE)
 })
 
@@ -139,7 +139,7 @@ setMethod("mz", "MsBackendTimsTof", function(object) {
 setMethod("intensity", "MsBackendTimsTof", function(object) {
   NumericList(do.call(c, lapply(seq_len(length(object@fileNames)), function(i)
     .read_frame_col(object@fileNames[i], "intensity",
-                    object@indices[object@indices[, "file"] == i, ]))),
+                    object@indices[object@indices[, "file"] == i, 1:2]))),
     compress = FALSE)
 })
 
