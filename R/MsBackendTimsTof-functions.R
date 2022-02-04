@@ -12,20 +12,25 @@
 #'
 #' @noRd
 .initialize <- function(x, file = character(), BPPARAM = bpparam()) {
-  L <- bplapply(seq_len(length(file)), function(fl_idx) {
-    tms <- OpenTIMS(file[fl_idx])
-    frames <- cbind(tms@frames, file = fl_idx)
-    indices <- cbind(
-      frame = rep(tms@frames$Id, tms@frames$NumScans),
-      scan = unlist(lapply(tms@frames$NumScans, seq_len)),
-      file = fl_idx)
-    #CloseTIMS(tms)
-    list(frames, indices)
-  }, BPPARAM = BPPARAM)
-  x@frames <- do.call(rbindFill, lapply(L, "[[", 1))
-  x@indices <- do.call(rbind, lapply(L, "[[", 2))
-  x@fileNames <- file
-  x
+    L <- bplapply(seq_len(length(file)), function(fl_idx) {
+        tms <- opentimsr::OpenTIMS(file[fl_idx])
+        on.exit(opentimsr::CloseTIMS(tms))
+        frames <- cbind(tms@frames, file = fl_idx)
+        indices <- cbind(
+            frame = rep(tms@frames$Id, tms@frames$NumScans),
+            scan = sequence(tms@frames$NumScans),
+            file = fl_idx)
+        list(frames, indices)
+    }, BPPARAM = BPPARAM)
+    x@frames <- do.call(rbindFill, lapply(L, "[[", 1))
+    idx <- match(colnames(x@frames, .SPECTRA_VARIABLE_MAPPINGS))
+    not_na <- !is.na(idx)
+    colnames(x@frames)[not_na] <- names(.SPECTRA_VARIABLE_MAPPINGS)[idx[not_na]]
+    if (any(colnames(x@frames) == "polarity"))
+        x@frames$polarity <- .format_polarity(x@frames$polarity)
+    x@indices <- do.call(rbind, lapply(L, "[[", 2))
+    x@fileNames <- file
+    x
 }
 
 #' @description
@@ -53,7 +58,7 @@
 #'
 #' Checks if `data.frame` `x` is compatible to be the `@frames` slot of a
 #' `MsBackendTimsTof` object.
-#' 
+#'
 #' @param x `data.frame`.
 #'
 #' @noRd
@@ -96,6 +101,10 @@
 }
 
 #' @importFrom methods new
+#'
+#' @rdname MsBackendTimsTof
+#'
+#' @export
 MsBackendTimsTof <- function() {
   new("MsBackendTimsTof")
 }
@@ -121,8 +130,7 @@ MsBackendTimsTof <- function() {
 #' @noRd
 .read_frame_col <- function(x, columns, indices) {
   tms <- OpenTIMS(x)
-  #on.exit(CloseTIMS(tms)) #I haven't manage to use CloseTIMS yet (actually I
-  # get message that the function cannot be found)
+  on.exit(opentimsr::CloseTIMS(tms))
   if (any(!columns %in% tms@all_columns))
     stop("Invalid value for columns")
   if (!length(sd <- setdiff(columns, c("frame", "scan"))))
@@ -135,4 +143,37 @@ MsBackendTimsTof <- function() {
   else unname(split.data.frame(as.matrix(tmp[, sd]), f))
 }
 
+#' Extract columns from @frames given the @indices in `x`. The function takes
+#' care of eventually duplicating values.
+#'
+#' @param x `MsBackendTimsTOF`
+#'
+#' @param columns `character` with the column names.
+#'
+#' @author Andrea Vicini, Johannes Rainer
+#'
+#' @noRd
+.get_frame_columns <- function(x, columns) {
+    if (!all(columns %in% colnames(x@frames)))
+        stop("Columns ", paste0("'", columns[!columns %in% colnames(x@frames)],
+                                "'", collapse = ", "), " not available.",
+             call. = FALSE)
+    idx <- match(paste(x@indices[, "frame"], x@indices[, "file"]),
+                 paste(x@frames$Id, x@frames$file))
+    x@frames[idx, columns]
+}
 
+#' Mapping of spectra variables to frames column names.
+#'
+#' @noRd
+.SPECTRA_VARIABLE_MAPPINGS <- c(
+    rtime = "Time",
+    polarity = "Polarity"
+)
+
+.format_polarity <- function(x) {
+    xn <- rep(NA_integer_, length(x))
+    xn[grep("^(p|\\+)", x, ignore.case = TRUE)] <- 1L
+    xn[grep("^(n|-)", x, ignore.case = TRUE)] <- 0L
+    xn
+}

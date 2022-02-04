@@ -15,10 +15,10 @@ test_that(".valid_frames works", {
 
 test_that(".valid_indices works", {
   expect_null(.valid_indices(be))
-  
+
   be2 <- be
   be2@indices[1, "file"] = 4
-  expect_equal(.valid_indices(be2), 
+  expect_equal(.valid_indices(be2),
                c("Some file indices are not valid",
                  "Some indices in x@indices are not compatible with x@frames"))
 })
@@ -29,4 +29,20 @@ test_that(".valid_fileNames works", {
   expect_match(.valid_fileNames(c(NA, tmpf)), "'NA' values in fileNames")
   expect_match(.valid_fileNames(c("x", tmpf)), "not found")
   expect_null(.valid_fileNames(tmpf))
+})
+
+test_that(".get_frame_columns works", {
+    res <- .get_frame_columns(be, c("Time", "Polarity"))
+    expect_true(is.data.frame(res))
+    expect_identical(nrow(res), length(be))
+    expect_equal(colnames(res), c("Time", "Polarity"))
+
+    expect_error(.get_frame_columns(be, "bla"), "'bla' not available")
+})
+
+test_that(".format_polarity works", {
+    res <- .format_polarity(c("Pos", "pos", "+", "neg", "?"))
+    expect_equal(res, c(1L, 1L, 1L, 0L, NA_integer_))
+    res <- .format_polarity(c("-", NA))
+    expect_equal(res, c(0L, NA_integer_))
 })

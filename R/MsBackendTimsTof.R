@@ -5,11 +5,11 @@
 #' @aliases MsBackendTimsTof MsBackendTimsTof-class
 #'
 #' @description
-#' The `MsBackendTimsTof` class supports Bruker TimsTOF data files. New objects 
-#' are created with the `MsBackendTimsTof` function. 
-#' 
+#' The `MsBackendTimsTof` class supports Bruker TimsTOF data files. New objects
+#' are created with the `MsBackendTimsTof` function.
+#'
 #' @section Available methods:
-#' 
+#'
 #' The following methods are implemented:
 #'
 #' - `[`: subset the backend. Only subsetting by element (*row*/`i`) is
@@ -46,7 +46,7 @@
 #'   for each spectrum.
 #'
 #' @param BPPARAM Parameter object defining the parallel processing
-#' setup to import data in parallel. Defaults to `BPPARAM = bpparam()`. 
+#' setup to import data in parallel. Defaults to `BPPARAM = bpparam()`.
 #' See [bpparam()] for more information.
 #'
 #' @param drop For `[`: not considered.
@@ -103,7 +103,7 @@ setMethod("backendInitialize", signature = "MsBackendTimsTof",
             msg <- Spectra:::.valid_ms_backend_files_exist(files)
             if (length(msg))
               stop(msg)
-            object <- .initialize(object, files, BPPARAM) 
+            object <- .initialize(object, files, BPPARAM)
             validObject(object)
             object
           })
@@ -145,8 +145,7 @@ setMethod("intensity", "MsBackendTimsTof", function(object) {
 
 #' @rdname MsBackendTimsTof
 setMethod("rtime", "MsBackendTimsTof", function(object) {
-  object@frames[match(paste(object@indices[, "frame"], object@indices[, "file"]),
-                      paste(object@frames$Id, object@frames$file)) , "Time"]
+    .get_frame_columns(object, "rtime")
 })
 
 #' @importFrom methods "slot<-"
@@ -166,7 +165,7 @@ setMethod("[", "MsBackendTimsTof", function(x, i, j, ..., drop = FALSE) {
   # x@frames$NumScans <- unname(table(ff_indices)) should we update NumScans?
   slot(x, "fileNames", check = FALSE) <- x@fileNames[unique(x@frames$file)]
   x
-}) 
+})
 
 #' @rdname MsBackendTimsTof
 setMethod("dataStorage", "MsBackendTimsTof", function(object) {
@@ -174,4 +173,3 @@ setMethod("dataStorage", "MsBackendTimsTof", function(object) {
     return (object@fileNames[object@indices[, "file"]])
   character(0)
 })
-
