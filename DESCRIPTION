@@ -1,6 +1,6 @@
 Package: MsBackendTimsTof
 Title: Mass Spectrometry Data Backend for MassBank record Files
-Version: 0.0.2
+Version: 0.0.3
 Authors@R:
     c(person(given = "RforMassSpectrometry Package Maintainer",
              email = "maintainer@rformassspectrometry.org",
