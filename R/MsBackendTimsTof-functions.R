@@ -23,7 +23,7 @@
         list(frames, indices)
     }, BPPARAM = BPPARAM)
     x@frames <- do.call(rbindFill, lapply(L, "[[", 1))
-    idx <- match(colnames(x@frames, .SPECTRA_VARIABLE_MAPPINGS))
+    idx <- match(colnames(x@frames), .SPECTRA_VARIABLE_MAPPINGS)
     not_na <- !is.na(idx)
     colnames(x@frames)[not_na] <- names(.SPECTRA_VARIABLE_MAPPINGS)[idx[not_na]]
     if (any(colnames(x@frames) == "polarity"))

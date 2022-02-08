@@ -32,10 +32,10 @@ test_that(".valid_fileNames works", {
 })
 
 test_that(".get_frame_columns works", {
-    res <- .get_frame_columns(be, c("Time", "Polarity"))
+    res <- .get_frame_columns(be, c("rtime", "polarity"))
     expect_true(is.data.frame(res))
     expect_identical(nrow(res), length(be))
-    expect_equal(colnames(res), c("Time", "Polarity"))
+    expect_equal(colnames(res), c("rtime", "polarity"))
 
     expect_error(.get_frame_columns(be, "bla"), "'bla' not available")
 })
