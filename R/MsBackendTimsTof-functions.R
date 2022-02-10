@@ -77,7 +77,7 @@
   msg <- .valid_required_columns(x@indices, c("frame", "file"))
   if ("file" %in% colnames(x@indices) &&
       any(!x@indices[, "file"] %in% seq_len(length(x@fileNames))))
-    msg <- c(msg, "Some file indices are not valid")
+    msg <- c(msg, "Some file indices are not compatible with x@fileNames")
   if (any(!paste0(x@indices[, "frame"], x@indices[, "file"]) %in%
           paste0(x@frames$Id, x@frames$file)))
     msg <- c(msg, "Some indices in x@indices are not compatible with x@frames")
@@ -128,7 +128,8 @@ MsBackendTimsTof <- function() {
 #' @importFrom opentimsr OpenTIMS CloseTIMS query
 #'
 #' @noRd
-.read_frame_col <- function(x, columns, indices) {
+# Maybe I didn't name this function very well. Maybe .read_tims_columns?
+.read_frame_col <- function(x, columns, indices) { 
   tms <- OpenTIMS(x)
   on.exit(opentimsr::CloseTIMS(tms))
   if (any(!columns %in% tms@all_columns))
@@ -154,13 +155,13 @@ MsBackendTimsTof <- function() {
 #'
 #' @noRd
 .get_frame_columns <- function(x, columns) {
-    if (!all(columns %in% colnames(x@frames)))
-        stop("Columns ", paste0("'", columns[!columns %in% colnames(x@frames)],
-                                "'", collapse = ", "), " not available.",
-             call. = FALSE)
-    idx <- match(paste(x@indices[, "frame"], x@indices[, "file"]),
-                 paste(x@frames$Id, x@frames$file))
-    x@frames[idx, columns]
+  if (!all(columns %in% colnames(x@frames)))
+    stop("Column(s) ", paste0("'", columns[!columns %in% colnames(x@frames)],
+                              "'", collapse = ", "), " not available.",
+         call. = FALSE)
+  idx <- match(paste(x@indices[, "frame"], x@indices[, "file"]),
+               paste(x@frames$Id, x@frames$file))
+  x@frames[idx, columns]
 }
 
 #' Mapping of spectra variables to frames column names.

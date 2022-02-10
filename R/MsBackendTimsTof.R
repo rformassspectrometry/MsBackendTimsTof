@@ -74,7 +74,11 @@ setClass("MsBackendTimsTof",
                    indices = "matrix",
                    fileNames = "character"),
          prototype = prototype(frames = data.frame(),
-                               indices = matrix(),
+                               indices = matrix(, nrow = 0, ncol = 3,
+                                                dimnames = list(NULL, 
+                                                                c("frame",
+                                                                  "scan",
+                                                                  "file"))),
                                fileNames = character(),
                                readonly = TRUE,
                                version = "0.1"))
@@ -117,9 +121,13 @@ setMethod("length", "MsBackendTimsTof", function(x) {
 
 #' @rdname MsBackendTimsTof
 setMethod("peaksData", "MsBackendTimsTof", function(object) {
-  do.call(c, lapply(seq_len(length(object@fileNames)), function(i)
-    .read_frame_col(object@fileNames[i], c("mz", "intensity"),
-                    object@indices[object@indices[, "file"] == i, 1:2])))
+  res <- vector(mode = "list", length(object))
+  for (i in seq_len(length(object@fileNames))) {
+    I <- which(object@indices[, "file"] == i)
+    res[I] <- .read_frame_col(object@fileNames[i], c("mz", "intensity"),
+                              object@indices[I, 1:2])
+  }
+  res
 })
 
 
@@ -127,20 +135,25 @@ setMethod("peaksData", "MsBackendTimsTof", function(object) {
 #'
 #' @rdname MsBackendTimsTof
 setMethod("mz", "MsBackendTimsTof", function(object) {
-  NumericList(do.call(c, lapply(seq_len(length(object@fileNames)), function(i)
-    .read_frame_col(object@fileNames[i], "mz",
-                    object@indices[object@indices[, "file"] == i, 1:2]))),
-    compress = FALSE)
+  res <- vector(mode = "list", length(object))
+  for (i in seq_len(length(object@fileNames))) {
+    I <- which(object@indices[, "file"] == i)
+    res[I] <- .read_frame_col(object@fileNames[i], "mz", object@indices[I, 1:2])
+  }
+  NumericList(res, compress = FALSE)
 })
 
 #' @importFrom IRanges NumericList
 #'
 #' @rdname MsBackendTimsTof
 setMethod("intensity", "MsBackendTimsTof", function(object) {
-  NumericList(do.call(c, lapply(seq_len(length(object@fileNames)), function(i)
-    .read_frame_col(object@fileNames[i], "intensity",
-                    object@indices[object@indices[, "file"] == i, 1:2]))),
-    compress = FALSE)
+  res <- vector(mode = "list", length(object))
+  for (i in seq_len(length(object@fileNames))) {
+    I <- which(object@indices[, "file"] == i)
+    res[I] <- .read_frame_col(object@fileNames[i], "intensity",
+                              object@indices[I, 1:2])
+  }
+  NumericList(res, compress = FALSE)
 })
 
 #' @rdname MsBackendTimsTof

@@ -16,10 +16,10 @@ test_that(".valid_frames works", {
 test_that(".valid_indices works", {
   expect_null(.valid_indices(be))
 
-  be2 <- be
-  be2@indices[1, "file"] = 4
-  expect_equal(.valid_indices(be2),
-               c("Some file indices are not valid",
+  tmp <- be
+  tmp@indices[1, "file"] = 4
+  expect_equal(.valid_indices(tmp),
+               c("Some file indices are not compatible with x@fileNames",
                  "Some indices in x@indices are not compatible with x@frames"))
 })
 
@@ -29,6 +29,15 @@ test_that(".valid_fileNames works", {
   expect_match(.valid_fileNames(c(NA, tmpf)), "'NA' values in fileNames")
   expect_match(.valid_fileNames(c("x", tmpf)), "not found")
   expect_null(.valid_fileNames(tmpf))
+})
+
+test_that(".read_frame_col works", {
+  res <- .read_frame_col(path_d_folder, "mz",
+                         cbind(frame = c(1, 2),  scan = c(1, 3)))
+  tms <- OpenTIMS(path_d_folder)
+  tmp <- query(tms, frames = 1, columns = "mz")
+  tmp2 <- query(tms, frames = 2, columns = "mz")
+  expect_identical(res, list(tmp[tmp$scan == 1,], tmp2[tmp2$scan == 3,]))
 })
 
 test_that(".get_frame_columns works", {
@@ -46,3 +55,10 @@ test_that(".format_polarity works", {
     res <- .format_polarity(c("-", NA))
     expect_equal(res, c(0L, NA_integer_))
 })
+
+test_that("MsBackendTimsTof works", {
+  res <- MsBackendTimsTof()
+  expect_equal(length(res), 0)
+  validObject(res)
+})
+
