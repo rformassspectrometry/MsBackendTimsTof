@@ -1,5 +1,9 @@
 # MsBackendTimsTof 0.0
 
+## MsBackendTimsTof 0.0.4
+
+- `spectraVariables` and `spectraData` methods.
+
 ## MsBackendTimsTof 0.0.3
 
 - Export `MsBackendTimsTof` function.

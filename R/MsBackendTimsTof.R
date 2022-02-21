@@ -44,10 +44,22 @@
 #' - `rtime`: gets the retention times for each spectrum. Returns a `numeric`
 #'   vector (length equal to the number of spectra) with the retention time
 #'   for each spectrum.
+#'   
+#' - `spectraData`: gets spectra variables (specified by `columns`) from
+#'   `object`.
+#'
+#' - `spectraVariables`: returns a `character` vector with the spectra variables
+#'   names of core spectra variables defined in the Spectra package and other
+#'   additional variables contained in `object`. Note that also `"mz"` and
+#'   `"intensity"` (which are by default not returned by the
+#'   `spectraVariables,Spectra` method) are returned.
 #'
 #' @param BPPARAM Parameter object defining the parallel processing
 #' setup to import data in parallel. Defaults to `BPPARAM = bpparam()`.
 #' See [bpparam()] for more information.
+#' 
+#' @param columns For `spectraData`: names of the spectra variables to extract
+#'   from `object`.
 #'
 #' @param drop For `[`: not considered.
 #'
@@ -174,7 +186,7 @@ setMethod("[", "MsBackendTimsTof", function(x, i, j, ..., drop = FALSE) {
   ff_indices <- paste(x@indices[, "frame"], x@indices[, "file"])
   slot(x, "frames", check = FALSE) <-
     x@frames[match(unique(ff_indices),
-                   paste(x@frames$Id, x@frames$file)), , drop = FALSE]
+                   paste(x@frames$frameId, x@frames$file)), , drop = FALSE]
   # x@frames$NumScans <- unname(table(ff_indices)) should we update NumScans?
   slot(x, "fileNames", check = FALSE) <- x@fileNames[unique(x@frames$file)]
   x
@@ -186,3 +198,16 @@ setMethod("dataStorage", "MsBackendTimsTof", function(object) {
     return (object@fileNames[object@indices[, "file"]])
   character(0)
 })
+
+#' @rdname MsBackendTimsTof
+setMethod("spectraVariables", "MsBackendTimsTof", function(object) {
+  unique(c(names(Spectra:::.SPECTRA_DATA_COLUMNS),
+           colnames(object@frames))) #c("frame", "tof", "inv_ion_mobility")
+})
+
+#' @rdname MsBackendTimsTof
+setMethod("spectraData", "MsBackendTimsTof",
+          function(object, columns = spectraVariables(object)) {
+            .spectra_data(object, columns)
+          })
+

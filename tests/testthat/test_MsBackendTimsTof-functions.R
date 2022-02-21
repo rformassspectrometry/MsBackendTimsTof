@@ -1,3 +1,5 @@
+library(opentimsr)
+
 test_that(".valid_required_columns works", {
   df <- data.frame()
   expect_null(.valid_required_columns(df))
@@ -7,9 +9,9 @@ test_that(".valid_required_columns works", {
 })
 
 test_that(".valid_frames works", {
-  frames <- data.frame(Id = c(1, 2), file = c(1, 2), other = c("a", "b"))
+  frames <- data.frame(frameId = c(1, 2), file = c(1, 2), other = c("a", "b"))
   expect_null(.valid_frames(frames))
-  frames <- frames[, c("Id", "other")]
+  frames <- frames[, c("frameId", "other")]
   expect_match(.valid_frames(frames), "Required column")
 })
 

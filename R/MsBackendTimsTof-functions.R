@@ -63,7 +63,7 @@
 #'
 #' @noRd
 .valid_frames <- function(x) {
-  .valid_required_columns(x, c("Id", "file"))
+  .valid_required_columns(x, c("frameId", "file"))
 }
 
 #' @description
@@ -79,7 +79,7 @@
       any(!x@indices[, "file"] %in% seq_len(length(x@fileNames))))
     msg <- c(msg, "Some file indices are not compatible with x@fileNames")
   if (any(!paste0(x@indices[, "frame"], x@indices[, "file"]) %in%
-          paste0(x@frames$Id, x@frames$file)))
+          paste0(x@frames$frameId, x@frames$file)))
     msg <- c(msg, "Some indices in x@indices are not compatible with x@frames")
   msg
 }
@@ -160,7 +160,7 @@ MsBackendTimsTof <- function() {
                               "'", collapse = ", "), " not available.",
          call. = FALSE)
   idx <- match(paste(x@indices[, "frame"], x@indices[, "file"]),
-               paste(x@frames$Id, x@frames$file))
+               paste(x@frames$frameId, x@frames$file))
   x@frames[idx, columns]
 }
 
@@ -169,7 +169,8 @@ MsBackendTimsTof <- function() {
 #' @noRd
 .SPECTRA_VARIABLE_MAPPINGS <- c(
     rtime = "Time",
-    polarity = "Polarity"
+    polarity = "Polarity",
+    frameId = "Id"
 )
 
 .format_polarity <- function(x) {
@@ -178,3 +179,41 @@ MsBackendTimsTof <- function() {
     xn[grep("^(n|-)", x, ignore.case = TRUE)] <- 0L
     xn
 }
+
+.spectra_data <- function(x, columns = spectraVariables(x)) {
+  if (!all(present <- columns %in% spectraVariables(x)))
+    stop("Column(s) ", paste0("\"", columns[!present], "\"", collapse = ", "),
+         " not available.", call. = FALSE)
+  res <- vector(mode = "list", length = length(columns))
+  names(res) <- columns
+  core_cols <- columns[columns %in% names(Spectra:::.SPECTRA_DATA_COLUMNS)]
+  frames_cols <- columns[columns %in% colnames(x@frames)]
+  if (length(frames_cols)) {
+    res[frames_cols] <- .get_frame_columns(x, frames_cols)
+    core_cols <- core_cols[!core_cols %in% frames_cols]
+  }
+  if ("mz" %in% columns) {
+    res[["mz"]] <- mz(x)
+    core_cols <- core_cols[core_cols != "mz"]
+  }
+  if ("intensity" %in% columns) {
+    res[["intensity"]] <- intensity(x)
+    core_cols <- core_cols[core_cols != "intensity"]
+  }
+  if ("scanIndex" %in% columns) {
+    res[["scanIndex"]] <- x@indices[, "scan"]
+    core_cols <- core_cols[core_cols != "scanIndex"]
+  }
+  if("dataStorage" %in% columns) {
+    res[["dataStorage"]] <- dataStorage(x)
+    core_cols <- core_cols[core_cols != "dataStorage"]
+  }
+  if (length(core_cols)) {
+    res[core_cols] <- lapply(Spectra:::.SPECTRA_DATA_COLUMNS[core_cols],
+                             function(z, n) rep(as(NA, z), n), length(x))
+  }
+  if (length(res))
+    as(res, "DataFrame")
+  else NULL
+}
+
