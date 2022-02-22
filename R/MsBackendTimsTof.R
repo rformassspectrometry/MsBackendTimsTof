@@ -133,13 +133,7 @@ setMethod("length", "MsBackendTimsTof", function(x) {
 
 #' @rdname MsBackendTimsTof
 setMethod("peaksData", "MsBackendTimsTof", function(object) {
-  res <- vector(mode = "list", length(object))
-  for (i in seq_len(length(object@fileNames))) {
-    I <- which(object@indices[, "file"] == i)
-    res[I] <- .read_frame_col(object@fileNames[i], c("mz", "intensity"),
-                              object@indices[I, 1:2])
-  }
-  res
+  .get_tims_columns(object, c("mz", "intensity"))
 })
 
 
@@ -147,25 +141,14 @@ setMethod("peaksData", "MsBackendTimsTof", function(object) {
 #'
 #' @rdname MsBackendTimsTof
 setMethod("mz", "MsBackendTimsTof", function(object) {
-  res <- vector(mode = "list", length(object))
-  for (i in seq_len(length(object@fileNames))) {
-    I <- which(object@indices[, "file"] == i)
-    res[I] <- .read_frame_col(object@fileNames[i], "mz", object@indices[I, 1:2])
-  }
-  NumericList(res, compress = FALSE)
+  NumericList(.get_tims_columns(object, "mz"), compress = FALSE)
 })
 
 #' @importFrom IRanges NumericList
 #'
 #' @rdname MsBackendTimsTof
 setMethod("intensity", "MsBackendTimsTof", function(object) {
-  res <- vector(mode = "list", length(object))
-  for (i in seq_len(length(object@fileNames))) {
-    I <- which(object@indices[, "file"] == i)
-    res[I] <- .read_frame_col(object@fileNames[i], "intensity",
-                              object@indices[I, 1:2])
-  }
-  NumericList(res, compress = FALSE)
+  NumericList(.get_tims_columns(object, "intensity"), compress = FALSE)
 })
 
 #' @rdname MsBackendTimsTof
@@ -201,8 +184,8 @@ setMethod("dataStorage", "MsBackendTimsTof", function(object) {
 
 #' @rdname MsBackendTimsTof
 setMethod("spectraVariables", "MsBackendTimsTof", function(object) {
-  unique(c(names(Spectra:::.SPECTRA_DATA_COLUMNS),
-           colnames(object@frames))) #c("frame", "tof", "inv_ion_mobility")
+  unique(c(names(Spectra:::.SPECTRA_DATA_COLUMNS), .TIMSTOF_COLUMNS,
+           colnames(object@frames)))
 })
 
 #' @rdname MsBackendTimsTof

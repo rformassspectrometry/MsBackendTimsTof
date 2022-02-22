@@ -110,11 +110,11 @@ test_that("dataStorage,MsBackendTimsTof works", {
 })
 
 test_that("spectraVariables,MsBackendTimsTof works", {
-  expect_equal(spectraVariables(MsBackendTimsTof()),
-               names(Spectra:::.SPECTRA_DATA_COLUMNS))
-  
+  expect_identical(spectraVariables(MsBackendTimsTof()),
+                   unique(c(names(Spectra:::.SPECTRA_DATA_COLUMNS),
+                          .TIMSTOF_COLUMNS)))
   res <- spectraVariables(be)
-  expect_true(all(res %in% c(colnames(be@frames),
+  expect_true(all(res %in% c(colnames(be@frames), .TIMSTOF_COLUMNS,
                              names(Spectra:::.SPECTRA_DATA_COLUMNS))))
 })
 

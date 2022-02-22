@@ -109,39 +109,35 @@ MsBackendTimsTof <- function() {
   new("MsBackendTimsTof")
 }
 
-#' Read variables from the `OpenTIMS` object (`OpenTIMS(x)`) created from data
-#' stored in folder `x`. At least one variable in `OpenTIMS(x)@all_columns`
-#' different from `"frame"` and "`scan`" has to be provided via `columns`
-#' parameter.
+#' Get `x@all_columns` variables from `x` splitted by spectra. At least one
+#' variable among `x@all_columns` and different from `"frame"` and "`scan`"
+#' has to be provided via `columns` parameter.
 #'
-#' @param x `character(1)` path to the '*.d' folder to read from.
+#' @param x `MsBackendTimsTof` object.
 #'
 #' @param columns `character` with the names of the columns to extract.
-#'
-#' @param indices `matrix` of indices. It contains columns `"frame"` and
-#' `"scan"` to select which rows of data to read from `OpenTIMS(x)`.
-#'
-#' @return `list` of `numeric` (if a single variable is read) or `list`
-#' of `matrix` (otherwise). Each element of the list corresponds to certain
-#' `"frame"` and `"scan"` indeces from `indeces`.
 #'
 #' @importFrom opentimsr OpenTIMS CloseTIMS query
 #'
 #' @noRd
-# Maybe I didn't name this function very well. Maybe .read_tims_columns?
-.read_frame_col <- function(x, columns, indices) { 
-  tms <- OpenTIMS(x)
-  on.exit(opentimsr::CloseTIMS(tms))
-  if (any(!columns %in% tms@all_columns))
-    stop("Invalid value for columns")
-  if (!length(sd <- setdiff(columns, c("frame", "scan"))))
-    stop("At least one column value different from 'frame' and 'scan' required")
-  tmp <- query(tms, unique(indices[, "frame"]), c("frame", "scan", sd))
-  f <- factor(paste(tmp$frame, tmp$scan),
-              levels = paste(indices[, "frame"], indices[, "scan"]))
-  if (length(sd) == 1)
-    unname(split(tmp[, sd], f))
-  else unname(split.data.frame(as.matrix(tmp[, sd]), f))
+.get_tims_columns <- function(x, columns) {
+  res <- vector(mode = "list", length(x))
+  for (i in seq_len(length(x@fileNames))) {
+    I <- which(x@indices[, "file"] == i)
+    tms <- OpenTIMS(x@fileNames[i])
+    on.exit(opentimsr::CloseTIMS(tms))
+    if (any(!columns %in% tms@all_columns))
+      stop("Invalid value for columns")
+    if (!length(sd <- setdiff(columns, c("frame", "scan"))))
+      stop("At least one column value different from 'frame' and 'scan' required")
+    tmp <- query(tms, unique(x@indices[I, "frame"]), c("frame", "scan", sd))
+    f <- factor(paste(tmp$frame, tmp$scan),
+                levels = paste(x@indices[I, "frame"], x@indices[I, "scan"]))
+    if (length(sd) == 1)
+      res[I] <- unname(split(tmp[, sd], f))
+    else res[I] <- unname(split.data.frame(as.matrix(tmp[, sd]), f))
+  }
+  res
 }
 
 #' Extract columns from @frames given the @indices in `x`. The function takes
@@ -180,6 +176,9 @@ MsBackendTimsTof <- function() {
     xn
 }
 
+# can we assume that tms@all_coulmns is the same for all the TimsTOF? 
+.TIMSTOF_COLUMNS <- c("mz", "intensity", "tof", "inv_ion_mobility")
+
 .spectra_data <- function(x, columns = spectraVariables(x)) {
   if (!all(present <- columns %in% spectraVariables(x)))
     stop("Column(s) ", paste0("\"", columns[!present], "\"", collapse = ", "),
@@ -188,21 +187,30 @@ MsBackendTimsTof <- function() {
   names(res) <- columns
   core_cols <- columns[columns %in% names(Spectra:::.SPECTRA_DATA_COLUMNS)]
   frames_cols <- columns[columns %in% colnames(x@frames)]
-  if (length(frames_cols)) {
-    res[frames_cols] <- .get_frame_columns(x, frames_cols)
-    core_cols <- core_cols[!core_cols %in% frames_cols]
-  }
-  if ("mz" %in% columns) {
-    res[["mz"]] <- mz(x)
-    core_cols <- core_cols[core_cols != "mz"]
-  }
-  if ("intensity" %in% columns) {
-    res[["intensity"]] <- intensity(x)
-    core_cols <- core_cols[core_cols != "intensity"]
-  }
+  tims_cols <- columns[columns %in% .TIMSTOF_COLUMNS]
   if ("scanIndex" %in% columns) {
     res[["scanIndex"]] <- x@indices[, "scan"]
     core_cols <- core_cols[core_cols != "scanIndex"]
+  }
+  if("frameId" %in% frames_cols) {
+    res[["frameId"]] <- x@indices[, "frame"]
+    frames_cols <- frames_cols[frames_cols != "frameId"]
+  }
+  if("file" %in% frames_cols) {
+    res[["file"]] <- x@indices[, "file"]
+    frames_cols <- frames_cols[frames_cols != "file"]
+  }
+  if (length(frames_cols)) {
+    res[frames_cols] <- .get_frame_columns(x, frames_cols)
+    core_cols <- setdiff(core_cols, frames_cols)
+  }
+  # maybe inv_ion_mobility shouldn't be get in another way because differently 
+  # from mz, intensity and tof there seem to be a unique value for each spectra
+  if (length(tims_cols)) {
+    res[tims_cols] <- lapply(tims_cols, function(col)
+      NumericList(lapply(.get_tims_columns(x, tims_cols), "[", , col),
+                  compress = FALSE))
+    core_cols <- setdiff(core_cols, tims_cols)
   }
   if("dataStorage" %in% columns) {
     res[["dataStorage"]] <- dataStorage(x)
@@ -216,4 +224,3 @@ MsBackendTimsTof <- function() {
     as(res, "DataFrame")
   else NULL
 }
-
