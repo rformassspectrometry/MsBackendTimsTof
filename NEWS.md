@@ -6,6 +6,8 @@
   methods to return spectra values in wrong order given a reordered
   `MsBackendTimsTof` object.
 - `spectraVariables` and `spectraData` methods.
+- fixed a problem in file indexing possibly arising after object subsetting.
+- unit tests update.
 
 ## MsBackendTimsTof 0.0.3
 

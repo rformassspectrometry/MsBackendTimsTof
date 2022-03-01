@@ -29,7 +29,7 @@
     if (any(colnames(x@frames) == "polarity"))
         x@frames$polarity <- .format_polarity(x@frames$polarity)
     x@indices <- do.call(rbind, lapply(L, "[[", 2))
-    x@fileNames <- file
+    x@fileNames <- setNames(seq_len(length(file)), file)
     x
 }
 
@@ -75,19 +75,19 @@
 #' @noRd
 .valid_indices <- function(x) {
   msg <- .valid_required_columns(x@indices, c("frame", "file"))
-  if ("file" %in% colnames(x@indices) &&
-      any(!x@indices[, "file"] %in% seq_len(length(x@fileNames))))
-    msg <- c(msg, "Some file indices are not compatible with x@fileNames")
+  if ("file" %in% colnames(x@indices) && !setequal(x@indices[, "file"],
+                                                  x@fileNames))
+    msg <- c(msg, "Some file indices are out of bounds")
   if (any(!paste0(x@indices[, "frame"], x@indices[, "file"]) %in%
           paste0(x@frames$frameId, x@frames$file)))
-    msg <- c(msg, "Some indices in x@indices are not compatible with x@frames")
+    msg <- c(msg, "Some indices are out of bounds")
   msg
 }
 
 #' @description
 #'
-#' Checks if the `character` `x` is compatible to be the `@fileNames` slot of a
-#' `MsBackendTimsTof` object.
+#' Checks if the named `integer` `x` is compatible to be the `@fileNames` slot
+#' of a `MsBackendTimsTof` object.
 #'
 #' @param x `character` with folder names.
 #'
@@ -95,8 +95,11 @@
 .valid_fileNames <- function(x) {
   msg <- NULL
   if (anyNA(x))
-    msg <- "'NA' values in fileNames are not allowed."
-  msg <- c(msg, Spectra:::.valid_ms_backend_files_exist(unique(x)))
+    msg <- "'NA' values in fileNames names are not allowed."
+  nms <- names(x)
+  if (anyNA(nms))
+    msg <- "'NA' values in fileNames names are not allowed."
+  msg <- c(msg, Spectra:::.valid_ms_backend_files_exist(unique(nms)))
   msg
 }
 
@@ -109,9 +112,10 @@ MsBackendTimsTof <- function() {
   new("MsBackendTimsTof")
 }
 
-#' Get `x@all_columns` variables from `x` splitted by spectra. At least one
-#' variable among `x@all_columns` and different from `"frame"` and "`scan`"
-#' has to be provided via `columns` parameter.
+#' Get `x@all_columns` variables (including "`mz`" and "`intensity`") from `x`
+#' splitted by spectra. At least one variable among `x@all_columns` and
+#' different from `"frame"` and "`scan`" has to be provided via `columns`
+#' parameter. 
 #'
 #' @param x `MsBackendTimsTof` object.
 #'
@@ -122,12 +126,14 @@ MsBackendTimsTof <- function() {
 #' @noRd
 .get_tims_columns <- function(x, columns) {
   res <- vector(mode = "list", length(x))
-  for (i in seq_len(length(x@fileNames))) {
-    I <- which(x@indices[, "file"] == i)
-    tms <- OpenTIMS(x@fileNames[i])
+  nms <- names(x@fileNames)
+  for (i in seq_len(length(nms))) {
+    I <- which(x@indices[, "file"] == x@fileNames[i])
+    tms <- OpenTIMS(nms[i])
     on.exit(opentimsr::CloseTIMS(tms))
-    if (any(!columns %in% tms@all_columns))
-      stop("Invalid value for columns")
+    if (any(notin <- !columns %in% tms@all_columns))
+      stop("Column(s) ", paste0("'", columns[notin], "'", collapse = ", "),
+           " not available.", call. = FALSE)
     if (!length(sd <- setdiff(columns, c("frame", "scan"))))
       stop("At least one column value different from 'frame' and 'scan' required")
     tmp <- query(tms, unique(x@indices[I, "frame"]), c("frame", "scan", sd))
@@ -192,11 +198,11 @@ MsBackendTimsTof <- function() {
     res[["scanIndex"]] <- x@indices[, "scan"]
     core_cols <- core_cols[core_cols != "scanIndex"]
   }
-  if("frameId" %in% frames_cols) {
+  if ("frameId" %in% frames_cols) {
     res[["frameId"]] <- x@indices[, "frame"]
     frames_cols <- frames_cols[frames_cols != "frameId"]
   }
-  if("file" %in% frames_cols) {
+  if ("file" %in% frames_cols) {
     res[["file"]] <- x@indices[, "file"]
     frames_cols <- frames_cols[frames_cols != "file"]
   }
@@ -204,15 +210,13 @@ MsBackendTimsTof <- function() {
     res[frames_cols] <- .get_frame_columns(x, frames_cols)
     core_cols <- setdiff(core_cols, frames_cols)
   }
-  # maybe inv_ion_mobility shouldn't be get in another way because differently 
-  # from mz, intensity and tof there seem to be a unique value for each spectra
   if (length(tims_cols)) {
     res[tims_cols] <- lapply(tims_cols, function(col)
-      NumericList(lapply(.get_tims_columns(x, tims_cols), "[", , col),
-                  compress = FALSE))
+      NumericList(lapply(.get_tims_columns(x, tims_cols),
+                         function(m) unname(m[, col])), compress = FALSE))
     core_cols <- setdiff(core_cols, tims_cols)
   }
-  if("dataStorage" %in% columns) {
+  if ("dataStorage" %in% columns) {
     res[["dataStorage"]] <- dataStorage(x)
     core_cols <- core_cols[core_cols != "dataStorage"]
   }

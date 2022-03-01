@@ -21,25 +21,29 @@ test_that(".valid_indices works", {
   tmp <- be
   tmp@indices[1, "file"] = 4
   expect_equal(.valid_indices(tmp),
-               c("Some file indices are not compatible with x@fileNames",
-                 "Some indices in x@indices are not compatible with x@frames"))
+               c("Some file indices are out of bounds",
+                 "Some indices are out of bounds"))
 })
 
 test_that(".valid_fileNames works", {
   tmpf <- tempfile()
   write("hello", file = tmpf)
-  expect_match(.valid_fileNames(c(NA, tmpf)), "'NA' values in fileNames")
-  expect_match(.valid_fileNames(c("x", tmpf)), "not found")
-  expect_null(.valid_fileNames(tmpf))
+  expect_match(.valid_fileNames(setNames(c(1L, 3L), c(NA, tmpf))),
+               "'NA' values in fileNames")
+  expect_match(.valid_fileNames(setNames(c(1L, 3L), c("x", tmpf))), "not found")
+  expect_null(.valid_fileNames(setNames(3L, tmpf)))
 })
 
-test_that(".read_frame_col works", {
-  res <- .read_frame_col(path_d_folder, "mz",
-                         cbind(frame = c(1, 2),  scan = c(1, 3)))
-  tms <- OpenTIMS(path_d_folder)
-  tmp <- query(tms, frames = 1, columns = "mz")
-  tmp2 <- query(tms, frames = 2, columns = "mz")
-  expect_identical(res, list(tmp[tmp$scan == 1,], tmp2[tmp2$scan == 3,]))
+test_that(".get_tims_columns works", {
+  res <- .get_tims_columns(be, c("tof"))
+  expect_true(is.list(res))
+  expect_identical(length(res), length(be))
+  
+  res <- .get_tims_columns(be, c("tof", "inv_ion_mobility"))
+  expect_identical(length(res), length(be))
+  expect_equal(colnames(res[[1]]), c("tof", "inv_ion_mobility"))
+  
+  expect_error(.get_tims_columns(be, "bla"), "'bla' not available")
 })
 
 test_that(".get_frame_columns works", {

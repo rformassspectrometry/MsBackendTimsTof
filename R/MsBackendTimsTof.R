@@ -84,14 +84,14 @@ setClass("MsBackendTimsTof",
          contains = "MsBackend",
          slots = c(frames = "data.frame",
                    indices = "matrix",
-                   fileNames = "character"),
+                   fileNames = "integer"),
          prototype = prototype(frames = data.frame(),
-                               indices = matrix(, nrow = 0, ncol = 3,
+                               indices = matrix(nrow = 0, ncol = 3,
                                                 dimnames = list(NULL, 
                                                                 c("frame",
                                                                   "scan",
                                                                   "file"))),
-                               fileNames = character(),
+                               fileNames = integer(),
                                readonly = TRUE,
                                version = "0.1"))
 
@@ -171,14 +171,16 @@ setMethod("[", "MsBackendTimsTof", function(x, i, j, ..., drop = FALSE) {
     x@frames[match(unique(ff_indices),
                    paste(x@frames$frameId, x@frames$file)), , drop = FALSE]
   # x@frames$NumScans <- unname(table(ff_indices)) should we update NumScans?
-  slot(x, "fileNames", check = FALSE) <- x@fileNames[unique(x@frames$file)]
+  slot(x, "fileNames", check = FALSE) <- x@fileNames[x@fileNames %in%
+                                                       unique(x@frames$file)]
   x
 })
 
 #' @rdname MsBackendTimsTof
 setMethod("dataStorage", "MsBackendTimsTof", function(object) {
-  if("file" %in% colnames(object@indices))
-    return (object@fileNames[object@indices[, "file"]])
+  if("file" %in% colnames(object@indices) && length(object@fileNames))
+    return (names(object@fileNames[match(object@indices[, "file"],
+                                         object@fileNames)])) 
   character(0)
 })
 
