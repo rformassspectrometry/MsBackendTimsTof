@@ -1,5 +1,14 @@
 # MsBackendTimsTof 0.0
 
+## MsBackendTimsTof 0.0.4
+
+- fixed a problem in `mz`, `intensity`, `peaksData` methods that caused these
+  methods to return spectra values in wrong order given a reordered
+  `MsBackendTimsTof` object.
+- `spectraVariables` and `spectraData` methods.
+- fixed a problem in file indexing possibly arising after object subsetting.
+- unit tests update.
+
 ## MsBackendTimsTof 0.0.3
 
 - Export `MsBackendTimsTof` function.
