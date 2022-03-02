@@ -13,6 +13,9 @@
 \alias{rtime,MsBackendTimsTof-method}
 \alias{[,MsBackendTimsTof-method}
 \alias{dataStorage,MsBackendTimsTof-method}
+\alias{spectraVariables,MsBackendTimsTof-method}
+\alias{spectraData,MsBackendTimsTof-method}
+\alias{show,MsBackendTimsTof-method}
 \title{TimsTOF data backend}
 \usage{
 MsBackendTimsTof()
@@ -21,7 +24,7 @@ MsBackendTimsTof()
 
 \S4method{length}{MsBackendTimsTof}(x)
 
-\S4method{peaksData}{MsBackendTimsTof}(object)
+\S4method{peaksData}{MsBackendTimsTof}(object, columns = c("mz", "intensity"))
 
 \S4method{mz}{MsBackendTimsTof}(object)
 
@@ -32,6 +35,12 @@ MsBackendTimsTof()
 \S4method{[}{MsBackendTimsTof}(x, i, j, ..., drop = FALSE)
 
 \S4method{dataStorage}{MsBackendTimsTof}(object)
+
+\S4method{spectraVariables}{MsBackendTimsTof}(object)
+
+\S4method{spectraData}{MsBackendTimsTof}(object, columns = spectraVariables(object))
+
+\S4method{show}{MsBackendTimsTof}(object)
 }
 \arguments{
 \item{object}{\code{MsBackendTimsTof} object.}
@@ -45,6 +54,10 @@ setup to import data in parallel. Defaults to \code{BPPARAM = bpparam()}.
 See \code{\link[=bpparam]{bpparam()}} for more information.}
 
 \item{x}{\code{MsBackendTimsTof} object.}
+
+\item{columns}{For \code{spectraData}: names of the spectra variables to extract
+from \code{object}. For \code{peaksData}: names of the peak variables to extract.
+Defaults to \code{columns = c("mz", "intensity")}.}
 
 \item{i}{For \code{[}: \code{integer}, \code{logical} to subset the object.}
 
@@ -87,6 +100,13 @@ The length of the \code{list} is equal to the number of spectra in \code{object}
 \item \code{rtime}: gets the retention times for each spectrum. Returns a \code{numeric}
 vector (length equal to the number of spectra) with the retention time
 for each spectrum.
+\item \code{spectraData}: gets spectra variables (specified by \code{columns}) from
+\code{object}.
+\item \code{spectraVariables}: returns a \code{character} vector with the spectra variables
+names of core spectra variables defined in the Spectra package and other
+additional variables contained in \code{object}. Note that also \code{"mz"} and
+\code{"intensity"} (which are by default not returned by the
+\verb{spectraVariables,Spectra} method) are returned.
 }
 }
 

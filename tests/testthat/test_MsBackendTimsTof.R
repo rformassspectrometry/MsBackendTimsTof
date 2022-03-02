@@ -5,7 +5,7 @@ tms <- OpenTIMS(path_d_folder)
 test_that("backendInitialize,MsBackendTimsTof works", {
     expected_frames <- rbind(cbind(tms@frames, file = 1),
                              cbind(tms@frames, file = 2))
-    colnames(expected_frames)[1:3] <- c("frameId", "rtime", "polarity") 
+    colnames(expected_frames)[1:3] <- c("frameId", "rtime", "polarity")
     expected_frames$polarity <- .format_polarity(expected_frames$polarity)
     expect_equal(be@frames, expected_frames)
     expect_equal(be@fileNames,
@@ -32,12 +32,25 @@ test_that("[,MsBackendTimsTof works", {
     expect_equal(res@frames, be@frames[1, , drop = FALSE])
     expect_equal(names(res@fileNames), normalizePath(path_d_folder))
 
-    res <- be[c(1000, 1, 1)]
+    res <- be[c(1000, 1, 222)]
     expect_true(validObject(res))
-    expect_equal(res@indices, be@indices[c(1000, 1, 1), ])
+    expect_equal(res@indices, be@indices[c(1000, 1, 222), ])
     expect_equal(res@frames$frameId, c(2, 1))
     expect_equal(res@frames$file, c(1L, 1L))
     expect_equal(names(res@fileNames), normalizePath(path_d_folder))
+    expect_equal(rtime(res), rtime(be)[c(1000, 1, 222)])
+    expect_equal(mz(res), mz(be)[c(1000, 1, 222)])
+
+    ## arbitrary order with duplication
+    res <- be[c(1000, 2790, 1, 222, 1, 2790)]
+    expect_true(validObject(res))
+    expect_equal(res@indices, be@indices[c(1000, 2790, 1, 222, 1, 2790), ])
+    expect_equal(res@frames$frameId, c(2, 4, 1))
+    expect_equal(res@frames$file, c(1L, 1L, 1L))
+    expect_equal(names(res@fileNames), normalizePath(path_d_folder))
+    expect_equal(rtime(res), rtime(be)[c(1000, 2790, 1, 222, 1, 2790)])
+    expect_equal(mz(res), mz(be)[c(1000, 2790, 1, 222, 1, 2790)])
+    expect_equal(intensity(res), intensity(be)[c(1000, 2790, 1, 222, 1, 2790)])
 
     expect_error(be[10^7], "index out of bounds")
 })

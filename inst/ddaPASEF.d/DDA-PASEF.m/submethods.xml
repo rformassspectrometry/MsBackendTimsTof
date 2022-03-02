@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<method>
+    <submethods>
+        <submethod program="OtofImpacTEMControl" revision="1">
+            <name>D:\Data\sampleData\ddaPASEF_CaptiveSpray_Calibrants_denoised_1.d\DDA PASEF-standard_1.1sec_cycletime_denoised.m</name>
+            <files>
+                <file name="microTOFQImpacTemAcquisition.method"/>
+                <file name="diaSettings.diasqlite"/>
+                <file name="prmSettings.prmsqlite"/>
+                <file name="Maldi.method"/>
+            </files>
+        </submethod>
+    </submethods>
+    <locked>false</locked>
+    <readonly>true</readonly>
+    <comment/>
+</method>
