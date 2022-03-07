@@ -95,7 +95,10 @@ Returns a \code{\link[=NumericList]{NumericList()}} of \code{numeric} vectors (m
 spectrum). The length of the list is equal to the number of spectra in
 \code{object}.
 \item \code{peaksData}: gets the peak matrices of the spectra in the backend.
-Returns a \code{list} of \code{matrix} with columns \code{"mz"} and \code{"intensity"}.
+Returns a \code{list} of \code{matrix} with columns defined by parameter \code{columns}
+(which defaults to \code{columns = c("mz", "intensity")}. Note that regardless
+of the order of requested columns in \code{columns}, \code{"mz"} and \code{"intensity"}
+(if requested) are always returned as the first columns.
 The length of the \code{list} is equal to the number of spectra in \code{object}.
 \item \code{rtime}: gets the retention times for each spectrum. Returns a \code{numeric}
 vector (length equal to the number of spectra) with the retention time

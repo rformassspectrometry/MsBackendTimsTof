@@ -38,7 +38,10 @@
 #'   `object`.
 #'
 #' - `peaksData`: gets the peak matrices of the spectra in the backend.
-#'   Returns a `list` of `matrix` with columns `"mz"` and `"intensity"`.
+#'   Returns a `list` of `matrix` with columns defined by parameter `columns`
+#'   (which defaults to `columns = c("mz", "intensity")`. Note that regardless
+#'   of the order of requested columns in `columns`, `"mz"` and `"intensity"`
+#'   (if requested) are always returned as the first columns.
 #'   The length of the `list` is equal to the number of spectra in `object`.
 #'
 #' - `rtime`: gets the retention times for each spectrum. Returns a `numeric`
