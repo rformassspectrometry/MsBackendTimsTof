@@ -1,13 +1,20 @@
 # MsBackendTimsTof 0.0
 
+## MsBackendTimsTof 0.0.5
+
+- Add test data.
+- Add `show` method.
+- Fix issue in `peaksData` with duplicated spectra (e.g. due to
+  `sps[c(1, 1, 1)]`).
+
 ## MsBackendTimsTof 0.0.4
 
-- fixed a problem in `mz`, `intensity`, `peaksData` methods that caused these
+- Fixed a problem in `mz`, `intensity`, `peaksData` methods that caused these
   methods to return spectra values in wrong order given a reordered
   `MsBackendTimsTof` object.
 - `spectraVariables` and `spectraData` methods.
-- fixed a problem in file indexing possibly arising after object subsetting.
-- unit tests update.
+- Fixed a problem in file indexing possibly arising after object subsetting.
+- Unit tests update.
 
 ## MsBackendTimsTof 0.0.3
 

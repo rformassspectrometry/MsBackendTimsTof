@@ -1,0 +1,2900 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<root>
+    <fileinfo type="ImpacTEM Pro Method" appname="timsTOF engine" appversion="3.0.17.2" createdate="2022-02-24T13:58:51.145+01:00" typeversion="120.000000"/>
+    <generalinfo>
+        <org>Bruker Daltonik GmbH</org>
+        <os>unknown</os>
+        <hostname>unknown</hostname>
+        <author>unknown</author>
+        <configuration>V0.0 2617 1001895164 1749027 11 273647 1854399 00100 timsTOF_Pro 25087 5 31 130951 415 1D50437 3943</configuration>
+        <id>deadf00d</id>
+        <options>--</options>
+        <comment>--</comment>
+        <modified-by-timstof>3.0.17.2</modified-by-timstof>
+        <modified-by-timstof-on>2022-02-24T13:58:51.145+01:00</modified-by-timstof-on>
+    </generalinfo>
+    <instrument>
+        <qtofimpactemacq>
+            <para_int value="4" permname="Digitizer_ConfigurationMode"/>
+            <para_double value="0.200000" permname="Digitizer_SampleIntervall"/>
+            <para_double value="202.598857" permname="Digitizer_VertOffset"/>
+            <para_double value="316.000000" permname="Digitizer_FullScale"/>
+            <para_int value="0" permname="Digitizer_bandwidth"/>
+            <para_int value="1400" permname="Digitizer_TriggerLevel"/>
+            <para_double value="7.000000" permname="Digitizer_NoiseSuppressionThreshold"/>
+            <para_int value="0" permname="Digitizer_ADCCompensation"/>
+            <para_int value="1" permname="Collision_QuenchAlways_Set"/>
+            <para_int value="1" permname="Collision_EntranceFix"/>
+            <dependent source="esi" polarity="positive">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="apci" polarity="positive">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="2.000000"/>
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="370.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="3.500000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="220.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="nesioff" polarity="positive">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="120.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="nesion" polarity="positive">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="150.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="appi" polarity="positive">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="2.000000"/>
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="370.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="220.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="multimode" polarity="positive">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="1.000000"/>
+                    <entry_double value="1.000000"/>
+                    <entry_double value="2.800000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="120.000000"/>
+                    <entry_double value="120.000000"/>
+                    <entry_double value="120.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="nanoflowesi" polarity="positive">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="0.700000"/>
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="150.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="ultraspray" polarity="positive">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="4.100000"/>
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="250.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="3.000000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="captivespray" polarity="positive">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="3.000000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="150.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="gc-apci" polarity="positive">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="3.000000"/>
+                    <entry_double value="3.000000"/>
+                    <entry_double value="3.000000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="2.500000"/>
+                    <entry_double value="2.500000"/>
+                    <entry_double value="2.500000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="250.000000"/>
+                    <entry_double value="250.000000"/>
+                    <entry_double value="250.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="esi" polarity="negative">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="apci" polarity="negative">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="2.000000"/>
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="370.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="3.500000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="220.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="nesioff" polarity="negative">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="120.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="nesion" polarity="negative">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="150.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="appi" polarity="negative">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="2.000000"/>
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="370.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="220.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="multimode" polarity="negative">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="1.000000"/>
+                    <entry_double value="1.000000"/>
+                    <entry_double value="2.800000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="120.000000"/>
+                    <entry_double value="120.000000"/>
+                    <entry_double value="120.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="nanoflowesi" polarity="negative">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="0.700000"/>
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="150.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="ultraspray" polarity="negative">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="4.100000"/>
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="250.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="3.000000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="captivespray" polarity="negative">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                    <entry_double value="0.500000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="3.000000"/>
+                    <entry_double value="4.000000"/>
+                    <entry_double value="4.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="150.000000"/>
+                    <entry_double value="180.000000"/>
+                    <entry_double value="180.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent source="gc-apci" polarity="negative">
+                <para_vec_double permname="Source_StandbyNebulizerPressureSetValue">
+                    <entry_double value="3.000000"/>
+                    <entry_double value="3.000000"/>
+                    <entry_double value="3.000000"/>
+                </para_vec_double>
+                <para_double value="0.000000" permname="Source_StandbyNanoBoosterPressureSetValue"/>
+                <para_vec_double permname="Source_StandbyVaporizerTemperatureSetValue">
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                    <entry_double value="0.000000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasFlowRateSetValue">
+                    <entry_double value="2.500000"/>
+                    <entry_double value="2.500000"/>
+                    <entry_double value="2.500000"/>
+                </para_vec_double>
+                <para_vec_double permname="Source_StandbyDryGasTemperatureSetValue">
+                    <entry_double value="250.000000"/>
+                    <entry_double value="250.000000"/>
+                    <entry_double value="250.000000"/>
+                </para_vec_double>
+            </dependent>
+            <dependent polarity="positive">
+                <para_string value="D:\Data\KMA\Methods PASEF\DDA PASEF-standard_1.1sec_cycletime_moderate.m" permname="Calibration_CurrentMethodPathName"/>
+            </dependent>
+            <dependent polarity="negative">
+                <para_string value="" permname="Calibration_CurrentMethodPathName"/>
+            </dependent>
+            <dependent polarity="positive">
+                <para_int value="100" permname="TOF_DeviceTempAverageNumber1"/>
+                <para_int value="100" permname="TOF_DeviceTempAverageNumber2"/>
+                <para_double value="0.000000" permname="TOF_DeviceTempGradient1"/>
+                <para_double value="0.000000" permname="TOF_DeviceTempGradient2"/>
+            </dependent>
+            <dependent polarity="negative">
+                <para_int value="100" permname="TOF_DeviceTempAverageNumber1"/>
+                <para_int value="100" permname="TOF_DeviceTempAverageNumber2"/>
+                <para_double value="0.000000" permname="TOF_DeviceTempGradient1"/>
+                <para_double value="0.000000" permname="TOF_DeviceTempGradient2"/>
+            </dependent>
+            <dependent polarity="positive">
+                <para_int value="1" permname="IMS_CalibrationRampDelay"/>
+                <para_int value="926" permname="IMS_CalibrationRampNumberOfCycles"/>
+                <para_double value="210.450790" permname="IMS_CalibrationRampStart"/>
+                <para_double value="75.170919" permname="IMS_CalibrationRampEnd"/>
+                <para_double value="0.600000" permname="IMS_Calibration_MobilityStart_Save"/>
+                <para_double value="1.600000" permname="IMS_Calibration_MobilityEnd_Save"/>
+                <para_int value="1" permname="IMS_Calibration_LastCalibrationMode"/>
+            </dependent>
+            <dependent polarity="negative">
+                <para_int value="1" permname="IMS_CalibrationRampDelay"/>
+                <para_int value="526" permname="IMS_CalibrationRampNumberOfCycles"/>
+                <para_double value="-269.206450" permname="IMS_CalibrationRampStart"/>
+                <para_double value="-42.183052" permname="IMS_CalibrationRampEnd"/>
+                <para_double value="0.600000" permname="IMS_Calibration_MobilityStart_Save"/>
+                <para_double value="1.600000" permname="IMS_Calibration_MobilityEnd_Save"/>
+                <para_int value="1" permname="IMS_Calibration_LastCalibrationMode"/>
+            </dependent>
+            <dependent polarity="positive">
+                <para_double value="26.500000" permname="Transfer_Funnel1Out_Base_Set"/>
+            </dependent>
+            <dependent polarity="negative">
+                <para_double value="-26.500000" permname="Transfer_Funnel1Out_Base_Set"/>
+            </dependent>
+            <dependent polarity="positive">
+                <para_double value="1650.000000" permname="TOF_PulserPullSetValue"/>
+            </dependent>
+            <dependent polarity="negative">
+                <para_double value="1600.000000" permname="TOF_PulserPullSetValue"/>
+            </dependent>
+            <dependent polarity="positive">
+                <para_double value="0" permname="Calibration_Digitizer_ExtractPulsWidth"/>
+            </dependent>
+            <dependent polarity="negative">
+                <para_double value="0" permname="Calibration_Digitizer_ExtractPulsWidth"/>
+            </dependent>
+            <para_double value="2.75" permname="MSMS_Pasef_Scheduler_MeasuringTime"/>
+            <para_double value="3" permname="Internal_AutotuneSingleIonIntensityFactor"/>
+            <para_double value="60" permname="Collision_GasSupply_Set"/>
+            <para_double value="0.025000000000000001" permname="MSMS_Pasef_MultipletGroupingMzTolerance"/>
+            <para_double value="45000" permname="MSMS_Pasef_TofResolution"/>
+            <para_int value="50" permname="MSMS_Pasef_Mobilogram_Threshold"/>
+            <para_double value="0" permname="TOF_DetectorSourceSetValue"/>
+            <para_double value="2.5" permname="MSMS_Pasef_MobilogramGridMzWidth"/>
+            <para_double value="1.6499999999999999" permname="MSMS_Pasef_Scheduler_SwitchingTime"/>
+            <para_double value="2235" permname="TOF_DetectorTofSetValue"/>
+            <para_double value="0.5" permname="MSMS_Pasef_MobilogramGridMzOverlap"/>
+            <para_int value="6" permname="Collision_QuenchTime_Set"/>
+            <para_double value="40" permname="TOF_DetectorTof_HighSensitivity_GainVoltage"/>
+            <para_int value="10" permname="MSMS_Pasef_MultipletGroupingMobilityTolerance"/>
+            <para_double value="2" permname="IMS_Cycle_PurgeLength"/>
+            <para_double value="1" permname="IMS_Cycle_PurgeTransferDelay"/>
+            <dependent polarity="positive">
+                <para_double value="0" permname="Transfer_Tunnel0Voltage_Delta_1A"/>
+                <para_double value="0" permname="Transfer_Tunnel0Voltage_Delta_2A"/>
+                <para_double value="0" permname="Transfer_Tunnel0Voltage_Delta_4A"/>
+                <para_double value="0" permname="Transfer_Tunnel0Voltage_Delta_5A"/>
+                <para_double value="40" permname="FocusPreTOF_Lens1_Storage_Set"/>
+                <para_double value="0" permname="Transfer_Tunnel0Voltage_Delta_6A"/>
+                <para_double value="23" permname="FocusPreTOF_Lens1_Extraction_Set"/>
+                <para_double value="0" permname="Transfer_DeflectorPlate_Delta_1"/>
+                <para_double value="0" permname="FocusPreTOF_Lens5_Set"/>
+                <para_double value="185" permname="Transfer_CapillaryExit_Base_Set"/>
+                <para_double value="0" permname="FocusPreTOF_Lens2_Set"/>
+                <para_double value="0" permname="IMS_Purge_Voltage_Base"/>
+                <para_double value="-79.199996999999996" permname="FocusPreTOF_Lens3_Set"/>
+                <para_double value="0" permname="FocusPreTOF_Lens4_Set"/>
+                <para_double value="648" permname="TOF_CorrectorExtractSetValue"/>
+                <para_double value="2" permname="IMS_Cycle_TransferTime"/>
+                <para_double value="25.5" permname="Collision_Bias_Set"/>
+                <para_double value="3.6000000000000001" permname="IMS_CalibrationTransitTime"/>
+                <para_double value="9900" permname="TOF_FlightTubeSetValue"/>
+                <para_double value="782" permname="TOF_DeceleratorSetValue"/>
+                <para_double value="70" permname="Collision_In_Set"/>
+                <para_double value="2700" permname="TOF_ReflectorSetValue"/>
+                <para_double value="25.5" permname="Collision_Out_Set"/>
+                <para_double value="135" permname="Transfer_Funnel1In_Base_Set"/>
+                <para_double value="39" permname="Transfer_Funnel1Base_Base_Set"/>
+                <para_double value="55" permname="Transfer_Funnel1Tunnel_T1_Base_Set"/>
+                <para_double value="50" permname="Transfer_Funnel1Tunnel_T2_Base_Set"/>
+                <para_double value="45" permname="Transfer_Funnel1Tunnel_T3_Base_Set"/>
+                <para_double value="40" permname="Transfer_Funnel1Tunnel_T4_Base_Set"/>
+                <para_double value="38" permname="Transfer_Funnel2In_Base_Set"/>
+                <para_double value="28" permname="Transfer_Funnel2Base_Base_Set"/>
+                <para_double value="29" permname="Transfer_Funnel2Out_Base_Set"/>
+                <para_double value="1592.8" permname="TOF_PulserPushSetValue"/>
+                <para_double value="6430.5" permname="TOF_PulserLensSetValue"/>
+                <para_double value="25" permname="FocusPreCollisionCell_Lens1_Base_Set"/>
+                <para_double value="54" permname="TOF_CorrectorFillSetValue"/>
+                <para_double value="-53" permname="FocusPreCollisionCell_Lens2_Base_Set"/>
+                <para_double value="30" permname="FocusPreCollisionCell_Lens3_Base_Set"/>
+                <para_double value="15" permname="FocusPreQuadrupole_Lens2_Delta_Set"/>
+                <para_double value="24.5" permname="FocusPreQuadrupole_Lens1_Extraction_Base_Set"/>
+                <para_double value="35" permname="FocusPreQuadrupole_Lens1_Storage_Base_Set"/>
+                <para_double value="15" permname="FocusPreQuadrupole_Lens2_Base_Set"/>
+                <para_double value="-100" permname="FocusPreQuadrupole_Lens3_Base_Set"/>
+                <para_double value="20" permname="FocusPreQuadrupole_SplitLens2_OpenTime_Set"/>
+                <para_double value="25.5" permname="Quadrupole_Bias_Base_Set"/>
+                <para_double value="25.5" permname="Quadrupole_EntranceRampDC_Base_Set"/>
+                <para_double value="-10" permname="Quadrupole_ExitRampDC_Base_Set"/>
+                <para_double value="25.5" permname="Transfer_MultipoleBias_Base_Set"/>
+                <para_double value="15" permname="Transfer_MultipoleGradientVoltage_Base_Set"/>
+            </dependent>
+            <dependent polarity="negative">
+                <para_double value="0" permname="Transfer_Tunnel0Voltage_Delta_1A"/>
+                <para_double value="0" permname="Transfer_Tunnel0Voltage_Delta_2A"/>
+                <para_double value="0" permname="Transfer_Tunnel0Voltage_Delta_4A"/>
+                <para_double value="0" permname="Transfer_Tunnel0Voltage_Delta_5A"/>
+                <para_double value="-30" permname="FocusPreTOF_Lens1_Storage_Set"/>
+                <para_double value="0" permname="Transfer_Tunnel0Voltage_Delta_6A"/>
+                <para_double value="-23.5" permname="FocusPreTOF_Lens1_Extraction_Set"/>
+                <para_double value="0" permname="Transfer_DeflectorPlate_Delta_1"/>
+                <para_double value="0" permname="FocusPreTOF_Lens5_Set"/>
+                <para_double value="-185" permname="Transfer_CapillaryExit_Base_Set"/>
+                <para_double value="0" permname="FocusPreTOF_Lens2_Set"/>
+                <para_double value="0" permname="IMS_Purge_Voltage_Base"/>
+                <para_double value="90" permname="FocusPreTOF_Lens3_Set"/>
+                <para_double value="0" permname="FocusPreTOF_Lens4_Set"/>
+                <para_double value="618" permname="TOF_CorrectorExtractSetValue"/>
+                <para_double value="2" permname="IMS_Cycle_TransferTime"/>
+                <para_double value="-25.5" permname="Collision_Bias_Set"/>
+                <para_double value="3.6000000000000001" permname="IMS_CalibrationTransitTime"/>
+                <para_double value="9900" permname="TOF_FlightTubeSetValue"/>
+                <para_double value="812" permname="TOF_DeceleratorSetValue"/>
+                <para_double value="-70" permname="Collision_In_Set"/>
+                <para_double value="2650" permname="TOF_ReflectorSetValue"/>
+                <para_double value="-25.5" permname="Collision_Out_Set"/>
+                <para_double value="-135" permname="Transfer_Funnel1In_Base_Set"/>
+                <para_double value="-39" permname="Transfer_Funnel1Base_Base_Set"/>
+                <para_double value="-60" permname="Transfer_Funnel1Tunnel_T1_Base_Set"/>
+                <para_double value="-55" permname="Transfer_Funnel1Tunnel_T2_Base_Set"/>
+                <para_double value="-50" permname="Transfer_Funnel1Tunnel_T3_Base_Set"/>
+                <para_double value="-40" permname="Transfer_Funnel1Tunnel_T4_Base_Set"/>
+                <para_double value="-38" permname="Transfer_Funnel2In_Base_Set"/>
+                <para_double value="-28" permname="Transfer_Funnel2Base_Base_Set"/>
+                <para_double value="-29" permname="Transfer_Funnel2Out_Base_Set"/>
+                <para_double value="1607.9000000000001" permname="TOF_PulserPushSetValue"/>
+                <para_double value="6305" permname="TOF_PulserLensSetValue"/>
+                <para_double value="-25" permname="FocusPreCollisionCell_Lens1_Base_Set"/>
+                <para_double value="48.700000000000003" permname="TOF_CorrectorFillSetValue"/>
+                <para_double value="41" permname="FocusPreCollisionCell_Lens2_Base_Set"/>
+                <para_double value="-30" permname="FocusPreCollisionCell_Lens3_Base_Set"/>
+                <para_double value="15" permname="FocusPreQuadrupole_Lens2_Delta_Set"/>
+                <para_double value="-24.5" permname="FocusPreQuadrupole_Lens1_Extraction_Base_Set"/>
+                <para_double value="-40" permname="FocusPreQuadrupole_Lens1_Storage_Base_Set"/>
+                <para_double value="-12" permname="FocusPreQuadrupole_Lens2_Base_Set"/>
+                <para_double value="110" permname="FocusPreQuadrupole_Lens3_Base_Set"/>
+                <para_double value="20" permname="FocusPreQuadrupole_SplitLens2_OpenTime_Set"/>
+                <para_double value="-25.5" permname="Quadrupole_Bias_Base_Set"/>
+                <para_double value="-25.5" permname="Quadrupole_EntranceRampDC_Base_Set"/>
+                <para_double value="40" permname="Quadrupole_ExitRampDC_Base_Set"/>
+                <para_double value="-25.5" permname="Transfer_MultipoleBias_Base_Set"/>
+                <para_double value="15" permname="Transfer_MultipoleGradientVoltage_Base_Set"/>
+            </dependent>
+            <para_int value="1" permname="TOF_SwitchTempCompensation"/>
+            <para_vec_double permname="TOF_DeviceTempGradientEnhanced">
+                <entry_double value="30"/>
+                <entry_double value="0"/>
+            </para_vec_double>
+            <dependent polarity="positive">
+                <para_double value="0.99999899999999997" permname="Calibration_Score"/>
+                <para_int value="1" permname="Calibration_TofCalVersion"/>
+                <para_int value="1" permname="Calibration_RegressionMode"/>
+                <para_double value="312.33400699999999" permname="Calibration_TofCalC0"/>
+                <para_double value="157983.917483" permname="Calibration_TofCalC1"/>
+                <para_double value="0" permname="Calibration_TofCalC2"/>
+                <para_string value="" permname="Calibration_TofCalHPC"/>
+                <para_double value="0.00037199999999999999" permname="Calibration_StdDev"/>
+                <para_double value="0.40399099999999999" permname="Calibration_StdDevInPPM"/>
+                <para_int value="5" permname="Calibration_Tof2CalibrationMode"/>
+                <para_double value="322.44060522378425" permname="Calibration_Tof2CalC0"/>
+                <para_double value="156861.0205998754" permname="Calibration_Tof2CalC1"/>
+                <para_double value="0.0015978630491965281" permname="Calibration_Tof2CalC2"/>
+                <para_double value="0" permname="Calibration_Tof2CalC3"/>
+                <para_double value="-0.025925098311571734" permname="Calibration_Tof2CalDM"/>
+                <para_double value="0.00015577924903615944" permname="Calibration_Tof2StdDev"/>
+                <para_double value="0.15103567588112779" permname="Calibration_Tof2StdDevInPPM"/>
+                <para_double value="1" permname="Calibration_Tof2Score"/>
+                <para_string value="Tuning Mix ES-TOF CCS compendium (ESI)" permname="Calibration_LastUsedReferenceMassList"/>
+                <para_string value="2022-02-02T09:40:10+01:00" permname="Calibration_LastCalibrationDate"/>
+                <para_string value="unknown" permname="Calibration_LastCalibrationUser"/>
+                <para_vec_string permname="Calibration_LastCalibrationReferenceMassName">
+                    <entry_string value="C6H19N3O6P3"/>
+                    <entry_string value="C12H19F12N3O6P3"/>
+                    <entry_string value="C18H19F24N3O6P3"/>
+                    <entry_string value="C24H19F36N3O6P3"/>
+                    <entry_string value="C30H19F48N3O6P3"/>
+                </para_vec_string>
+                <para_vec_double permname="Calibration_LastCalibrationReferenceMass">
+                    <entry_double value="322.04812299999998"/>
+                    <entry_double value="622.02896099999998"/>
+                    <entry_double value="922.00979900000004"/>
+                    <entry_double value="1221.9906370000001"/>
+                    <entry_double value="1521.9714750000001"/>
+                </para_vec_double>
+                <para_vec_double permname="Calibration_LastCalibrationCurrentTime">
+                    <entry_double value="45632.049643705468"/>
+                    <entry_double value="63294.168685941084"/>
+                    <entry_double value="76990.142157965936"/>
+                    <entry_double value="88586.004683518739"/>
+                    <entry_double value="98826.187264363558"/>
+                </para_vec_double>
+                <para_vec_double permname="Calibration_LastCalibrationCurrentMass">
+                    <entry_double value="322.04824613323063"/>
+                    <entry_double value="622.03306133502576"/>
+                    <entry_double value="922.01721267275707"/>
+                    <entry_double value="1222.0027154832333"/>
+                    <entry_double value="1521.9884776706822"/>
+                </para_vec_double>
+                <para_vec_double permname="Calibration_LastCalibrationResultMass">
+                    <entry_double value="322.04811718204581"/>
+                    <entry_double value="622.02902673599306"/>
+                    <entry_double value="922.00960378543311"/>
+                    <entry_double value="1221.9908554002629"/>
+                    <entry_double value="1521.9713918962914"/>
+                </para_vec_double>
+                <para_vec_double permname="Calibration_LastCalibrationMassError">
+                    <entry_double value="-0.018065480732836113"/>
+                    <entry_double value="0.10567995575302068"/>
+                    <entry_double value="-0.21172721498297264"/>
+                    <entry_double value="0.17872498874003945"/>
+                    <entry_double value="-0.054602671627259271"/>
+                </para_vec_double>
+                <para_vec_double permname="Calibration_LastCalibrationMassIntensity">
+                    <entry_double value="4789"/>
+                    <entry_double value="159574"/>
+                    <entry_double value="167555"/>
+                    <entry_double value="307491"/>
+                    <entry_double value="43950"/>
+                </para_vec_double>
+                <para_double value="99.993932999999998" permname="Calibration_ScanBegin"/>
+                <para_double value="1700" permname="Calibration_ScanEnd"/>
+                <para_double value="60" permname="Calibration_Collision_GasSupply_Set"/>
+                <para_double value="108" permname="Calibration_Digitizer_ExtractTriggerTime"/>
+                <para_double value="60" permname="Calibration_FocusPreTOF_Lens1_TransferTime"/>
+                <para_double value="12" permname="Calibration_FocusPreTOF_Lens1_PrePulseStorageTime"/>
+                <para_int value="0" permname="Calibration_TOF_FocusMode"/>
+                <para_double value="1592.8" permname="Calibration_TOF_PulserPushSetValue"/>
+                <para_double value="1592.8" permname="Calibration_TOF_PulserPullSetValue"/>
+                <para_double value="6430.5" permname="Calibration_TOF_PulserLensSetValue"/>
+                <para_double value="54" permname="Calibration_TOF_CorrectorFillSetValue"/>
+                <para_double value="648" permname="Calibration_TOF_CorrectorExtractSetValue"/>
+                <para_double value="9900" permname="Calibration_TOF_FlightTubeSetValue"/>
+                <para_double value="782" permname="Calibration_TOF_DeceleratorSetValue"/>
+                <para_double value="2700" permname="Calibration_TOF_ReflectorSetValue"/>
+                <para_double value="2235" permname="Calibration_TOF_DetectorTofSetValue"/>
+                <para_double value="100" permname="Calibration_FocusPreQuadrupole_SplitLens2_DutyCycle_Set"/>
+                <para_double value="20" permname="Calibration_FocusPreQuadrupole_SplitLens2_OpenTime_Set"/>
+                <para_double value="23" permname="Calibration_FocusPreTOF_Lens1_Extraction_Set"/>
+                <para_double value="40" permname="Calibration_FocusPreTOF_Lens1_Storage_Set"/>
+                <para_double value="0" permname="Calibration_FocusPreTOF_Lens2_Set"/>
+                <para_double value="-79.199996999999996" permname="Calibration_FocusPreTOF_Lens3_Set"/>
+                <para_double value="0" permname="Calibration_FocusPreTOF_Lens4_Set"/>
+                <para_double value="0" permname="Calibration_FocusPreTOF_Lens5_Set"/>
+                <para_double value="5" permname="Calibration_Processing_AssumedPeakWidth"/>
+                <para_double value="25.264575980942706" permname="TOF_DeviceReferenceTemp1"/>
+                <para_double value="25.61081012292086" permname="TOF_DeviceReferenceTemp2"/>
+            </dependent>
+            <dependent polarity="negative">
+                <para_double value="0.71590100000000001" permname="Calibration_Score"/>
+                <para_int value="1" permname="Calibration_TofCalVersion"/>
+                <para_int value="2" permname="Calibration_RegressionMode"/>
+                <para_double value="315.39540599999998" permname="Calibration_TofCalC0"/>
+                <para_double value="156068.202647" permname="Calibration_TofCalC1"/>
+                <para_double value="-0.00024499999999999999" permname="Calibration_TofCalC2"/>
+                <para_string value="" permname="Calibration_TofCalHPC"/>
+                <para_double value="0.0024610000000000001" permname="Calibration_StdDev"/>
+                <para_double value="1.8671409999999999" permname="Calibration_StdDevInPPM"/>
+                <para_int value="5" permname="Calibration_Tof2CalibrationMode"/>
+                <para_double value="313.81844599999999" permname="Calibration_Tof2CalC0"/>
+                <para_double value="156101.27586600001" permname="Calibration_Tof2CalC1"/>
+                <para_double value="-0.00029799999999999998" permname="Calibration_Tof2CalC2"/>
+                <para_double value="0" permname="Calibration_Tof2CalC3"/>
+                <para_double value="0.011786" permname="Calibration_Tof2CalDM"/>
+                <para_double value="0.00015799999999999999" permname="Calibration_Tof2StdDev"/>
+                <para_double value="0.11213099999999999" permname="Calibration_Tof2StdDevInPPM"/>
+                <para_double value="1" permname="Calibration_Tof2Score"/>
+                <para_string value="Tuning Mix ES-TOF (ESI)" permname="Calibration_LastUsedReferenceMassList"/>
+                <para_string value="2021-06-01T11:16:17+02:00" permname="Calibration_LastCalibrationDate"/>
+                <para_string value="Demo User" permname="Calibration_LastCalibrationUser"/>
+                <para_vec_string permname="Calibration_LastCalibrationReferenceMassName">
+                    <entry_string value="C12HF21N3O"/>
+                    <entry_string value="C20H18F27N3O8P3"/>
+                    <entry_string value="C26H18F39N3O8P3"/>
+                    <entry_string value="C32H18F51N3O8P3"/>
+                    <entry_string value="C38H18F63N3O8P3"/>
+                    <entry_string value="C44H18F75N3O8P3"/>
+                    <entry_string value="C50H18F87N3O8P3"/>
+                    <entry_string value="C56H18F99N3O8P3"/>
+                </para_vec_string>
+                <para_vec_double permname="Calibration_LastCalibrationReferenceMass">
+                    <entry_double value="601.97897699999999"/>
+                    <entry_double value="1033.98811"/>
+                    <entry_double value="1333.9689470000001"/>
+                    <entry_double value="1633.949785"/>
+                    <entry_double value="1933.930623"/>
+                    <entry_double value="2233.9114610000001"/>
+                    <entry_double value="2533.8922990000001"/>
+                    <entry_double value="2833.873137"/>
+                </para_vec_double>
+                <para_vec_double permname="Calibration_LastCalibrationCurrentTime">
+                    <entry_double value="62413.652304000003"/>
+                    <entry_double value="81700.873431999993"/>
+                    <entry_double value="92755.900597999993"/>
+                    <entry_double value="102623.243338"/>
+                    <entry_double value="111619.22792400001"/>
+                    <entry_double value="119940.611774"/>
+                    <entry_double value="127719.643054"/>
+                    <entry_double value="135050.28662299999"/>
+                </para_vec_double>
+                <para_vec_double permname="Calibration_LastCalibrationCurrentMass">
+                    <entry_double value="601.97884799999997"/>
+                    <entry_double value="1033.987609"/>
+                    <entry_double value="1333.968744"/>
+                    <entry_double value="1633.9493869999999"/>
+                    <entry_double value="1933.9297919999999"/>
+                    <entry_double value="2233.910531"/>
+                    <entry_double value="2533.8914570000002"/>
+                    <entry_double value="2833.872284"/>
+                </para_vec_double>
+                <para_vec_double permname="Calibration_LastCalibrationResultMass">
+                    <entry_double value="601.97899800000005"/>
+                    <entry_double value="1033.9879169999999"/>
+                    <entry_double value="1333.9691769999999"/>
+                    <entry_double value="1633.949942"/>
+                    <entry_double value="1933.9304609999999"/>
+                    <entry_double value="2233.9113029999999"/>
+                    <entry_double value="2533.892319"/>
+                    <entry_double value="2833.8732220000002"/>
+                </para_vec_double>
+                <para_vec_double permname="Calibration_LastCalibrationMassError">
+                    <entry_double value="0.034914000000000001"/>
+                    <entry_double value="-0.186802"/>
+                    <entry_double value="0.172095"/>
+                    <entry_double value="0.096383999999999997"/>
+                    <entry_double value="-0.083673999999999998"/>
+                    <entry_double value="-0.070874999999999994"/>
+                    <entry_double value="0.0078289999999999992"/>
+                    <entry_double value="0.030131000000000002"/>
+                </para_vec_double>
+                <para_vec_double permname="Calibration_LastCalibrationMassIntensity">
+                    <entry_double value="2219964"/>
+                    <entry_double value="5005980"/>
+                    <entry_double value="7276616"/>
+                    <entry_double value="7721336"/>
+                    <entry_double value="3784334"/>
+                    <entry_double value="5329760"/>
+                    <entry_double value="2906052"/>
+                    <entry_double value="4453196"/>
+                </para_vec_double>
+                <para_double value="500.00195300000001" permname="Calibration_ScanBegin"/>
+                <para_double value="3000" permname="Calibration_ScanEnd"/>
+                <para_double value="60" permname="Calibration_Collision_GasSupply_Set"/>
+                <para_double value="143" permname="Calibration_Digitizer_ExtractTriggerTime"/>
+                <para_double value="100" permname="Calibration_FocusPreTOF_Lens1_TransferTime"/>
+                <para_double value="15" permname="Calibration_FocusPreTOF_Lens1_PrePulseStorageTime"/>
+                <para_int value="1" permname="Calibration_TOF_FocusMode"/>
+                <para_double value="1607.9000000000001" permname="Calibration_TOF_PulserPushSetValue"/>
+                <para_double value="1607.9000000000001" permname="Calibration_TOF_PulserPullSetValue"/>
+                <para_double value="6305" permname="Calibration_TOF_PulserLensSetValue"/>
+                <para_double value="48.700000000000003" permname="Calibration_TOF_CorrectorFillSetValue"/>
+                <para_double value="618" permname="Calibration_TOF_CorrectorExtractSetValue"/>
+                <para_double value="9900" permname="Calibration_TOF_FlightTubeSetValue"/>
+                <para_double value="812" permname="Calibration_TOF_DeceleratorSetValue"/>
+                <para_double value="2650" permname="Calibration_TOF_ReflectorSetValue"/>
+                <para_double value="2221.9460319999998" permname="Calibration_TOF_DetectorTofSetValue"/>
+                <para_double value="100" permname="Calibration_FocusPreQuadrupole_SplitLens2_DutyCycle_Set"/>
+                <para_double value="20" permname="Calibration_FocusPreQuadrupole_SplitLens2_OpenTime_Set"/>
+                <para_double value="-23.5" permname="Calibration_FocusPreTOF_Lens1_Extraction_Set"/>
+                <para_double value="-30" permname="Calibration_FocusPreTOF_Lens1_Storage_Set"/>
+                <para_double value="0" permname="Calibration_FocusPreTOF_Lens2_Set"/>
+                <para_double value="90" permname="Calibration_FocusPreTOF_Lens3_Set"/>
+                <para_double value="0" permname="Calibration_FocusPreTOF_Lens4_Set"/>
+                <para_double value="0" permname="Calibration_FocusPreTOF_Lens5_Set"/>
+                <para_double value="0" permname="Calibration_Processing_AssumedPeakWidth"/>
+                <para_double value="25.217327000000001" permname="TOF_DeviceReferenceTemp1"/>
+                <para_double value="24.978369000000001" permname="TOF_DeviceReferenceTemp2"/>
+            </dependent>
+            <dependent polarity="positive">
+                <para_int value="1" permname="IMS_Calibration_SwitchPressureCompensation"/>
+                <para_vec_double permname="IMS_Calibration_LastCalibrationReferenceMobility">
+                    <entry_double value="0.99145862820751063"/>
+                    <entry_double value="1.1986128344636646"/>
+                    <entry_double value="1.3933650439464611"/>
+                </para_vec_double>
+                <para_vec_double permname="IMS_CalibrationCoefficients">
+                    <entry_double value="-0.0090604328215670247"/>
+                    <entry_double value="134.17566931004527"/>
+                    <entry_double value="13.291023118354758"/>
+                    <entry_double value="1659.9914169608205"/>
+                </para_vec_double>
+                <para_double value="2.6070340282152724" permname="IMS_Calibration_Funnel1In_Pressure"/>
+                <para_vec_double permname="IMS_Calibration_LastCalibrationCurrentCycleNumber">
+                    <entry_double value="587.49999600000001"/>
+                    <entry_double value="401.49999600000001"/>
+                    <entry_double value="223.49999600000001"/>
+                </para_vec_double>
+                <para_double value="-1" permname="IMS_Calibration_StdDev"/>
+                <para_double value="50" permname="IMS_Calibration_Funnel1In_PressureCompensationFactor"/>
+                <para_double value="0.99999976690019821" permname="IMS_Calibration_Score"/>
+                <para_string value="unknown" permname="IMS_Calibration_LastCalibrationUser"/>
+                <para_string value="2022-02-22T16:11:51+01:00" permname="IMS_Calibration_LastCalibrationDate"/>
+                <para_vec_string permname="IMS_Calibration_LastCalibrationReferenceMassName">
+                    <entry_string value="C12H19F12N3O6P3"/>
+                    <entry_string value="C18H19F24N3O6P3"/>
+                    <entry_string value="C24H19F36N3O6P3"/>
+                </para_vec_string>
+                <para_vec_double permname="IMS_Calibration_LastCalibrationReferenceMass">
+                    <entry_double value="622.02896099999998"/>
+                    <entry_double value="922.00979900000004"/>
+                    <entry_double value="1221.9906370000001"/>
+                </para_vec_double>
+                <para_vec_double permname="IMS_Calibration_LastCalibrationCurrentMobility">
+                    <entry_double value="0.99375922940664063"/>
+                    <entry_double value="1.1959417136652837"/>
+                    <entry_double value="1.3898042977325562"/>
+                </para_vec_double>
+                <para_vec_double permname="IMS_Calibration_LastCalibrationResultMobility">
+                    <entry_double value="0.991912649028311"/>
+                    <entry_double value="1.1969843838058745"/>
+                    <entry_double value="1.3946735846523035"/>
+                </para_vec_double>
+                <para_vec_double permname="IMS_Calibration_LastCalibrationMobilityError">
+                    <entry_double value="0.045793218988997061"/>
+                    <entry_double value="-0.13586127321244906"/>
+                    <entry_double value="0.093912267393776297"/>
+                </para_vec_double>
+                <para_vec_double permname="IMS_Calibration_LastCalibrationMassIntensity">
+                    <entry_double value="497245.48078571301"/>
+                    <entry_double value="479697.49720926239"/>
+                    <entry_double value="552125.85193187161"/>
+                </para_vec_double>
+                <para_double value="3.6000000000000001" permname="IMS_Calibration_CalibrationTransitTime_Save"/>
+                <para_double value="0.087479506031640897" permname="IMS_Calibration_RampVelocity_Save"/>
+                <para_string value="Tuning Mix ES-TOF CCS compendium (ESI)" permname="IMS_Calibration_LastCalibrationReferenceMassList"/>
+            </dependent>
+            <dependent polarity="negative">
+                <para_int value="0" permname="IMS_Calibration_SwitchPressureCompensation"/>
+                <para_vec_double permname="IMS_Calibration_LastCalibrationReferenceMobility">
+                    <entry_double value="0.87818099999999999"/>
+                    <entry_double value="1.2525649999999999"/>
+                    <entry_double value="1.401597"/>
+                    <entry_double value="1.573097"/>
+                    <entry_double value="1.745217"/>
+                </para_vec_double>
+                <para_vec_double permname="IMS_CalibrationCoefficients">
+                    <entry_double value="0.03465"/>
+                    <entry_double value="127.57727300000001"/>
+                    <entry_double value="11.237784"/>
+                    <entry_double value="5632.6209879999997"/>
+                </para_vec_double>
+                <para_double value="-1" permname="IMS_Calibration_Funnel1In_Pressure"/>
+                <para_vec_double permname="IMS_Calibration_LastCalibrationCurrentCycleNumber">
+                    <entry_double value="0"/>
+                    <entry_double value="0"/>
+                    <entry_double value="0"/>
+                    <entry_double value="0"/>
+                    <entry_double value="0"/>
+                </para_vec_double>
+                <para_double value="0.0016590000000000001" permname="IMS_Calibration_StdDev"/>
+                <para_double value="50" permname="IMS_Calibration_Funnel1In_PressureCompensationFactor"/>
+                <para_double value="1" permname="IMS_Calibration_Score"/>
+                <para_string value="Demo User" permname="IMS_Calibration_LastCalibrationUser"/>
+                <para_string value="2019-01-17T15:29:57+01:00" permname="IMS_Calibration_LastCalibrationDate"/>
+                <para_vec_string permname="IMS_Calibration_LastCalibrationReferenceMassName">
+                    <entry_string value="C12HF21N3O"/>
+                    <entry_string value="C20H18F27N3O8P3"/>
+                    <entry_string value="C26H18F39N3O8P3"/>
+                    <entry_string value="C32H18F51N3O8P3"/>
+                    <entry_string value="C38H18F63N3O8P3"/>
+                </para_vec_string>
+                <para_vec_double permname="IMS_Calibration_LastCalibrationReferenceMass">
+                    <entry_double value="601.97897699999999"/>
+                    <entry_double value="1033.98811"/>
+                    <entry_double value="1333.9689470000001"/>
+                    <entry_double value="1633.949785"/>
+                    <entry_double value="1933.930623"/>
+                </para_vec_double>
+                <para_vec_double permname="IMS_Calibration_LastCalibrationCurrentMobility">
+                    <entry_double value="0.86790100000000003"/>
+                    <entry_double value="1.2419849999999999"/>
+                    <entry_double value="1.3914120000000001"/>
+                    <entry_double value="1.563172"/>
+                    <entry_double value="1.730548"/>
+                </para_vec_double>
+                <para_vec_double permname="IMS_Calibration_LastCalibrationResultMobility">
+                    <entry_double value="0.87785199999999997"/>
+                    <entry_double value="1.253377"/>
+                    <entry_double value="1.4029050000000001"/>
+                    <entry_double value="1.5744450000000001"/>
+                    <entry_double value="1.7412650000000001"/>
+                </para_vec_double>
+                <para_vec_double permname="IMS_Calibration_LastCalibrationMobilityError">
+                    <entry_double value="-0.037435999999999997"/>
+                    <entry_double value="0.064807000000000003"/>
+                    <entry_double value="0.093349000000000001"/>
+                    <entry_double value="0.085708999999999994"/>
+                    <entry_double value="-0.22643200000000002"/>
+                </para_vec_double>
+                <para_vec_double permname="IMS_Calibration_LastCalibrationMassIntensity">
+                    <entry_double value="731378.294337"/>
+                    <entry_double value="1921689.1007000001"/>
+                    <entry_double value="3130699.6417040001"/>
+                    <entry_double value="3059132.9385390002"/>
+                    <entry_double value="1866318.1427760001"/>
+                </para_vec_double>
+                <para_double value="3.6000000000000001" permname="IMS_Calibration_CalibrationTransitTime_Save"/>
+                <para_double value="-0.18726899999999999" permname="IMS_Calibration_RampVelocity_Save"/>
+                <para_string value="" permname="IMS_Calibration_LastCalibrationReferenceMassList"/>
+            </dependent>
+        </qtofimpactemacq>
+    </instrument>
+    <method>
+        <qtofimpactemacq>
+            <timetable>
+                <segment endtime="5">
+                    <para_int value="0" permname="Internal_AutotuneControl"/>
+                    <para_string value="" permname="Service_InstrumentOverlayName"/>
+                    <para_double value="0.000000" permname="Service_InstrumentOverlayValue"/>
+                    <para_int value="0" permname="MSMSAuto_SwitchDeconvolution"/>
+                    <para_int value="5" permname="MSMSAuto_DeconvolutionNoOfPreCursor"/>
+                    <para_double value="0.000000" permname="MSMSAuto_DeconvolutionIntensityThreshold"/>
+                    <para_int value="5" permname="MSMSAuto_DeconvolutionChargeMin"/>
+                    <para_int value="50" permname="MSMSAuto_DeconvolutionChargeMax"/>
+                    <para_double value="40000.000000" permname="MSMSAuto_DeconvolutionMassMin"/>
+                    <para_double value="60000.000000" permname="MSMSAuto_DeconvolutionMassMax"/>
+                    <para_int value="0" permname="CollisionSweep_Mode_Set"/>
+                    <para_int value="0" permname="Other_LoadInstrumentParameter"/>
+                    <para_int value="0" permname="Other_RunProcessingScript"/>
+                    <para_int value="1" permname="Internal_ViewMode"/>
+                    <para_int value="2" permname="Other_ParameterMode"/>
+                    <para_int value="1" permname="Other_AccelerateSpectraRate"/>
+                    <para_double value="5.000000" permname="MSMSAuto_ThresholdRelative"/>
+                    <para_int value="1" permname="MSMSAuto_ChargedIonsGroupLengthUseStrict"/>
+                    <para_int value="0" permname="MSMSAuto_SortByMass"/>
+                    <para_int value="0" permname="MSMSAuto_FragmentationMode"/>
+                    <para_int value="0" permname="MSMSAuto_SwitchPreCursorBackgroundSubstraction"/>
+                    <para_int value="20" permname="MSMSAuto_PreCursorBackgroundAverageNumber"/>
+                    <para_int value="0" permname="MSMSAuto_SwitchSile"/>
+                    <para_int value="100" permname="MSMSAuto_SileTopN"/>
+                    <para_int value="3" permname="MSMSAuto_SileDoMSMSOf"/>
+                    <para_int value="1" permname="MSMSAuto_SileIntensityRatioMode"/>
+                    <para_double value="0.001000" permname="MSMSAuto_SileTolerance"/>
+                    <para_int value="0" permname="MSMSAuto_SileCheckChargeConsistency"/>
+                    <para_double value="0.600000" permname="MSMSAuto_SileCrossCorrelation"/>
+                    <para_double value="1.200000" permname="MSMSAuto_SileHeavyLightOrFirst"/>
+                    <para_double value="0.800000" permname="MSMSAuto_SileHeavyLightOrLast"/>
+                    <para_double value="0.050000" permname="MSMSAuto_SileHeavyLightAndFirst"/>
+                    <para_double value="20.000000" permname="MSMSAuto_SileHeavyLightAndLast"/>
+                    <para_vec_double permname="MSMSAuto_SileListDeltaMass">
+                        <entry_double value="6.020100"/>
+                    </para_vec_double>
+                    <para_vec_int permname="MSMSAuto_SileListMaxSubstitutions">
+                        <entry_int value="2"/>
+                    </para_vec_int>
+                    <para_vec_int permname="MSMSAuto_SileListChargeRangeStart">
+                        <entry_int value="1"/>
+                    </para_vec_int>
+                    <para_vec_int permname="MSMSAuto_SileListChargeRangeEnd">
+                        <entry_int value="3"/>
+                    </para_vec_int>
+                    <para_int value="0" permname="MSMSAuto_PreCursorCycleMode"/>
+                    <para_double value="3.000000" permname="MSMSAuto_PreCursorCycleTimeMS"/>
+                    <para_int value="0" permname="MSMSAuto_SwitchCollisionEnergyStepping"/>
+                    <para_vec_double permname="MSMSAuto_CollisionEnergySteppingFactor">
+                        <entry_double value="0.200000"/>
+                        <entry_double value="0.800000"/>
+                    </para_vec_double>
+                    <para_int value="1" permname="MSMS_AcquisitionControl_Switch_Active"/>
+                    <para_int value="0" permname="MSMS_AcquisitionControl_Dynamic_Active"/>
+                    <para_int value="10000" permname="MSMS_AcquisitionControl_Fix_Summation"/>
+                    <para_double value="0.680000" permname="MSMS_AcquisitionControl_Fix_SpectraRate"/>
+                    <para_double value="1.460000" permname="MSMS_AcquisitionControl_Fix_SampleTime"/>
+                    <para_int value="100000" permname="MSMS_AcquisitionControl_TargetIntensity"/>
+                    <para_int value="10000" permname="MSMS_AcquisitionControl_SummationUpperLimit_Summation"/>
+                    <para_double value="1.460000" permname="MSMS_AcquisitionControl_SummationUpperLimit_SpectraRate"/>
+                    <para_double value="1.460000" permname="MSMS_AcquisitionControl_SummationUpperLimit_SampleTime"/>
+                    <para_int value="500" permname="MSMS_AcquisitionControl_SummationLowerLimit_Summation"/>
+                    <para_double value="1.460000" permname="MSMS_AcquisitionControl_SummationLowerLimit_SpectraRate"/>
+                    <para_double value="0.080000" permname="MSMS_AcquisitionControl_SummationLowerLimit_SampleTime"/>
+                    <para_int value="1" permname="MSMSAuto_RTMLTimeSlice"/>
+                    <para_int value="0" permname="MSMSAuto_RTMLSwitchSetNumberOfPrecursors"/>
+                    <para_int value="0" permname="MSMSAuto_RTMLSwitchEmptyIntervalsAcquireMSMS"/>
+                    <para_int value="4" permname="SpectraAcquisition_SaveSpectra"/>
+                    <para_int value="1" permname="RollingAverage_Mode"/>
+                    <para_int value="10" permname="RollingAverage_Number"/>
+                    <para_double value="100.000000" permname="Mode_TargetMassStart"/>
+                    <para_double value="1700.000000" permname="Mode_TargetMassEnd"/>
+                    <para_int value="1" permname="Processing_SwitchCalcPeakWidth"/>
+                    <para_int value="0" permname="Processing_SwitchCalcSignalToNoise"/>
+                    <para_int value="0" permname="Processing_SwitchCalcGoodness"/>
+                    <para_double value="0.140000" permname="Processing_BaselineFlatness"/>
+                    <para_double value="200.000000" permname="Processing_GuessedNoise"/>
+                    <para_double value="100.000000" permname="Processing_GuessedAverage"/>
+                    <para_double value="5.000000" permname="Processing_AssumedPeakWidth"/>
+                    <dependent source="esi" polarity="positive">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="apci" polarity="positive">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="nesioff" polarity="positive">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="nesion" polarity="positive">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="appi" polarity="positive">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="multimode" polarity="positive">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="nanoflowesi" polarity="positive">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="ultraspray" polarity="positive">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="captivespray" polarity="positive">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="gc-apci" polarity="positive">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="esi" polarity="negative">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="apci" polarity="negative">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="nesioff" polarity="negative">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="nesion" polarity="negative">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="appi" polarity="negative">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="multimode" polarity="negative">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="nanoflowesi" polarity="negative">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="ultraspray" polarity="negative">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="captivespray" polarity="negative">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent source="gc-apci" polarity="negative">
+                        <para_int value="0" permname="Source_MultiModeActiveMode_Set"/>
+                        <para_int value="2000" permname="Source_ChargingVoltage_Set"/>
+                        <para_int value="800" permname="Source_OnVoltSetValue"/>
+                        <para_vec_int permname="Source_MultiModeCapillary_Set">
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                            <entry_int value="2500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeEndPlateOffset_Set">
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                            <entry_int value="-500"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCorona_Set">
+                            <entry_int value="0"/>
+                            <entry_int value="4000"/>
+                            <entry_int value="4000"/>
+                        </para_vec_int>
+                        <para_vec_int permname="Source_MultiModeCharging_Set">
+                            <entry_int value="2000"/>
+                            <entry_int value="0"/>
+                            <entry_int value="2000"/>
+                        </para_vec_int>
+                        <para_vec_double permname="Source_MultiModeNebulizerPressure_Set">
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                            <entry_double value="2.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeNebulizerHeater_Set">
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                            <entry_double value="200.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasFlow_Set">
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                            <entry_double value="6.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Source_MultiModeDryGasHeater_Set">
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                            <entry_double value="240.000000"/>
+                        </para_vec_double>
+                        <para_int value="11" permname="Source_LastActive"/>
+                    </dependent>
+                    <dependent polarity="positive">
+                        <para_int value="0" permname="MSMS_ISCIDSwitchActive"/>
+                        <para_double value="1.000000" permname="MSMS_ISCIDFactorAcquisitionTime"/>
+                        <para_double value="5.000000" permname="MSMS_ISCIDEnergyISCID"/>
+                    </dependent>
+                    <dependent polarity="negative">
+                        <para_int value="0" permname="MSMS_ISCIDSwitchActive"/>
+                        <para_double value="1.000000" permname="MSMS_ISCIDFactorAcquisitionTime"/>
+                        <para_double value="-5.000000" permname="MSMS_ISCIDEnergyISCID"/>
+                    </dependent>
+                    <dependent polarity="positive">
+                        <para_vec_double permname="IMS_MaldiPlate_Base_Set">
+                            <entry_double value="0.000000"/>
+                            <entry_double value="0.000000"/>
+                        </para_vec_double>
+                        <para_double value="207.000000" permname="IMS_Funnel1Tunnel_RampStartDiff_Set"/>
+                        <para_double value="77.000000" permname="IMS_Funnel1Tunnel_RampEndDiff_Set"/>
+                        <para_double value="100.000000" permname="IMS_Service_AccumulationTime"/>
+                        <para_double value="100.000000" permname="IMS_Service_RampTime"/>
+                        <para_vec_double permname="IMS_Service_Funnel1Tunnel_T1_Base_Set">
+                            <entry_double value="-250.000000"/>
+                            <entry_double value="-117.710258"/>
+                        </para_vec_double>
+                    </dependent>
+                    <dependent polarity="negative">
+                        <para_vec_double permname="IMS_MaldiPlate_Base_Set">
+                            <entry_double value="0.000000"/>
+                            <entry_double value="0.000000"/>
+                        </para_vec_double>
+                        <para_double value="-210.000000" permname="IMS_Funnel1Tunnel_RampStartDiff_Set"/>
+                        <para_double value="-70.000000" permname="IMS_Funnel1Tunnel_RampEndDiff_Set"/>
+                        <para_double value="100.000000" permname="IMS_Service_AccumulationTime"/>
+                        <para_double value="70.000000" permname="IMS_Service_RampTime"/>
+                        <para_vec_double permname="IMS_Service_Funnel1Tunnel_T1_Base_Set">
+                            <entry_double value="-220.000000"/>
+                            <entry_double value="-87.710258"/>
+                        </para_vec_double>
+                    </dependent>
+                    <dependent polarity="positive">
+                        <para_int value="1" permname="IMS_CalibrationMode"/>
+                    </dependent>
+                    <dependent polarity="negative">
+                        <para_int value="1" permname="IMS_CalibrationMode"/>
+                    </dependent>
+                    <dependent polarity="positive">
+                        <para_int value="0" permname="Ims_Processing_Active"/>
+                        <para_double value="-1.000000" permname="IMS_Processing_AreaThresholdRel"/>
+                        <para_double value="5000.000000" permname="IMS_Processing_IntThresholdRel"/>
+                        <para_double value="10.000000" permname="IMS_Processing_Mz_ThresholdSignalToNoiseRel"/>
+                    </dependent>
+                    <dependent polarity="negative">
+                        <para_int value="0" permname="Ims_Processing_Active"/>
+                        <para_double value="0.891708" permname="IMS_Processing_AreaThresholdRel"/>
+                        <para_double value="44585.403573" permname="IMS_Processing_IntThresholdRel"/>
+                        <para_double value="10.000000" permname="IMS_Processing_Mz_ThresholdSignalToNoiseRel"/>
+                    </dependent>
+                    <dependent polarity="positive">
+                        <para_int value="1" permname="TOF_EnableSwitchGeneralHV"/>
+                    </dependent>
+                    <dependent polarity="negative">
+                        <para_int value="1" permname="TOF_EnableSwitchGeneralHV"/>
+                    </dependent>
+                    <dependent polarity="positive">
+                        <para_int value="0" permname="MSMS_BBCIDSwitchActive"/>
+                    </dependent>
+                    <dependent polarity="negative">
+                        <para_int value="0" permname="MSMS_BBCIDSwitchActive"/>
+                    </dependent>
+                    <dependent polarity="positive">
+                        <para_vec_int permname="MSMSManual_ListFragmentationMode">
+                            <entry_int value="0"/>
+                            <entry_int value="0"/>
+                        </para_vec_int>
+                        <para_vec_double permname="MSMSManual_ListTimeETDAccuAnalyte">
+                            <entry_double value="300.000000"/>
+                            <entry_double value="0.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="MSMSManual_ListTimeETDAccuReagent">
+                            <entry_double value="5.000000"/>
+                            <entry_double value="0.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="MSMSManual_ListTimeETDReaction">
+                            <entry_double value="50.000000"/>
+                            <entry_double value="0.000000"/>
+                        </para_vec_double>
+                    </dependent>
+                    <dependent polarity="negative">
+                        <para_vec_int permname="MSMSManual_ListFragmentationMode">
+                            <entry_int value="0"/>
+                            <entry_int value="0"/>
+                        </para_vec_int>
+                        <para_vec_double permname="MSMSManual_ListTimeETDAccuAnalyte">
+                            <entry_double value="300.000000"/>
+                            <entry_double value="0.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="MSMSManual_ListTimeETDAccuReagent">
+                            <entry_double value="5.000000"/>
+                            <entry_double value="0.000000"/>
+                        </para_vec_double>
+                        <para_vec_double permname="MSMSManual_ListTimeETDReaction">
+                            <entry_double value="50.000000"/>
+                            <entry_double value="0.000000"/>
+                        </para_vec_double>
+                    </dependent>
+                    <para_string value="" permname="MSMS_Pasef_HookName"/>
+                    <para_string value="" permname="MSMS_Pasef_HookChecksum"/>
+                    <dependent polarity="positive">
+                        <para_string value="Tuning Mix ES-TOF CCS compendium (ESI)" permname="Calibration_UsedReferenceMassList"/>
+                    </dependent>
+                    <dependent polarity="negative">
+                        <para_string value="Tuning Mix ES-TOF CCS compendium (ESI)" permname="Calibration_UsedReferenceMassList"/>
+                    </dependent>
+                    <para_int value="0" permname="TOF_DetectorTof_HighSensitivity_Enabled"/>
+                    <para_int value="0" permname="TOF_FocusMode"/>
+                    <para_int value="1" permname="SpectraAcquisition_DenoisingFilterActive"/>
+                    <para_int value="0" permname="SpectraAcquisition_DenoisingFilterMode"/>
+                    <para_int value="0" permname="Source_SwitchNanoBooster"/>
+                    <para_vec_int permname="Internal_ChromatogramTraceShow">
+                        <entry_int value="1"/>
+                        <entry_int value="1"/>
+                        <entry_int value="1"/>
+                    </para_vec_int>
+                    <para_vec_int permname="Internal_ChromatogramTraceColor">
+                        <entry_int value="8388608"/>
+                        <entry_int value="255"/>
+                        <entry_int value="65280"/>
+                    </para_vec_int>
+                    <para_vec_string permname="Internal_ChromatogramTraceDefinition">
+                        <entry_string value="BPC,±MS"/>
+                        <entry_string value="TIC,±AllMS/MS"/>
+                        <entry_string value="TIC,±MS"/>
+                    </para_vec_string>
+                    <para_vec_int permname="IMS_MobilogramTraceShow">
+                        <entry_int value="1"/>
+                        <entry_int value="1"/>
+                        <entry_int value="1"/>
+                    </para_vec_int>
+                    <para_vec_int permname="IMS_MobilogramTraceColor">
+                        <entry_int value="16711680"/>
+                        <entry_int value="65280"/>
+                        <entry_int value="255"/>
+                    </para_vec_int>
+                    <para_vec_string permname="IMS_MobilogramTraceDefinition">
+                        <entry_string value="EIM:922,±0.05,+All"/>
+                        <entry_string value="EIM:1222,±0.05,+All"/>
+                        <entry_string value="EIM:622,±0.05,+All"/>
+                    </para_vec_string>
+                    <para_int value="1" permname="IMS_PolygonFilter_ActiveMode"/>
+                    <para_vec_int permname="IMS_PolygonFilter_Id">
+                        <entry_int value="0"/>
+                        <entry_int value="0"/>
+                        <entry_int value="0"/>
+                        <entry_int value="0"/>
+                        <entry_int value="0"/>
+                    </para_vec_int>
+                    <para_vec_int permname="IMS_PolygonFilter_Type">
+                        <entry_int value="1"/>
+                        <entry_int value="1"/>
+                        <entry_int value="1"/>
+                        <entry_int value="1"/>
+                        <entry_int value="1"/>
+                    </para_vec_int>
+                    <para_vec_int permname="IMS_PolygonFilter_Color">
+                        <entry_int value="255"/>
+                        <entry_int value="255"/>
+                        <entry_int value="255"/>
+                        <entry_int value="255"/>
+                        <entry_int value="255"/>
+                    </para_vec_int>
+                    <para_int value="5" permname="MSMSAuto_ChargedIonsGroupLength"/>
+                    <para_vec_double permname="IMS_PolygonFilter_Mass">
+                        <entry_double value="150"/>
+                        <entry_double value="800"/>
+                        <entry_double value="1300"/>
+                        <entry_double value="1705"/>
+                        <entry_double value="1705"/>
+                    </para_vec_double>
+                    <para_vec_double permname="IMS_PolygonFilter_Mobility">
+                        <entry_double value="0.59999999999999998"/>
+                        <entry_double value="1.2"/>
+                        <entry_double value="1.6000000000000001"/>
+                        <entry_double value="1.6000000000000001"/>
+                        <entry_double value="0.59999999999999998"/>
+                    </para_vec_double>
+                    <para_int value="0" permname="Internal_InBatchAutoCalibrationEnabled"/>
+                    <para_int value="1" permname="Digitizer_SpectraRateMode"/>
+                    <para_int value="1" permname="Internal_SWCompatibilityUseIMS"/>
+                    <para_int value="0" permname="MSMSAuto_RTMLSwitchActive"/>
+                    <para_double value="99.993932999999998" permname="Mode_ScanBegin"/>
+                    <para_double value="1700" permname="Mode_ScanEnd"/>
+                    <para_int value="0" permname="Processing_SwitchCalcIntegratedIntensity"/>
+                    <dependent source="esi">
+                        <para_int value="1" permname="Source_ActiveExhaustSetValue"/>
+                        <para_int value="1" permname="Source_SheathGasFlowEnableSetValue"/>
+                    </dependent>
+                    <dependent source="apci">
+                        <para_int value="1" permname="Source_ActiveExhaustSetValue"/>
+                        <para_int value="1" permname="Source_SheathGasFlowEnableSetValue"/>
+                    </dependent>
+                    <dependent source="nesioff">
+                        <para_int value="1" permname="Source_ActiveExhaustSetValue"/>
+                        <para_int value="1" permname="Source_SheathGasFlowEnableSetValue"/>
+                    </dependent>
+                    <dependent source="nesion">
+                        <para_int value="1" permname="Source_ActiveExhaustSetValue"/>
+                        <para_int value="1" permname="Source_SheathGasFlowEnableSetValue"/>
+                    </dependent>
+                    <dependent source="appi">
+                        <para_int value="1" permname="Source_ActiveExhaustSetValue"/>
+                        <para_int value="1" permname="Source_SheathGasFlowEnableSetValue"/>
+                    </dependent>
+                    <dependent source="multimode">
+                        <para_int value="1" permname="Source_ActiveExhaustSetValue"/>
+                        <para_int value="1" permname="Source_SheathGasFlowEnableSetValue"/>
+                    </dependent>
+                    <dependent source="nanoflowesi">
+                        <para_int value="1" permname="Source_ActiveExhaustSetValue"/>
+                        <para_int value="1" permname="Source_SheathGasFlowEnableSetValue"/>
+                    </dependent>
+                    <dependent source="ultraspray">
+                        <para_int value="1" permname="Source_ActiveExhaustSetValue"/>
+                        <para_int value="1" permname="Source_SheathGasFlowEnableSetValue"/>
+                    </dependent>
+                    <dependent source="captivespray">
+                        <para_int value="1" permname="Source_ActiveExhaustSetValue"/>
+                        <para_int value="1" permname="Source_SheathGasFlowEnableSetValue"/>
+                    </dependent>
+                    <dependent source="gc-apci">
+                        <para_int value="1" permname="Source_ActiveExhaustSetValue"/>
+                        <para_int value="1" permname="Source_SheathGasFlowEnableSetValue"/>
+                    </dependent>
+                    <dependent source="viphesi">
+                        <para_int value="1" permname="Source_ActiveExhaustSetValue"/>
+                        <para_int value="1" permname="Source_SheathGasFlowEnableSetValue"/>
+                    </dependent>
+                    <dependent source="viphesiapci">
+                        <para_int value="1" permname="Source_ActiveExhaustSetValue"/>
+                        <para_int value="1" permname="Source_SheathGasFlowEnableSetValue"/>
+                    </dependent>
+                    <para_double value="0.40000000000000002" permname="MSMS_Pasef_ExclusionReleaseTime"/>
+                    <para_double value="1" permname="Processing_AverageNoise"/>
+                    <para_int value="0" permname="Mode_IonPolarity"/>
+                    <para_int value="1" permname="MSMS_Pasef_ExclusionReconsiderActive"/>
+                    <para_int value="0" permname="CollisionSweep_Switch_Set"/>
+                    <para_vec_double permname="MSMSAuto_ListExcludeMassEnd"/>
+                    <para_int value="10" permname="MSMS_Pasef_NumRampsPerCycle"/>
+                    <para_vec_double permname="CollisionSweep_Time_Set">
+                        <entry_double value="0"/>
+                        <entry_double value="25"/>
+                        <entry_double value="50"/>
+                        <entry_double value="75"/>
+                    </para_vec_double>
+                    <para_double value="4" permname="MSMS_Pasef_ExclusionReconsiderRatio"/>
+                    <para_int value="0" permname="Ims_Stepping_Active"/>
+                    <para_vec_double permname="MSMSAuto_ListPreferMassStart">
+                        <entry_double value="100"/>
+                        <entry_double value="200"/>
+                        <entry_double value="443.5"/>
+                    </para_vec_double>
+                    <para_int value="4" permname="MSMS_Pasef_CycleOverlap"/>
+                    <para_int value="1" permname="MSMS_Pasef_MsRepetitions"/>
+                    <para_vec_double permname="MSMSAuto_ListPreferMassEnd">
+                        <entry_double value="120"/>
+                        <entry_double value="300"/>
+                        <entry_double value="444.5"/>
+                    </para_vec_double>
+                    <para_vec_double permname="CollisionSweep_CollisionRF_Factor_Set">
+                        <entry_double value="0.53333299999999995"/>
+                        <entry_double value="0.53333299999999995"/>
+                        <entry_double value="0.53333299999999995"/>
+                        <entry_double value="0.53333299999999995"/>
+                    </para_vec_double>
+                    <para_int value="0" permname="MSMS_Pasef_AllowedCharge_Minimum"/>
+                    <para_int value="0" permname="MSMSAuto_ChargedIonsExcludeUnknown"/>
+                    <para_int value="1" permname="Source_DivertValve"/>
+                    <para_int value="6" permname="Mode_ScanMode"/>
+                    <para_vec_double permname="CollisionSweep_CollisionEnergy_Factor_Set">
+                        <entry_double value="1"/>
+                        <entry_double value="1"/>
+                        <entry_double value="1"/>
+                        <entry_double value="1"/>
+                    </para_vec_double>
+                    <para_vec_double permname="CollisionSweep_TransferTime_Factor_Set">
+                        <entry_double value="3.240316"/>
+                        <entry_double value="3.240316"/>
+                        <entry_double value="3.240316"/>
+                        <entry_double value="3.240316"/>
+                    </para_vec_double>
+                    <para_int value="2500" permname="MSMS_Pasef_IntensityThreshold"/>
+                    <para_int value="25" permname="MSMS_Pasef_Mobilogram_SummationWidth"/>
+                    <para_int value="1" permname="MSMSAuto_MS_Repetition"/>
+                    <para_int value="3" permname="MSMS_Pasef_Mobilogram_MaxNumPeaks"/>
+                    <para_int value="20000" permname="MSMS_Pasef_Scheduler_TargetIntensity"/>
+                    <para_double value="0" permname="Quadrupole_IsolationResolution_Set"/>
+                    <para_int value="5" permname="MSMS_Pasef_AllowedCharge_Maximum"/>
+                    <para_int value="0" permname="MSMS_Pasef_IntensityRepetitionTable_Active"/>
+                    <para_double value="1500" permname="Collision_RF_Set"/>
+                    <para_vec_int permname="MSMS_Pasef_IntensityRepetitionTable_Intensity">
+                        <entry_int value="0"/>
+                        <entry_int value="6324"/>
+                        <entry_int value="6666"/>
+                        <entry_int value="7071"/>
+                        <entry_int value="7559"/>
+                        <entry_int value="8164"/>
+                        <entry_int value="8944"/>
+                        <entry_int value="10000"/>
+                        <entry_int value="11547"/>
+                        <entry_int value="14142"/>
+                        <entry_int value="20000"/>
+                    </para_vec_int>
+                    <para_vec_int permname="MSMS_Pasef_IntensityRepetitionTable_Repetition">
+                        <entry_int value="10"/>
+                        <entry_int value="10"/>
+                        <entry_int value="9"/>
+                        <entry_int value="8"/>
+                        <entry_int value="7"/>
+                        <entry_int value="6"/>
+                        <entry_int value="5"/>
+                        <entry_int value="4"/>
+                        <entry_int value="3"/>
+                        <entry_int value="2"/>
+                        <entry_int value="1"/>
+                    </para_vec_int>
+                    <para_int value="1" permname="MSMS_Pasef_ExclusionActive"/>
+                    <para_double value="10" permname="Processing_ThresholdSignalToNoise"/>
+                    <para_double value="0.014999999999999999" permname="MSMS_Pasef_ExclusionWindowMassWidth"/>
+                    <para_int value="0" permname="Calibration_MarkSegment"/>
+                    <para_double value="0.014999999999999999" permname="MSMS_Pasef_ExclusionWindow1PerK0Width"/>
+                    <para_int value="0" permname="IMSICC_Active"/>
+                    <para_int value="0" permname="MSMSAuto_ModeExcludeMassRange"/>
+                    <para_double value="2000000" permname="IMSICC_Target"/>
+                    <para_vec_double permname="MSMSAuto_ListExcludeMassStart"/>
+                    <para_double value="200" permname="Quadrupole_IsolationMass_Set"/>
+                    <para_int value="2" permname="MSMSAuto_PreCursorIonCount"/>
+                    <para_int value="1" permname="IMS_imeX_UseAdvancedParameters"/>
+                    <para_double value="10000" permname="MSMSAuto_ThresholdAbsolute"/>
+                    <para_double value="2" permname="IMS_imeX_AccumulationTime"/>
+                    <para_int value="0" permname="MSMSAuto_ExclusionActive"/>
+                    <para_int value="0" permname="MSMSAuto_ExclusionActiveStrict"/>
+                    <para_int value="30" permname="MSMSAuto_ExclusionRelease"/>
+                    <para_int value="1" permname="IMS_imeX_AccumulationCalculationLock"/>
+                    <para_int value="2" permname="MSMSAuto_ExclusionActivation"/>
+                    <para_int value="1" permname="IMS_imeX_DutyCycleLock"/>
+                    <para_int value="0" permname="MSMSAuto_ChargedIonsExcludeSingle"/>
+                    <para_int value="0" permname="MSMSAuto_SwitchPreferChargeRange"/>
+                    <para_int value="2" permname="MSMSAuto_PreferChargeRangeLow"/>
+                    <para_int value="2" permname="MSMSAuto_PreferChargeRangeHigh"/>
+                    <para_int value="0" permname="MSMSAuto_ExclusionReIncludeActive"/>
+                    <para_double value="5" permname="MSMSAuto_ExclusionReIncludeFactor"/>
+                    <para_int value="1" permname="MSMSAuto_MSMS_Repetition"/>
+                    <para_int value="3" permname="IMS_imeX_Mode"/>
+                    <para_int value="8870" permname="Digitizer_Summation"/>
+                    <para_double value="1" permname="Digitizer_SpectraRate"/>
+                    <para_double value="1" permname="Digitizer_SpectraSampleTime"/>
+                    <para_double value="10" permname="IMS_Processing_Mz_ThresholdSignalToNoiseAbs"/>
+                    <para_int value="0" permname="IMS_Processing_SwitchCalcIntegratedIntensity"/>
+                    <para_int value="1" permname="IMS_imeX_Active"/>
+                    <para_double value="300" permname="Transfer_Funnel1RF_Set"/>
+                    <para_double value="200" permname="Transfer_Funnel2RF_Set"/>
+                    <para_int value="3" permname="MSMS_DefaultChargeState"/>
+                    <para_double value="200" permname="Transfer_MultipoleRF_Set"/>
+                    <para_double value="200" permname="Transfer_Funnel0RF_Set"/>
+                    <para_double value="100" permname="Transfer_Multipole0RF_Set"/>
+                    <dependent source="esi">
+                        <para_double value="200" permname="Source_APCIHeaterSetValue"/>
+                        <para_double value="180" permname="Source_DryHeaterSetValue"/>
+                        <para_int value="-500" permname="Source_EndPlateOffsetSetValue"/>
+                        <para_double value="3" permname="Source_DryGasSetValue"/>
+                        <para_double value="4" permname="Source_SheathGasFlowSetValue"/>
+                        <para_double value="0.40000000000000002" permname="Source_NebulizerSetValue"/>
+                        <para_double value="0.20000000000000001" permname="Source_NanoBoosterSetValue"/>
+                    </dependent>
+                    <dependent source="apci">
+                        <para_double value="200" permname="Source_APCIHeaterSetValue"/>
+                        <para_double value="240" permname="Source_DryHeaterSetValue"/>
+                        <para_int value="0" permname="Source_EndPlateOffsetSetValue"/>
+                        <para_double value="3" permname="Source_DryGasSetValue"/>
+                        <para_double value="4" permname="Source_SheathGasFlowSetValue"/>
+                        <para_double value="2" permname="Source_NebulizerSetValue"/>
+                        <para_double value="0.20000000000000001" permname="Source_NanoBoosterSetValue"/>
+                    </dependent>
+                    <dependent source="nesioff">
+                        <para_double value="200" permname="Source_APCIHeaterSetValue"/>
+                        <para_double value="240" permname="Source_DryHeaterSetValue"/>
+                        <para_int value="0" permname="Source_EndPlateOffsetSetValue"/>
+                        <para_double value="3" permname="Source_DryGasSetValue"/>
+                        <para_double value="4" permname="Source_SheathGasFlowSetValue"/>
+                        <para_double value="2" permname="Source_NebulizerSetValue"/>
+                        <para_double value="0.20000000000000001" permname="Source_NanoBoosterSetValue"/>
+                    </dependent>
+                    <dependent source="nesion">
+                        <para_double value="200" permname="Source_APCIHeaterSetValue"/>
+                        <para_double value="240" permname="Source_DryHeaterSetValue"/>
+                        <para_int value="0" permname="Source_EndPlateOffsetSetValue"/>
+                        <para_double value="3" permname="Source_DryGasSetValue"/>
+                        <para_double value="4" permname="Source_SheathGasFlowSetValue"/>
+                        <para_double value="2" permname="Source_NebulizerSetValue"/>
+                        <para_double value="0.20000000000000001" permname="Source_NanoBoosterSetValue"/>
+                    </dependent>
+                    <dependent source="appi">
+                        <para_double value="200" permname="Source_APCIHeaterSetValue"/>
+                        <para_double value="240" permname="Source_DryHeaterSetValue"/>
+                        <para_int value="0" permname="Source_EndPlateOffsetSetValue"/>
+                        <para_double value="3" permname="Source_DryGasSetValue"/>
+                        <para_double value="4" permname="Source_SheathGasFlowSetValue"/>
+                        <para_double value="2" permname="Source_NebulizerSetValue"/>
+                        <para_double value="0.20000000000000001" permname="Source_NanoBoosterSetValue"/>
+                    </dependent>
+                    <dependent source="multimode">
+                        <para_double value="200" permname="Source_APCIHeaterSetValue"/>
+                        <para_double value="240" permname="Source_DryHeaterSetValue"/>
+                        <para_int value="0" permname="Source_EndPlateOffsetSetValue"/>
+                        <para_double value="3" permname="Source_DryGasSetValue"/>
+                        <para_double value="4" permname="Source_SheathGasFlowSetValue"/>
+                        <para_double value="2" permname="Source_NebulizerSetValue"/>
+                        <para_double value="0.20000000000000001" permname="Source_NanoBoosterSetValue"/>
+                    </dependent>
+                    <dependent source="nanoflowesi">
+                        <para_double value="200" permname="Source_APCIHeaterSetValue"/>
+                        <para_double value="240" permname="Source_DryHeaterSetValue"/>
+                        <para_int value="0" permname="Source_EndPlateOffsetSetValue"/>
+                        <para_double value="3" permname="Source_DryGasSetValue"/>
+                        <para_double value="4" permname="Source_SheathGasFlowSetValue"/>
+                        <para_double value="2" permname="Source_NebulizerSetValue"/>
+                        <para_double value="0.20000000000000001" permname="Source_NanoBoosterSetValue"/>
+                    </dependent>
+                    <dependent source="ultraspray">
+                        <para_double value="200" permname="Source_APCIHeaterSetValue"/>
+                        <para_double value="240" permname="Source_DryHeaterSetValue"/>
+                        <para_int value="0" permname="Source_EndPlateOffsetSetValue"/>
+                        <para_double value="3" permname="Source_DryGasSetValue"/>
+                        <para_double value="4" permname="Source_SheathGasFlowSetValue"/>
+                        <para_double value="2" permname="Source_NebulizerSetValue"/>
+                        <para_double value="0.20000000000000001" permname="Source_NanoBoosterSetValue"/>
+                    </dependent>
+                    <dependent source="captivespray">
+                        <para_double value="200" permname="Source_APCIHeaterSetValue"/>
+                        <para_double value="180" permname="Source_DryHeaterSetValue"/>
+                        <para_int value="-500" permname="Source_EndPlateOffsetSetValue"/>
+                        <para_double value="3" permname="Source_DryGasSetValue"/>
+                        <para_double value="4" permname="Source_SheathGasFlowSetValue"/>
+                        <para_double value="2" permname="Source_NebulizerSetValue"/>
+                        <para_double value="0.20000000000000001" permname="Source_NanoBoosterSetValue"/>
+                    </dependent>
+                    <dependent source="gc-apci">
+                        <para_double value="200" permname="Source_APCIHeaterSetValue"/>
+                        <para_double value="240" permname="Source_DryHeaterSetValue"/>
+                        <para_int value="0" permname="Source_EndPlateOffsetSetValue"/>
+                        <para_double value="3" permname="Source_DryGasSetValue"/>
+                        <para_double value="4" permname="Source_SheathGasFlowSetValue"/>
+                        <para_double value="2" permname="Source_NebulizerSetValue"/>
+                        <para_double value="0.20000000000000001" permname="Source_NanoBoosterSetValue"/>
+                    </dependent>
+                    <dependent source="viphesi">
+                        <para_double value="240" permname="Source_DryHeaterSetValue"/>
+                        <para_int value="-500" permname="Source_EndPlateOffsetSetValue"/>
+                        <para_double value="4" permname="Source_SheathGasFlowSetValue"/>
+                        <para_double value="2.5" permname="Source_NebulizerSetValue"/>
+                        <para_double value="0.20000000000000001" permname="Source_NanoBoosterSetValue"/>
+                        <para_double value="300" permname="Source_APCIHeaterSetValue"/>
+                        <para_double value="8" permname="Source_DryGasSetValue"/>
+                    </dependent>
+                    <dependent source="viphesiapci">
+                        <para_double value="240" permname="Source_DryHeaterSetValue"/>
+                        <para_int value="-500" permname="Source_EndPlateOffsetSetValue"/>
+                        <para_double value="4" permname="Source_SheathGasFlowSetValue"/>
+                        <para_double value="2.5" permname="Source_NebulizerSetValue"/>
+                        <para_double value="0.20000000000000001" permname="Source_NanoBoosterSetValue"/>
+                        <para_double value="300" permname="Source_APCIHeaterSetValue"/>
+                        <para_double value="8" permname="Source_DryGasSetValue"/>
+                    </dependent>
+                    <dependent polarity="positive">
+                        <para_vec_double permname="MSMS_ListCollisionEnergy">
+                            <entry_double value="10"/>
+                            <entry_double value="10"/>
+                            <entry_double value="10"/>
+                        </para_vec_double>
+                        <para_double value="0" permname="Transfer_Tunnel0Voltage_Delta_3A"/>
+                        <para_double value="10" permname="IMS_Processing_ValleyFilter"/>
+                        <para_vec_double permname="Ims_PrePulseStorageTimeSteps">
+                            <entry_double value="8"/>
+                            <entry_double value="12"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Energy_Ramping_Collision_Energy_StartEnd_Tims_Step_2">
+                            <entry_double value="22"/>
+                            <entry_double value="64.900000000000006"/>
+                        </para_vec_double>
+                        <para_vec_double permname="MSMS_ListIsolationWidth">
+                            <entry_double value="2"/>
+                            <entry_double value="2"/>
+                            <entry_double value="2"/>
+                        </para_vec_double>
+                        <para_int value="1" permname="IMS_Processing_IntThresholdMode"/>
+                        <para_vec_double permname="Energy_Ramping_Advanced_ListCollisionEnergyValuesTimsStep2">
+                            <entry_double value="64.900000000000006"/>
+                            <entry_double value="22"/>
+                        </para_vec_double>
+                        <para_vec_double permname="MSMS_IsolationMassStartEnd">
+                            <entry_double value="700"/>
+                            <entry_double value="800"/>
+                        </para_vec_double>
+                        <para_double value="-1" permname="IMS_Processing_AreaThresholdAbs"/>
+                        <para_double value="70" permname="Transfer_DeflectorPlate_Delta_3"/>
+                        <para_double value="1.7" permname="IMS_imeX_RampEndForAccumulationCalculation"/>
+                        <para_double value="0" permname="MSMS_BBCIDEnergyISCID"/>
+                        <para_double value="500" permname="IMS_Funnel1RF_Set"/>
+                        <para_vec_double permname="Energy_Ramping_Advanced_ListMobilityValues">
+                            <entry_double value="1.6000000000000001"/>
+                            <entry_double value="0.59999999999999998"/>
+                        </para_vec_double>
+                        <para_int value="0" permname="IMS_Processing_AreaThresholdMode"/>
+                        <para_double value="60" permname="FocusPreTOF_Lens1_TransferTime_Set"/>
+                        <para_double value="10" permname="Collision_Energy_Offset_Set"/>
+                        <para_double value="300" permname="IMS_Collision_In_Set"/>
+                        <para_vec_double permname="Energy_Ramping_Advanced_ListCollisionEnergyValues">
+                            <entry_double value="59"/>
+                            <entry_double value="20"/>
+                        </para_vec_double>
+                        <para_double value="-1" permname="IMS_Processing_AreaThreshold"/>
+                        <para_double value="12" permname="FocusPreTOF_Lens1_PrePulseStorageTime_Set"/>
+                        <para_double value="-20" permname="IMS_TunnelVoltage_Delta_1"/>
+                        <para_double value="-160" permname="IMS_TunnelVoltage_Delta_2"/>
+                        <para_double value="110" permname="IMS_TunnelVoltage_Delta_3"/>
+                        <para_double value="110" permname="IMS_TunnelVoltage_Delta_4"/>
+                        <para_double value="0" permname="IMS_TunnelVoltage_Delta_5"/>
+                        <para_double value="55" permname="IMS_TunnelVoltage_Delta_6"/>
+                        <para_vec_double permname="Energy_Ramping_Mobility_StartEnd">
+                            <entry_double value="0.59999999999999998"/>
+                            <entry_double value="1.6000000000000001"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Ims_CollisionCellRF_Steps">
+                            <entry_double value="800"/>
+                            <entry_double value="1500"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Energy_Ramping_Collision_Energy_StartEnd">
+                            <entry_double value="20"/>
+                            <entry_double value="59"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Ims_TransferTimeSteps">
+                            <entry_double value="25"/>
+                            <entry_double value="60"/>
+                        </para_vec_double>
+                        <para_int value="0" permname="Energy_Ramping_Advanced_Settings_Active"/>
+                        <para_double value="99" permname="IMS_Processing_PeakSens1"/>
+                        <para_vec_int permname="Energy_Ramping_Advanced_ListEntryType">
+                            <entry_int value="0"/>
+                            <entry_int value="0"/>
+                        </para_vec_int>
+                        <para_double value="99" permname="IMS_Processing_PeakSens2"/>
+                        <para_double value="-1" permname="IMS_Processing_IntThreshold"/>
+                        <para_int value="1" permname="IMS_Processing_ValleyFilterUsed"/>
+                        <para_vec_double permname="MSMS_IsolationWidthStartEnd">
+                            <entry_double value="2"/>
+                            <entry_double value="3"/>
+                        </para_vec_double>
+                        <para_double value="5000" permname="IMS_Processing_IntThresholdAbs"/>
+                        <para_vec_double permname="IMS_imeX_RampStart">
+                            <entry_double value="0.59999999999999998"/>
+                            <entry_double value="1.25"/>
+                            <entry_double value="1.3700000000000001"/>
+                            <entry_double value="0.59999999999999998"/>
+                            <entry_double value="0.59999999999999998"/>
+                        </para_vec_double>
+                        <para_double value="20" permname="MSMS_BBCIDEnergyCollision"/>
+                        <para_vec_double permname="IMS_imeX_RampEnd">
+                            <entry_double value="1.6000000000000001"/>
+                            <entry_double value="1.75"/>
+                            <entry_double value="1.4299999999999999"/>
+                            <entry_double value="1.6000000000000001"/>
+                            <entry_double value="1.6000000000000001"/>
+                        </para_vec_double>
+                        <para_double value="1" permname="MSMS_BBCIDFactorAcquisitionTime"/>
+                        <para_vec_double permname="IMS_imeX_RampTime">
+                            <entry_double value="45.433129000000001"/>
+                            <entry_double value="272.59877399999999"/>
+                            <entry_double value="2725.9877409999999"/>
+                            <entry_double value="100"/>
+                            <entry_double value="104.845682"/>
+                        </para_vec_double>
+                        <para_double value="0" permname="Transfer_ISCIDEnergy_Offset_Set"/>
+                        <para_vec_double permname="MSMSManual_ListSummationFactor">
+                            <entry_double value="1"/>
+                            <entry_double value="1"/>
+                        </para_vec_double>
+                        <para_double value="5" permname="Quadrupole_IonEnergy_Offset_Set"/>
+                        <para_vec_int permname="MSMS_ListIsolationEntryType">
+                            <entry_int value="0"/>
+                            <entry_int value="1"/>
+                            <entry_int value="0"/>
+                        </para_vec_int>
+                        <para_vec_double permname="MSMS_ListIsolationMass">
+                            <entry_double value="200"/>
+                            <entry_double value="200"/>
+                            <entry_double value="200"/>
+                        </para_vec_double>
+                        <para_double value="100" permname="FocusPreQuadrupole_SplitLens2_DutyCycle_Set"/>
+                        <para_vec_int permname="MSMS_ListChargeState">
+                            <entry_int value="1"/>
+                            <entry_int value="2"/>
+                            <entry_int value="4"/>
+                        </para_vec_int>
+                        <para_vec_int permname="MSMSManual_ListUseIsolationMass">
+                            <entry_int value="1"/>
+                            <entry_int value="1"/>
+                        </para_vec_int>
+                        <para_vec_double permname="MSMSManual_ListIsolationMass">
+                            <entry_double value="200"/>
+                            <entry_double value="622"/>
+                        </para_vec_double>
+                        <para_vec_double permname="MSMSManual_ListIsolationWidth">
+                            <entry_double value="0"/>
+                            <entry_double value="5"/>
+                        </para_vec_double>
+                        <para_vec_double permname="MSMSManual_ListCollisionEnergy">
+                            <entry_double value="10"/>
+                            <entry_double value="10"/>
+                        </para_vec_double>
+                        <para_vec_double permname="MSMSManual_ListISCIDEnergy">
+                            <entry_double value="0"/>
+                            <entry_double value="0"/>
+                        </para_vec_double>
+                    </dependent>
+                    <dependent source="esi" polarity="positive">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4500" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="apci" polarity="positive">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="nesioff" polarity="positive">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="nesion" polarity="positive">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="appi" polarity="positive">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="multimode" polarity="positive">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="nanoflowesi" polarity="positive">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="ultraspray" polarity="positive">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="captivespray" polarity="positive">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="1500" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="gc-apci" polarity="positive">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="viphesi" polarity="positive">
+                        <para_int value="2500" permname="Source_CapillarySetValue"/>
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                    </dependent>
+                    <dependent source="viphesiapci" polarity="positive">
+                        <para_int value="1200" permname="Source_CapillarySetValue"/>
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                    </dependent>
+                    <dependent polarity="negative">
+                        <para_vec_double permname="MSMS_ListCollisionEnergy">
+                            <entry_double value="-1"/>
+                            <entry_double value="-2"/>
+                            <entry_double value="-7.5"/>
+                        </para_vec_double>
+                        <para_double value="0" permname="Transfer_Tunnel0Voltage_Delta_3A"/>
+                        <para_double value="10" permname="IMS_Processing_ValleyFilter"/>
+                        <para_vec_double permname="Ims_PrePulseStorageTimeSteps">
+                            <entry_double value="8"/>
+                            <entry_double value="12"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Energy_Ramping_Collision_Energy_StartEnd_Tims_Step_2">
+                            <entry_double value="-22"/>
+                            <entry_double value="-64.900000000000006"/>
+                        </para_vec_double>
+                        <para_vec_double permname="MSMS_ListIsolationWidth">
+                            <entry_double value="1"/>
+                            <entry_double value="0.5"/>
+                            <entry_double value="2.5"/>
+                        </para_vec_double>
+                        <para_int value="1" permname="IMS_Processing_IntThresholdMode"/>
+                        <para_vec_double permname="Energy_Ramping_Advanced_ListCollisionEnergyValuesTimsStep2">
+                            <entry_double value="-22"/>
+                            <entry_double value="-64.900000000000006"/>
+                        </para_vec_double>
+                        <para_vec_double permname="MSMS_IsolationMassStartEnd">
+                            <entry_double value="700"/>
+                            <entry_double value="800"/>
+                        </para_vec_double>
+                        <para_double value="-1" permname="IMS_Processing_AreaThresholdAbs"/>
+                        <para_double value="-70" permname="Transfer_DeflectorPlate_Delta_3"/>
+                        <para_double value="2" permname="IMS_imeX_RampEndForAccumulationCalculation"/>
+                        <para_double value="0" permname="MSMS_BBCIDEnergyISCID"/>
+                        <para_double value="500" permname="IMS_Funnel1RF_Set"/>
+                        <para_vec_double permname="Energy_Ramping_Advanced_ListMobilityValues">
+                            <entry_double value="0.59999999999999998"/>
+                            <entry_double value="1.6000000000000001"/>
+                        </para_vec_double>
+                        <para_int value="0" permname="IMS_Processing_AreaThresholdMode"/>
+                        <para_double value="60" permname="FocusPreTOF_Lens1_TransferTime_Set"/>
+                        <para_double value="-10" permname="Collision_Energy_Offset_Set"/>
+                        <para_double value="-300" permname="IMS_Collision_In_Set"/>
+                        <para_vec_double permname="Energy_Ramping_Advanced_ListCollisionEnergyValues">
+                            <entry_double value="-20"/>
+                            <entry_double value="-59"/>
+                        </para_vec_double>
+                        <para_double value="-1" permname="IMS_Processing_AreaThreshold"/>
+                        <para_double value="12" permname="FocusPreTOF_Lens1_PrePulseStorageTime_Set"/>
+                        <para_double value="20" permname="IMS_TunnelVoltage_Delta_1"/>
+                        <para_double value="160" permname="IMS_TunnelVoltage_Delta_2"/>
+                        <para_double value="-110" permname="IMS_TunnelVoltage_Delta_3"/>
+                        <para_double value="-110" permname="IMS_TunnelVoltage_Delta_4"/>
+                        <para_double value="-0" permname="IMS_TunnelVoltage_Delta_5"/>
+                        <para_double value="-55" permname="IMS_TunnelVoltage_Delta_6"/>
+                        <para_vec_double permname="Energy_Ramping_Mobility_StartEnd">
+                            <entry_double value="0.59999999999999998"/>
+                            <entry_double value="1.6000000000000001"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Ims_CollisionCellRF_Steps">
+                            <entry_double value="800"/>
+                            <entry_double value="1500"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Energy_Ramping_Collision_Energy_StartEnd">
+                            <entry_double value="-20"/>
+                            <entry_double value="-59"/>
+                        </para_vec_double>
+                        <para_vec_double permname="Ims_TransferTimeSteps">
+                            <entry_double value="25"/>
+                            <entry_double value="60"/>
+                        </para_vec_double>
+                        <para_int value="1" permname="Energy_Ramping_Advanced_Settings_Active"/>
+                        <para_double value="99" permname="IMS_Processing_PeakSens1"/>
+                        <para_vec_int permname="Energy_Ramping_Advanced_ListEntryType">
+                            <entry_int value="0"/>
+                            <entry_int value="0"/>
+                        </para_vec_int>
+                        <para_double value="99" permname="IMS_Processing_PeakSens2"/>
+                        <para_double value="-1" permname="IMS_Processing_IntThreshold"/>
+                        <para_int value="1" permname="IMS_Processing_ValleyFilterUsed"/>
+                        <para_vec_double permname="MSMS_IsolationWidthStartEnd">
+                            <entry_double value="2"/>
+                            <entry_double value="3"/>
+                        </para_vec_double>
+                        <para_double value="50000" permname="IMS_Processing_IntThresholdAbs"/>
+                        <para_vec_double permname="IMS_imeX_RampStart">
+                            <entry_double value="0.59999999999999998"/>
+                            <entry_double value="1.25"/>
+                            <entry_double value="1.3700000000000001"/>
+                            <entry_double value="0.59999999999999998"/>
+                            <entry_double value="0.59999999999999998"/>
+                        </para_vec_double>
+                        <para_double value="-20" permname="MSMS_BBCIDEnergyCollision"/>
+                        <para_vec_double permname="IMS_imeX_RampEnd">
+                            <entry_double value="1.6000000000000001"/>
+                            <entry_double value="1.75"/>
+                            <entry_double value="1.4299999999999999"/>
+                            <entry_double value="1.6000000000000001"/>
+                            <entry_double value="1.6000000000000001"/>
+                        </para_vec_double>
+                        <para_double value="1" permname="MSMS_BBCIDFactorAcquisitionTime"/>
+                        <para_vec_double permname="IMS_imeX_RampTime">
+                            <entry_double value="45.433129000000001"/>
+                            <entry_double value="272.59877399999999"/>
+                            <entry_double value="2725.9877409999999"/>
+                            <entry_double value="100"/>
+                            <entry_double value="104.845682"/>
+                        </para_vec_double>
+                        <para_double value="0" permname="Transfer_ISCIDEnergy_Offset_Set"/>
+                        <para_vec_double permname="MSMSManual_ListSummationFactor">
+                            <entry_double value="10"/>
+                            <entry_double value="1"/>
+                        </para_vec_double>
+                        <para_double value="-5" permname="Quadrupole_IonEnergy_Offset_Set"/>
+                        <para_vec_int permname="MSMS_ListIsolationEntryType">
+                            <entry_int value="0"/>
+                            <entry_int value="1"/>
+                            <entry_int value="0"/>
+                        </para_vec_int>
+                        <para_vec_double permname="MSMS_ListIsolationMass">
+                            <entry_double value="622"/>
+                            <entry_double value="922"/>
+                            <entry_double value="1521"/>
+                        </para_vec_double>
+                        <para_double value="100" permname="FocusPreQuadrupole_SplitLens2_DutyCycle_Set"/>
+                        <para_vec_int permname="MSMS_ListChargeState">
+                            <entry_int value="1"/>
+                            <entry_int value="2"/>
+                            <entry_int value="4"/>
+                        </para_vec_int>
+                        <para_vec_int permname="MSMSManual_ListUseIsolationMass">
+                            <entry_int value="1"/>
+                            <entry_int value="1"/>
+                        </para_vec_int>
+                        <para_vec_double permname="MSMSManual_ListIsolationMass">
+                            <entry_double value="200"/>
+                            <entry_double value="665"/>
+                        </para_vec_double>
+                        <para_vec_double permname="MSMSManual_ListIsolationWidth">
+                            <entry_double value="0"/>
+                            <entry_double value="5"/>
+                        </para_vec_double>
+                        <para_vec_double permname="MSMSManual_ListCollisionEnergy">
+                            <entry_double value="-10"/>
+                            <entry_double value="-10"/>
+                        </para_vec_double>
+                        <para_vec_double permname="MSMSManual_ListISCIDEnergy">
+                            <entry_double value="-0"/>
+                            <entry_double value="-0"/>
+                        </para_vec_double>
+                    </dependent>
+                    <dependent source="esi" polarity="negative">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="apci" polarity="negative">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="nesioff" polarity="negative">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="nesion" polarity="negative">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="appi" polarity="negative">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="multimode" polarity="negative">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="nanoflowesi" polarity="negative">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="ultraspray" polarity="negative">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="captivespray" polarity="negative">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="1500" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="gc-apci" polarity="negative">
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                        <para_int value="4000" permname="Source_CapillarySetValue"/>
+                    </dependent>
+                    <dependent source="viphesi" polarity="negative">
+                        <para_int value="2500" permname="Source_CapillarySetValue"/>
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                    </dependent>
+                    <dependent source="viphesiapci" polarity="negative">
+                        <para_int value="1200" permname="Source_CapillarySetValue"/>
+                        <para_int value="4000" permname="Source_CoronaSetValue"/>
+                    </dependent>
+                    <dependent polarity="positive">
+                        <para_string value="Tuning Mix ES-TOF CCS compendium (ESI)" permname="IMS_CalibrationReferenceMassList"/>
+                    </dependent>
+                    <dependent polarity="negative">
+                        <para_string value="Tuning Mix ES-TOF CCS compendium (ESI)" permname="IMS_CalibrationReferenceMassList"/>
+                    </dependent>
+                </segment>
+            </timetable>
+        </qtofimpactemacq>
+    </method>
+</root>
