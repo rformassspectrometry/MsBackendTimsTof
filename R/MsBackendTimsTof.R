@@ -38,13 +38,16 @@
 #'   `object`.
 #'
 #' - `peaksData`: gets the peak matrices of the spectra in the backend.
-#'   Returns a `list` of `matrix` with columns `"mz"` and `"intensity"`.
+#'   Returns a `list` of `matrix` with columns defined by parameter `columns`
+#'   (which defaults to `columns = c("mz", "intensity")`. Note that regardless
+#'   of the order of requested columns in `columns`, `"mz"` and `"intensity"`
+#'   (if requested) are always returned as the first columns.
 #'   The length of the `list` is equal to the number of spectra in `object`.
 #'
 #' - `rtime`: gets the retention times for each spectrum. Returns a `numeric`
 #'   vector (length equal to the number of spectra) with the retention time
 #'   for each spectrum.
-#'   
+#'
 #' - `spectraData`: gets spectra variables (specified by `columns`) from
 #'   `object`.
 #'
@@ -57,9 +60,10 @@
 #' @param BPPARAM Parameter object defining the parallel processing
 #' setup to import data in parallel. Defaults to `BPPARAM = bpparam()`.
 #' See [bpparam()] for more information.
-#' 
+#'
 #' @param columns For `spectraData`: names of the spectra variables to extract
-#'   from `object`.
+#'   from `object`. For `peaksData`: names of the peak variables to extract.
+#'   Defaults to `columns = c("mz", "intensity")`.
 #'
 #' @param drop For `[`: not considered.
 #'
@@ -87,7 +91,7 @@ setClass("MsBackendTimsTof",
                    fileNames = "integer"),
          prototype = prototype(frames = data.frame(),
                                indices = matrix(nrow = 0, ncol = 3,
-                                                dimnames = list(NULL, 
+                                                dimnames = list(NULL,
                                                                 c("frame",
                                                                   "scan",
                                                                   "file"))),
@@ -105,6 +109,8 @@ setValidity("MsBackendTimsTof", function(object) {
 })
 
 #' @importFrom BiocParallel bplapply
+#'
+#' @importMethodsFrom Spectra backendInitialize
 #'
 #' @rdname MsBackendTimsTof
 setMethod("backendInitialize", signature = "MsBackendTimsTof",
@@ -132,8 +138,10 @@ setMethod("length", "MsBackendTimsTof", function(x) {
 })
 
 #' @rdname MsBackendTimsTof
-setMethod("peaksData", "MsBackendTimsTof", function(object) {
-    .get_tims_columns(object, c("mz", "intensity"))
+setMethod(
+    "peaksData", "MsBackendTimsTof",
+    function(object, columns = c("mz", "intensity")) {
+        .get_tims_columns(object, columns)
 })
 
 
@@ -175,23 +183,48 @@ setMethod("[", "MsBackendTimsTof", function(x, i, j, ..., drop = FALSE) {
     x
 })
 
+#' @importMethodsFrom Spectra dataStorage
+#'
 #' @rdname MsBackendTimsTof
 setMethod("dataStorage", "MsBackendTimsTof", function(object) {
     if("file" %in% colnames(object@indices) && length(object@fileNames))
         return (names(object@fileNames[match(object@indices[, "file"],
-                                             object@fileNames)])) 
+                                             object@fileNames)]))
     character(0)
 })
 
+#' @importMethodsFrom Spectra spectraVariables
+#'
 #' @rdname MsBackendTimsTof
 setMethod("spectraVariables", "MsBackendTimsTof", function(object) {
     unique(c(names(Spectra:::.SPECTRA_DATA_COLUMNS), .TIMSTOF_COLUMNS,
              colnames(object@frames)))
 })
 
+#' @importMethodsFrom Spectra spectraData
+#'
 #' @rdname MsBackendTimsTof
 setMethod("spectraData", "MsBackendTimsTof",
           function(object, columns = spectraVariables(object)) {
               .spectra_data(object, columns)
           })
 
+#' @importFrom utils capture.output
+#'
+#' @rdname MsBackendTimsTof
+setMethod("show", "MsBackendTimsTof", function(object) {
+    n <- length(object)
+    cat(class(object), "with", n, "spectra\n")
+    if (n) {
+        idx <- unique(c(1L:min(6L, n), max(1L, n-5L):n))
+        spd <- spectraData(object[idx, ],
+                           c("msLevel", "precursorMz", "polarity"))
+        if (!length(rownames(spd)))
+            rownames(spd) <- idx
+        txt <- capture.output(print(spd))
+        cat(txt[-1], sep = "\n")
+        sp_cols <- spectraVariables(object)
+        cat(" ...", length(sp_cols) - 3, "more variables/columns.\n", "Use ",
+            "'spectraVariables' to list all of them.\n")
+    }
+})

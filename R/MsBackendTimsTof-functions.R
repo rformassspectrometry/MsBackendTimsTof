@@ -10,6 +10,10 @@
 #'
 #' @return initialized `MsBackendTimsTOF` object
 #'
+#' @importFrom BiocParallel bpparam
+#'
+#' @importFrom stats setNames
+#'
 #' @noRd
 .initialize <- function(x, file = character(), BPPARAM = bpparam()) {
     L <- bplapply(seq_len(length(file)), function(fl_idx) {
@@ -115,13 +119,15 @@ MsBackendTimsTof <- function() {
 #' Get `x@all_columns` variables (including "`mz`" and "`intensity`") from `x`
 #' splitted by spectra. At least one variable among `x@all_columns` and
 #' different from `"frame"` and "`scan`" has to be provided via `columns`
-#' parameter. 
+#' parameter.
 #'
 #' @param x `MsBackendTimsTof` object.
 #'
 #' @param columns `character` with the names of the columns to extract.
 #'
 #' @importFrom opentimsr OpenTIMS CloseTIMS query
+#'
+#' @importFrom MsCoreUtils rbindFill
 #'
 #' @noRd
 .get_tims_columns <- function(x, columns) {
@@ -138,14 +144,48 @@ MsBackendTimsTof <- function() {
         if (!length(sd <- setdiff(columns, c("frame", "scan"))))
             stop("At least one column value different from 'frame' and",
                  " 'scan' required")
-        tmp <- query(tms, unique(x@indices[I, "frame"]), c("frame", "scan", sd))
-        f <- factor(paste(tmp$frame, tmp$scan),
-                    levels = paste(x@indices[I, "frame"], x@indices[I, "scan"]))
-        if (length(sd) == 1)
-            res[I] <- unname(split(tmp[, sd], f))
-        else res[I] <- unname(split.data.frame(as.matrix(tmp[, sd]), f))
+        ## Ensure mz and intensity are always first, if provided
+        sd <- c(intersect(c("mz", "intensity"), sd),
+                setdiff(sd, c("mz", "intensity")))
+        i_frame <- x@indices[I, "frame"]
+        tmp <- query(tms, unique(i_frame), c("frame", "scan", sd))
+        ## subset tmp if we're about to extract only few scans.
+        if (length(i_frame) < (nrow(tmp) / 10)) {
+            i_scan <- x@indices[I, "scan"]
+            tmp <- tmp[tmp$scan %in% i_scan, ]
+            rownames(tmp) <- NULL
+            ids <- paste(i_frame, i_scan)
+        } else ids <- paste(i_frame, x@indices[I, "scan"])
+        if (!nrow(tmp))
+            tmp <- rbindFill(tmp, data.frame(frame = 0L))
+        f <- factor(paste(tmp$frame, tmp$scan), levels = unique(ids))
+        if (anyDuplicated(ids)) {
+            if (length(sd) == 1)
+                res[I] <- unname(split(tmp[, sd], f)[ids])
+            else
+                res[I] <- unname(split.data.frame(as.matrix(tmp[, sd]), f)[ids])
+        } else {
+            if (length(sd) == 1) {
+                res[I] <- unname(split(tmp[, sd], f))
+            } else {
+                res[I] <- unname(split.data.frame(as.matrix(tmp[, sd]), f))
+            }
+        }
     }
     res
+}
+
+#' Lists all available peak columns in TIMS file
+#'
+#' @param x `character(1)` with the file name.
+#'
+#' @author Johannes Rainer
+#'
+#' @noRd
+.list_tims_columns <- function(x) {
+    tms <- OpenTIMS(x)
+    on.exit(opentimsr::CloseTIMS(tms))
+    tms@all_columns
 }
 
 #' Extract columns from @frames given the @indices in `x`. The function takes
@@ -184,9 +224,10 @@ MsBackendTimsTof <- function() {
     xn
 }
 
-# can we assume that tms@all_coulmns is the same for all the TimsTOF? 
+# can we assume that tms@all_coulmns is the same for all the TimsTOF?
 .TIMSTOF_COLUMNS <- c("mz", "intensity", "tof", "inv_ion_mobility")
 
+#' @importFrom methods as
 .spectra_data <- function(x, columns = spectraVariables(x)) {
     if (!all(present <- columns %in% spectraVariables(x)))
         stop("Column(s) ", paste0("\"", columns[!present], "\"",

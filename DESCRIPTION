@@ -1,6 +1,6 @@
 Package: MsBackendTimsTof
 Title: Mass Spectrometry Data Backend for MassBank record Files
-Version: 0.0.4
+Version: 0.0.5
 Authors@R:
     c(person(given = "RforMassSpectrometry Package Maintainer",
              email = "maintainer@rformassspectrometry.org",
@@ -29,9 +29,7 @@ Depends:
 Imports:
     IRanges,
     BiocParallel,
-    S4Vectors,
     methods,
-    ProtGenerics,
     opentimsr (>= 1.0.11),
     MsCoreUtils
 Suggests:

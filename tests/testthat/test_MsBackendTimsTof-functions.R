@@ -44,6 +44,17 @@ test_that(".get_tims_columns works", {
     expect_equal(colnames(res[[1]]), c("tof", "inv_ion_mobility"))
 
     expect_error(.get_tims_columns(be, "bla"), "'bla' not available")
+
+    ## mz and intensity are always first.
+    be_sub <- be[200:300]
+    res <- .get_tims_columns(be_sub, c("intensity", "mz", "tof"))
+    expect_equal(colnames(res[[1L]]), c("mz", "intensity", "tof"))
+
+    res <- .get_tims_columns(be_sub, c("tof", "intensity"))
+    expect_equal(colnames(res[[1L]]), c("intensity", "tof"))
+
+    res <- .get_tims_columns(be_sub, c("tof", "inv_ion_mobility"))
+    expect_equal(colnames(res[[1L]]), c("tof", "inv_ion_mobility"))
 })
 
 test_that(".get_frame_columns works", {
@@ -68,3 +79,7 @@ test_that("MsBackendTimsTof works", {
     validObject(res)
 })
 
+test_that(".list_tims_columns works", {
+    res <- .list_tims_columns(path_d_folder)
+    expect_true(all(c("mz", "frame", "scan", "tof", "intensity") %in% res))
+})
