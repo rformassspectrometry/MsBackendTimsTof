@@ -125,4 +125,8 @@ test_that("spectraData,MsBackendTimsTof works", {
     expect_identical(res$polarity, .get_frame_columns(be, "polarity"))
     expect_identical(res$scanIndex, be@indices[, "scan"])
     expect_identical(res$dataStorage, dataStorage(be))
+
+    # only a few columns
+    res <- spectraData(be, columns = c("msLevel","rtime"))
+    expect_identical(colnames(res), c("msLevel","rtime"))
 })

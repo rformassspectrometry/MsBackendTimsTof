@@ -158,14 +158,14 @@ MsBackendTimsTof <- function() {
 #' @author Andrea Vicini, Johannes Rainer
 #'
 #' @noRd
-.get_frame_columns <- function(x, columns) {
+.get_frame_columns <- function(x, columns, drop = TRUE) {
     if (!all(columns %in% colnames(x@frames)))
         stop("Column(s) ",
              paste0("'", columns[!columns %in% colnames(x@frames)],
                     "'", collapse = ", "), " not available.", call. = FALSE)
     idx <- match(paste(x@indices[, "frame"], x@indices[, "file"]),
                  paste(x@frames$frameId, x@frames$file))
-    x@frames[idx, columns]
+    x@frames[idx, columns, drop]
 }
 
 #' Mapping of spectra variables to frames column names.
@@ -210,7 +210,7 @@ MsBackendTimsTof <- function() {
         frames_cols <- frames_cols[frames_cols != "file"]
     }
     if (length(frames_cols)) {
-        res[frames_cols] <- .get_frame_columns(x, frames_cols)
+        res[frames_cols] <- .get_frame_columns(x, frames_cols, drop = FALSE)
         core_cols <- setdiff(core_cols, frames_cols)
     }
     if (length(tims_cols)) {
