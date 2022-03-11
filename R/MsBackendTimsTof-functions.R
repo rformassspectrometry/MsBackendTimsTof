@@ -124,13 +124,16 @@ MsBackendTimsTof <- function() {
 #' @param x `MsBackendTimsTof` object.
 #'
 #' @param columns `character` with the names of the columns to extract.
+#' 
+#' @param drop `logical` if TRUE and `columns` has length 1 the result is
+#'   returned as list of `numeric` instead of as list of 1-column `matrix`.
 #'
 #' @importFrom opentimsr OpenTIMS CloseTIMS query
 #'
 #' @importFrom MsCoreUtils rbindFill
 #'
 #' @noRd
-.get_tims_columns <- function(x, columns) {
+.get_tims_columns <- function(x, columns, drop = TRUE) {
     res <- vector(mode = "list", length(x))
     nms <- names(x@fileNames)
     for (i in seq_len(length(nms))) {
@@ -161,14 +164,16 @@ MsBackendTimsTof <- function() {
         f <- factor(paste(tmp$frame, tmp$scan), levels = unique(ids))
         if (anyDuplicated(ids)) {
             if (length(sd) == 1)
-                res[I] <- unname(split(tmp[, sd], f)[ids])
+                res[I] <- unname(split(tmp[, sd, drop], f)[ids])
             else
-                res[I] <- unname(split.data.frame(as.matrix(tmp[, sd]), f)[ids])
+                res[I] <- unname(split.data.frame(as.matrix(tmp[, sd, drop]),
+                                                  f)[ids])
         } else {
             if (length(sd) == 1) {
-                res[I] <- unname(split(tmp[, sd], f))
+                res[I] <- unname(split(tmp[, sd, drop], f))
             } else {
-                res[I] <- unname(split.data.frame(as.matrix(tmp[, sd]), f))
+                res[I] <- unname(split.data.frame(as.matrix(tmp[, sd, drop]),
+                                                  f))
             }
         }
     }
@@ -194,18 +199,21 @@ MsBackendTimsTof <- function() {
 #' @param x `MsBackendTimsTOF`
 #'
 #' @param columns `character` with the column names.
+#' 
+#' @param drop `logical` if TRUE and `columns` has length 1 the result is
+#'   returned as `numeric` instead of as 1-column `data.frame`.
 #'
 #' @author Andrea Vicini, Johannes Rainer
 #'
 #' @noRd
-.get_frame_columns <- function(x, columns) {
+.get_frame_columns <- function(x, columns, drop = TRUE) {
     if (!all(columns %in% colnames(x@frames)))
         stop("Column(s) ",
              paste0("'", columns[!columns %in% colnames(x@frames)],
                     "'", collapse = ", "), " not available.", call. = FALSE)
     idx <- match(paste(x@indices[, "frame"], x@indices[, "file"]),
                  paste(x@frames$frameId, x@frames$file))
-    x@frames[idx, columns]
+    x@frames[idx, columns, drop]
 }
 
 #' Mapping of spectra variables to frames column names.
@@ -251,13 +259,14 @@ MsBackendTimsTof <- function() {
         frames_cols <- frames_cols[frames_cols != "file"]
     }
     if (length(frames_cols)) {
-        res[frames_cols] <- .get_frame_columns(x, frames_cols)
+        res[frames_cols] <- .get_frame_columns(x, frames_cols, drop = FALSE)
         core_cols <- setdiff(core_cols, frames_cols)
     }
     if (length(tims_cols)) {
         res[tims_cols] <- lapply(tims_cols, function(col)
-            NumericList(lapply(.get_tims_columns(x, tims_cols),
-                               function(m) unname(m[, col])), compress = FALSE))
+            NumericList(lapply(.get_tims_columns(x, tims_cols, drop = FALSE),
+                               function(m) unname(m[, col])),
+                        compress = FALSE))
         core_cols <- setdiff(core_cols, tims_cols)
     }
     if ("dataStorage" %in% columns) {

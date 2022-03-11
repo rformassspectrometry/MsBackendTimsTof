@@ -1,5 +1,11 @@
 # MsBackendTimsTof 0.0
 
+## MsBackendTimsTof 0.0.6
+
+- Fix issue in `spectraData` when parameter `columns` of length 1 is provided
+  (issue [#7]
+  (https://github.com/rformassspectrometry/MsBackendTimsTof/issues/7)).
+
 ## MsBackendTimsTof 0.0.5
 
 - Add test data.
