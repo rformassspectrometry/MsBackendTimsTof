@@ -11,11 +11,12 @@
 \alias{mz,MsBackendTimsTof-method}
 \alias{intensity,MsBackendTimsTof-method}
 \alias{rtime,MsBackendTimsTof-method}
-\alias{[,MsBackendTimsTof-method}
+\alias{[,MsBackendTimsTof,ANY,ANY,ANY-method}
 \alias{dataStorage,MsBackendTimsTof-method}
 \alias{spectraVariables,MsBackendTimsTof-method}
 \alias{spectraData,MsBackendTimsTof-method}
 \alias{show,MsBackendTimsTof-method}
+\alias{msLevel,MsBackendTimsTof-method}
 \title{TimsTOF data backend}
 \usage{
 MsBackendTimsTof()
@@ -32,7 +33,7 @@ MsBackendTimsTof()
 
 \S4method{rtime}{MsBackendTimsTof}(object)
 
-\S4method{[}{MsBackendTimsTof}(x, i, j, ..., drop = FALSE)
+\S4method{[}{MsBackendTimsTof,ANY,ANY,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{dataStorage}{MsBackendTimsTof}(object)
 
@@ -41,6 +42,8 @@ MsBackendTimsTof()
 \S4method{spectraData}{MsBackendTimsTof}(object, columns = spectraVariables(object))
 
 \S4method{show}{MsBackendTimsTof}(object)
+
+\S4method{msLevel}{MsBackendTimsTof}(object, ...)
 }
 \arguments{
 \item{object}{\code{MsBackendTimsTof} object.}
@@ -90,6 +93,8 @@ stored.
 Returns a \code{\link[=NumericList]{NumericList()}} of \code{numeric} vectors (intensity values for each
 spectrum). The length of the list is equal to the number of
 spectra in \code{object}.
+\item \code{msLevel}: gets the spectra MS level. Returns an integer vector (of length
+equal to the number of spectra) with the MS level for each spectrum.
 \item \code{mz}: gets the mass-to-charge ratios (m/z) from the spectra in the backend.
 Returns a \code{\link[=NumericList]{NumericList()}} of \code{numeric} vectors (m/z values for each
 spectrum). The length of the list is equal to the number of spectra in

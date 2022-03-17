@@ -32,6 +32,9 @@
 #'   spectrum). The length of the list is equal to the number of
 #'   spectra in `object`.
 #'
+#' - `msLevel`: gets the spectra MS level. Returns an integer vector (of length
+#'    equal to the number of spectra) with the MS level for each spectrum.
+#'
 #' - `mz`: gets the mass-to-charge ratios (m/z) from the spectra in the backend.
 #'   Returns a [NumericList()] of `numeric` vectors (m/z values for each
 #'   spectrum). The length of the list is equal to the number of spectra in
@@ -227,4 +230,11 @@ setMethod("show", "MsBackendTimsTof", function(object) {
         cat(" ...", length(sp_cols) - 3, "more variables/columns.\n", "Use ",
             "'spectraVariables' to list all of them.\n")
     }
+})
+
+#' @importMethodsFrom Spectra msLevel
+#'
+#' @rdname MsBackendTimsTof
+setMethod("msLevel", "MsBackendTimsTof", function(object, ...) {
+    .get_msLevel(object)
 })

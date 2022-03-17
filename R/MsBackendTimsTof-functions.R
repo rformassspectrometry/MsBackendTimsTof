@@ -232,6 +232,24 @@ MsBackendTimsTof <- function() {
     xn
 }
 
+#' Get the msLevel for each spectra. `x` is interpreted either as
+#' `MsBackendTimsTof` if `isMsMsType` is `FALSE` or as `numeric` with the
+#' MsMsType of each spectra if `isMsMsType` is `TRUE`. 
+#'
+#' @noRd
+.get_msLevel <- function(x, isMsMsType = FALSE) {
+    # msLevel=1 should correspond to MsMsType = 0. msLevel=2 to MsMsType = 8?
+    if (!isMsMsType) {
+        if (!"MsMsType" %in% colnames(x@frames))
+            return(rep(as(NA, "integer"), length(x)))
+        else x <- .get_frame_columns(x, "MsMsType")
+    }
+    map <- c(0L, 8L)
+    if (any(!is.na(x) & !x %in% map))
+        warning("msLevel not recognized for some spectra and set to NA.")
+    match(x, map)
+}
+
 # can we assume that tms@all_coulmns is the same for all the TimsTOF?
 .TIMSTOF_COLUMNS <- c("mz", "intensity", "tof", "inv_ion_mobility")
 
@@ -268,6 +286,14 @@ MsBackendTimsTof <- function() {
                                function(m) unname(m[, col])),
                         compress = FALSE))
         core_cols <- setdiff(core_cols, tims_cols)
+    }
+    if ("msLevel" %in% columns) {
+        if ("MsMsType" %in% frames_cols) {
+            res[["msLevel"]] <- .get_msLevel(res[["MsMsType"]], TRUE)
+        } else {
+            res[["msLevel"]] <- .get_msLevel(x)
+        }
+        core_cols <- core_cols[core_cols != "msLevel"]
     }
     if ("dataStorage" %in% columns) {
         res[["dataStorage"]] <- dataStorage(x)

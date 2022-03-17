@@ -142,9 +142,19 @@ test_that("spectraData,MsBackendTimsTof works", {
     ## selecting only a few columns
     res <- spectraData(be, columns = c("msLevel","rtime"))
     expect_identical(colnames(res), c("msLevel","rtime"))
-    expect_identical(res$msLevel, rep(as(NA, "integer"), length(be)))
+    expect_identical(res$msLevel,
+                     match(.get_frame_columns(be, "MsMsType"), c(0L, 8L)))
     expect_identical(res$rtime, rtime(be))
     res <- spectraData(be, columns = "tof")
     expect_identical(colnames(res), "tof")
     expect_identical(nrow(res), length(be))
+})
+
+test_that("msLevel,MsBackendTimsTof works", {
+    expect_identical(msLevel(MsBackendTimsTof()), integer(0))
+
+    MsMsType <- .get_frame_columns(be, "MsMsType")
+    res <- msLevel(be)
+    expect_identical(length(res), length(be))
+    expect_identical(res, match(.get_frame_columns(be, "MsMsType"), c(0L, 8L)))
 })

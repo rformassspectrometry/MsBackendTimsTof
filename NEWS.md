@@ -1,5 +1,10 @@
 # MsBackendTimsTof 0.0
 
+## MsBackendTimsTof 0.0.7
+
+- Added `msLevel` to extract MS level of each spectrum in `MsBackendTimsTof`
+  objects.
+
 ## MsBackendTimsTof 0.0.6
 
 - Fix issue in `spectraData` when parameter `columns` of length 1 is provided
