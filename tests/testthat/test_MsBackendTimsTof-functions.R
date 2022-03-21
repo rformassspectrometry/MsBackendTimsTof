@@ -83,3 +83,13 @@ test_that(".list_tims_columns works", {
     res <- .list_tims_columns(path_d_folder)
     expect_true(all(c("mz", "frame", "scan", "tof", "intensity") %in% res))
 })
+
+test_that(".get_msLevel works", {
+    MsMsType <- .get_frame_columns(be, "MsMsType")
+    res <- .get_msLevel(be)
+    expect_identical(which(res == 1L), which(MsMsType == 0L))
+    expect_identical(which(res == 2L), which(MsMsType == 8L))
+    expect_identical(.get_msLevel(MsMsType, isMsMsType = TRUE), res)
+    expect_identical(.get_msLevel(c(8L, NA, 0L), TRUE), c(2L, NA, 1L))
+    expect_warning(.get_msLevel(c(8L, 2L, 0L), TRUE), "not recognized")
+})
