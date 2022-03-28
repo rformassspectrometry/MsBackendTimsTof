@@ -87,6 +87,33 @@
 #' @rdname MsBackendTimsTof
 #'
 #' @exportClass MsBackendTimsTof
+#'
+#' @examples
+#'
+#' ## Load the opentimsr package to retrieve the required shared library
+#' ## from Bruker.
+#' so_folder <- tempdir()
+#' library(opentimsr)
+#' so_file <- download_bruker_proprietary_code(so_folder, method = "wget")
+#' setup_bruker_so(so_file)
+#' path_d_folder <- system.file("ddaPASEF.d",
+#'                              package = "MsBackendTimsTof")
+#'
+#' ## Define the test file
+#' fl <- system.file("ddaPASEF.d", package = "MsBackendTimsTof")
+#'
+#' ## Create a MsBackend instance for that file
+#' be <- backendInitialize(MsBackendTimsTof(), fl)
+#' be
+#'
+#' ## Available spectra variables
+#' spectraVariables(be)
+#'
+#' ## Subset to 10 randomly selected spectra.
+#' be_sub <- be[sort(sample(seq_along(be), 10))]
+#' rtime(be_sub)
+#'
+#' pd <- peaksData(be_sub, columns = c("mz", "intensity", "tof", "inv_ion_mobility"))
 setClass("MsBackendTimsTof",
          contains = "MsBackend",
          slots = c(frames = "data.frame",
