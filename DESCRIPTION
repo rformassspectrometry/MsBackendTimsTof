@@ -1,5 +1,5 @@
 Package: MsBackendTimsTof
-Title: Mass Spectrometry Data Backend for MassBank record Files
+Title: Mass spectrometry Data Backend for Bruker TimsTOF Siles
 Version: 0.0.7
 Authors@R:
     c(person(given = "RforMassSpectrometry Package Maintainer",
