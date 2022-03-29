@@ -1,13 +1,10 @@
 Package: MsBackendTimsTof
 Title: Mass Spectrometry Data Backend for MassBank record Files
-Version: 0.0.7
+Version: 0.0.8
 Authors@R:
-    c(person(given = "RforMassSpectrometry Package Maintainer",
-             email = "maintainer@rformassspectrometry.org",
-             role = "cre"),
-      person(given = "Johannes", family = "Rainer",
+    c(person(given = "Johannes", family = "Rainer",
              email = "Johannes.Rainer@eurac.edu",
-             role = "aut",
+             role = c("aut", "cre"),
              comment = c(ORCID = "0000-0002-6977-7147")),
       person(given = "Andrea", family = "Vicini",
              email = "andrea.vicini@eurac.edu",
@@ -16,7 +13,11 @@ Authors@R:
       person(given = "Steffen", family = "Neumann",
              email = "sneumann@ipb-halle.de",
              role = "ctb",
-             comment = c(ORCID = "0000-0002-7899-7192")))
+             comment = c(ORCID = "0000-0002-7899-7192")),
+      person(given = "Carolin", family = "Huber",
+             email = "carolin-elisabeth.huber@ufz.de",
+             role = c("ctb"),
+             comment = c(ORCID = "0000-0002-9355-8948")))
 Description: Mass spectrometry (MS) data backend supporting import and
              export of (ion mobility) MS data from Bruker TimsTOF files.
              The backend uses the opentimsr package which relies on the

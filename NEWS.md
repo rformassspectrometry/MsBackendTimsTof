@@ -1,5 +1,9 @@
 # MsBackendTimsTof 0.0
 
+## MsBackendTimsTof 0.0.8
+
+- Add documentation and vignette.
+
 ## MsBackendTimsTof 0.0.7
 
 - Added `msLevel` to extract MS level of each spectrum in `MsBackendTimsTof`
