@@ -11,7 +11,7 @@
 \alias{mz,MsBackendTimsTof-method}
 \alias{intensity,MsBackendTimsTof-method}
 \alias{rtime,MsBackendTimsTof-method}
-\alias{[,MsBackendTimsTof,ANY,ANY,ANY-method}
+\alias{[,MsBackendTimsTof-method}
 \alias{dataStorage,MsBackendTimsTof-method}
 \alias{spectraVariables,MsBackendTimsTof-method}
 \alias{spectraData,MsBackendTimsTof-method}
@@ -33,7 +33,7 @@ MsBackendTimsTof()
 
 \S4method{rtime}{MsBackendTimsTof}(object)
 
-\S4method{[}{MsBackendTimsTof,ANY,ANY,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{MsBackendTimsTof}(x, i, j, ..., drop = FALSE)
 
 \S4method{dataStorage}{MsBackendTimsTof}(object)
 
@@ -118,6 +118,33 @@ additional variables contained in \code{object}. Note that also \code{"mz"} and
 }
 }
 
+\examples{
+
+## Load the opentimsr package to retrieve the required shared library
+## from Bruker.
+so_folder <- tempdir()
+library(opentimsr)
+so_file <- download_bruker_proprietary_code(so_folder, method = "wget")
+setup_bruker_so(so_file)
+path_d_folder <- system.file("ddaPASEF.d",
+                             package = "MsBackendTimsTof")
+
+## Define the test file
+fl <- system.file("ddaPASEF.d", package = "MsBackendTimsTof")
+
+## Create a MsBackend instance for that file
+be <- backendInitialize(MsBackendTimsTof(), fl)
+be
+
+## Available spectra variables
+spectraVariables(be)
+
+## Subset to 10 randomly selected spectra.
+be_sub <- be[sort(sample(seq_along(be), 10))]
+rtime(be_sub)
+
+pd <- peaksData(be_sub, columns = c("mz", "intensity", "tof", "inv_ion_mobility"))
+}
 \author{
 Andrea Vicini, Johannes Rainer
 }

@@ -1,0 +1,177 @@
+---
+title: "Description and usage of MsBackendTimsTof"
+output:
+    BiocStyle::html_document:
+        toc_float: true
+vignette: >
+    %\VignetteIndexEntry{Description and usage of MsBackendTimsTof}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+    %\VignettePackage{MsBackendTimsTof}
+    %\VignetteDepends{Spectra,BiocStyle,BiocParallel}
+---
+
+```{r style, echo = FALSE, results = 'asis', message=FALSE}
+BiocStyle::markdown()
+```
+
+**Package**: `r Biocpkg("MsBackendTimsTof")`<br />
+**Authors**: `r packageDescription("MsBackendTimsTof")[["Author"]] `<br />
+**Compiled**: `r date()`
+
+```{r, echo = FALSE, message = FALSE}
+library(Spectra)
+library(BiocStyle)
+```
+
+# Introduction
+
+The `r Biocpkg("Spectra")` package provides a central infrastructure for the
+handling of Mass Spectrometry (MS) data. The package supports interchangeable
+use of different *backends* to import MS data from a variety of sources (such as
+mzML files). The `MsBackendTimsTof` package adds support for Bruker TimsTOF raw
+data files. This vignette shows how, and which data can be retrieved from such
+files.
+
+# Installation
+
+The package depends on the [OpenTIMS](https://github.com/michalsta/opentims) C++
+library to access data in timsTOF Pro data format (TDF) which is provided by the
+`opentimsr` R package. The `MsBackendTimsTof` package can be installed with:
+
+```{r, eval = FALSE}
+BiocManager::install("RforMassSpectrometry/MsBackendTimsTof")
+```
+
+To get some variables from the data files an additional library from the
+manufacturer is needed. This library can be downloaded with:
+
+```{r, eval = FALSE}
+so_folder <- tempdir()
+library(opentimsr)
+so_file <- download_bruker_proprietary_code(so_folder)
+```
+
+This downloads the shared library to a temporary folder. Note however that at
+present this shared library is **only available for Windows and Linux** (i.e. no
+macOS support). Next, to use this library, it has to be registered with the
+`opentimsr` package:
+
+```{r, eval = FALSE}
+setup_bruker_so(so_file)
+```
+
+These steps would be necessary for every new R session. To avoid that, it is
+suggested to copy the downloaded shared library above to a directory on the
+computer and to define an environment variable called `TIMSTOF_LIB` that defines
+the full path where this file is located (i.e. a character string defining the
+full file path with the file name). This variable can either be defined system
+wide, or within the *.Rprofile* file. An example entry in a *.Rprofile* could
+for example be:
+
+```
+options(TIMSTOF_LIB = "/Users/jo/lib/libtimsdata.so")
+```
+
+
+# Accessing data from Bruker TimsTOF files
+
+The `MsBackendTimsTof` package adds support for Bruker TimsTOF files to
+`Spectra`-based analysis workflows. Below we load the package and in addition
+fetch the required shared library and store that to a temporary folder.
+
+```{r, message = FALSE}
+library(MsBackendTimsTof)
+
+## Load the opentimsr package and download and register the shared library
+library(opentimsr)
+so_folder <- tempdir()
+so_file <- download_bruker_proprietary_code(so_folder, method = "wget")
+setup_bruker_so(so_file)
+```
+
+As detailed in the installation section, the code to download the shared library
+would only be necessary once, if the path to this file is defined in a
+environment variable `TIMSTOF_LIB`.
+
+We next load the TDF test file which is bundled within this package.
+
+```{r}
+fl <- system.file("ddaPASEF.d", package = "MsBackendTimsTof")
+
+be <- backendInitialize(MsBackendTimsTof(), fl)
+```
+
+In a real use case, we would however directly load the data into a `Spectra`
+object:
+
+```{r}
+sps <- Spectra(fl, source = MsBackendTimsTof())
+sps
+```
+
+We thus have access to all spectra variables within the file:
+
+```{r}
+spectraVariables(be)
+```
+
+And the full data can be retrieved with `spectraData`:
+
+```{r}
+all <- spectraData(be)
+```
+
+The data is organized by individual spectra, all spectra measured within the
+same *frame* have the same value in the spectra variable `"frameId"`. `"tof"`
+and `"inv_ion_mobility"` are available for each individual peak (not spectrum)
+and are thus additional *peaks variables*.
+
+Below we subset the backend to a range of spectra and extract their `peaksData`.
+
+```{r}
+be_sub <- be[218:226]
+peaksData(be_sub, columns = c("mz", "intensity", "tof", "inv_ion_mobility",
+                              "retention_time"))
+```
+
+Open questions:
+
+- is the data representation OK? Does it make sense to have `inv_ion_mobility`
+  as peaks variable, or should that be a spectra variable (seems to be the same
+  value for all peaks of one spectrum). Same for `retention_time`.
+
+```{r}
+## Check if retention time is the same for all peaks within a spectrum
+pks <- peaksData(be, columns = c("mz", "intensity", "tof", "inv_ion_mobility",
+                                 "retention_time"))
+rt <- vapply(pks, function(z) {
+    if (nrow(z)) {
+        if (length(unique(z[, "retention_time"])) != 1L)
+            stop("different values for retention_time")
+        z[1, "retention_time"]
+    } else NA_real_
+}, numeric(1))
+iim <- vapply(pks, function(z) {
+    if (nrow(z)) {
+        if (length(unique(z[, "inv_ion_mobility"])) != 1L)
+            stop("different values for inv_ion_mobility")
+        z[1, "inv_ion_mobility"]
+    } else NA_real_
+}, numeric(1))
+
+## Check if the retention times from peaks table match the ones from spectra
+## variables.
+all.equal(all$rtime[!is.na(rt)], rt[!is.na(rt)])
+
+```
+
+So, summarizing: seems the retention time information in the peaks data is
+redundant and also the inverse ion mobility seems to be rather a spectra, not a
+peaks variable.
+
+# Session information
+
+```{r}
+sessionInfo()
+```
