@@ -1,5 +1,5 @@
 Package: MsBackendTimsTof
-Title: Mass Spectrometry Data Backend for MassBank record Files
+Title: Mass spectrometry Data Backend for Bruker TimsTOF Files
 Version: 0.0.8
 Authors@R:
     c(person(given = "Johannes", family = "Rainer",
