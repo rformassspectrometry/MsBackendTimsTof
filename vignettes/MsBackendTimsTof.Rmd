@@ -49,7 +49,7 @@ manufacturer is needed. This library can be downloaded with:
 ```{r, eval = FALSE}
 so_folder <- tempdir()
 library(opentimsr)
-so_file <- download_bruker_proprietary_code(so_folder, method = "wget")
+so_file <- download_bruker_proprietary_code(so_folder)
 ```
 
 This downloads the shared library to a temporary folder. Note however that at
