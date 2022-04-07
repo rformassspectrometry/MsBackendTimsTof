@@ -1,3 +1,11 @@
+# MsBackendTimsTof 0.1
+
+## MsBackendTimsTof 0.1.0
+
+- Import `coreSpectraVariables` from `Spectra` and thus depend on `Spectra`
+  version >= 1.5.14.
+- Return `inv_ion_mobility` as a `spectraVariable`.
+
 # MsBackendTimsTof 0.0
 
 ## MsBackendTimsTof 0.0.8

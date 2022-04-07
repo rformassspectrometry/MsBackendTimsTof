@@ -124,7 +124,7 @@ MsBackendTimsTof <- function() {
 #' @param x `MsBackendTimsTof` object.
 #'
 #' @param columns `character` with the names of the columns to extract.
-#' 
+#'
 #' @param drop `logical` if TRUE and `columns` has length 1 the result is
 #'   returned as list of `numeric` instead of as list of 1-column `matrix`.
 #'
@@ -147,9 +147,6 @@ MsBackendTimsTof <- function() {
         if (!length(sd <- setdiff(columns, c("frame", "scan"))))
             stop("At least one column value different from 'frame' and",
                  " 'scan' required")
-        ## Ensure mz and intensity are always first, if provided
-        sd <- c(intersect(c("mz", "intensity"), sd),
-                setdiff(sd, c("mz", "intensity")))
         i_frame <- x@indices[I, "frame"]
         tmp <- query(tms, unique(i_frame), c("frame", "scan", sd))
         ## subset tmp if we're about to extract only few scans.
@@ -199,7 +196,7 @@ MsBackendTimsTof <- function() {
 #' @param x `MsBackendTimsTOF`
 #'
 #' @param columns `character` with the column names.
-#' 
+#'
 #' @param drop `logical` if TRUE and `columns` has length 1 the result is
 #'   returned as `numeric` instead of as 1-column `data.frame`.
 #'
@@ -234,7 +231,7 @@ MsBackendTimsTof <- function() {
 
 #' Get the msLevel for each spectra. `x` is interpreted either as
 #' `MsBackendTimsTof` if `isMsMsType` is `FALSE` or as `numeric` with the
-#' MsMsType of each spectra if `isMsMsType` is `TRUE`. 
+#' MsMsType of each spectra if `isMsMsType` is `TRUE`.
 #'
 #' @noRd
 .get_msLevel <- function(x, isMsMsType = FALSE) {
@@ -254,6 +251,8 @@ MsBackendTimsTof <- function() {
 .TIMSTOF_COLUMNS <- c("mz", "intensity", "tof", "inv_ion_mobility")
 
 #' @importFrom methods as
+#'
+#' @importFrom Spectra coreSpectraVariables
 .spectra_data <- function(x, columns = spectraVariables(x)) {
     if (!all(present <- columns %in% spectraVariables(x)))
         stop("Column(s) ", paste0("\"", columns[!present], "\"",
@@ -261,7 +260,7 @@ MsBackendTimsTof <- function() {
              " not available.", call. = FALSE)
     res <- vector(mode = "list", length = length(columns))
     names(res) <- columns
-    core_cols <- columns[columns %in% names(Spectra:::.SPECTRA_DATA_COLUMNS)]
+    core_cols <- columns[columns %in% names(coreSpectraVariables())]
     frames_cols <- columns[columns %in% colnames(x@frames)]
     tims_cols <- columns[columns %in% .TIMSTOF_COLUMNS]
     if ("scanIndex" %in% columns) {
@@ -300,7 +299,7 @@ MsBackendTimsTof <- function() {
         core_cols <- core_cols[core_cols != "dataStorage"]
     }
     if (length(core_cols)) {
-        res[core_cols] <- lapply(Spectra:::.SPECTRA_DATA_COLUMNS[core_cols],
+        res[core_cols] <- lapply(coreSpectraVariables()[core_cols],
                                  function(z, n) rep(as(NA, z), n), length(x))
     }
     if (length(res))

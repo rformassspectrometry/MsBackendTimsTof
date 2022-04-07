@@ -48,10 +48,10 @@ test_that(".get_tims_columns works", {
     ## mz and intensity are always first.
     be_sub <- be[200:300]
     res <- .get_tims_columns(be_sub, c("intensity", "mz", "tof"))
-    expect_equal(colnames(res[[1L]]), c("mz", "intensity", "tof"))
+    expect_equal(colnames(res[[1L]]), c("intensity", "mz", "tof"))
 
     res <- .get_tims_columns(be_sub, c("tof", "intensity"))
-    expect_equal(colnames(res[[1L]]), c("intensity", "tof"))
+    expect_equal(colnames(res[[1L]]), c("tof", "intensity"))
 
     res <- .get_tims_columns(be_sub, c("tof", "inv_ion_mobility"))
     expect_equal(colnames(res[[1L]]), c("tof", "inv_ion_mobility"))
