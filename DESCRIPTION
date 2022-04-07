@@ -32,7 +32,8 @@ Imports:
     BiocParallel,
     methods,
     opentimsr (>= 1.0.11),
-    MsCoreUtils
+    MsCoreUtils,
+    S4Vectors
 Suggests:
     testthat,
     knitr (>= 1.1.0),

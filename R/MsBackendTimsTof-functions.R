@@ -20,11 +20,10 @@
         tms <- opentimsr::OpenTIMS(file[fl_idx])
         on.exit(opentimsr::CloseTIMS(tms))
         frames <- cbind(tms@frames, file = fl_idx)
-        indices <- cbind(
-            frame = rep(tms@frames$Id, tms@frames$NumScans),
-            scan = sequence(tms@frames$NumScans),
-            file = fl_idx)
-        list(frames, indices)
+        indices <- unique(.query_tims(tms, frames = frames$Id,
+                                      columns = c("frame", "scan")))
+        indices$file <- fl_idx
+        list(frames, as.matrix(indices, rownames.force = FALSE))
     }, BPPARAM = BPPARAM)
     x@frames <- do.call(rbindFill, lapply(L, "[[", 1))
     idx <- match(colnames(x@frames), .SPECTRA_VARIABLE_MAPPINGS)
@@ -138,17 +137,8 @@ MsBackendTimsTof <- function() {
     nms <- names(x@fileNames)
     for (i in seq_len(length(nms))) {
         I <- which(x@indices[, "file"] == x@fileNames[i])
-        tms <- OpenTIMS(nms[i])
-        on.exit(opentimsr::CloseTIMS(tms))
-        if (any(notin <- !columns %in% tms@all_columns))
-            stop("Column(s) ",
-                 paste0("'", columns[notin], "'", collapse = ", "),
-                 " not available.", call. = FALSE)
-        if (!length(sd <- setdiff(columns, c("frame", "scan"))))
-            stop("At least one column value different from 'frame' and",
-                 " 'scan' required")
         i_frame <- x@indices[I, "frame"]
-        tmp <- query(tms, unique(i_frame), c("frame", "scan", sd))
+        tmp <- .query_tims(nms[i], unique(i_frame), columns)
         ## subset tmp if we're about to extract only few scans.
         if (length(i_frame) < (nrow(tmp) / 10)) {
             i_scan <- x@indices[I, "scan"]
@@ -160,21 +150,103 @@ MsBackendTimsTof <- function() {
             tmp <- rbindFill(tmp, data.frame(frame = 0L))
         f <- factor(paste(tmp$frame, tmp$scan), levels = unique(ids))
         if (anyDuplicated(ids)) {
-            if (length(sd) == 1)
-                res[I] <- unname(split(tmp[, sd, drop], f)[ids])
+            if (length(columns) == 1)
+                res[I] <- unname(split(tmp[, columns, drop], f)[ids])
             else
-                res[I] <- unname(split.data.frame(as.matrix(tmp[, sd, drop]),
-                                                  f)[ids])
+                res[I] <- unname(
+                    split.data.frame(as.matrix(tmp[, columns, drop]), f)[ids])
         } else {
-            if (length(sd) == 1) {
-                res[I] <- unname(split(tmp[, sd, drop], f))
+            if (length(columns) == 1) {
+                res[I] <- unname(split(tmp[, columns, drop], f))
             } else {
-                res[I] <- unname(split.data.frame(as.matrix(tmp[, sd, drop]),
-                                                  f))
+                res[I] <- unname(
+                    split.data.frame(as.matrix(tmp[, columns, drop]), f))
             }
         }
     }
     res
+}
+
+#' Parallel processing version of the function above
+#'
+#' @noRd
+.get_tims_columns_p <- function(x, columns, drop = TRUE, BPPARAM = bpparam()) {
+    f <- as.factor(x@indices[, "file"])
+    res <- bplapply(split.data.frame(x@indices, f), function(z, x) {
+        fn <- names(x@fileNames)[match(z[1, "file"], x@fileNames)]
+        tmp <- .query_tims(fn, unique(z[, "frame"]), columns)
+        ## subset tmp if we're about to extract only few scans.
+        if (nrow(z) < (nrow(tmp) / 10)) {
+            tmp <- tmp[tmp$scan %in% z[, "scan"], , drop = FALSE]
+            rownames(tmp) <- NULL
+        }
+        ids <- paste(z[, "frame"], z[, "scan"])
+        if (!nrow(tmp))
+            tmp <- rbindFill(tmp, data.frame(frame = 0L))
+        tmp_ids <- factor(paste(tmp$frame, tmp$scan), levels = unique(ids))
+        if (anyDuplicated(ids)) {
+            if (length(columns) == 1)
+                res <- split(tmp[, columns, drop], tmp_ids)[ids]
+            else
+                res <- split.data.frame(
+                    as.matrix(tmp[, columns, drop]), tmp_ids)[ids]
+        } else {
+            if (length(columns) == 1) {
+                res <- split(tmp[, columns, drop], tmp_ids)
+            } else {
+                res <- split.data.frame(
+                    as.matrix(tmp[, columns, drop]), tmp_ids)
+            }
+        }
+        unname(res)
+    }, x = x, BPPARAM = BPPARAM)
+    unsplit(res, f)
+}
+
+#' Extract the inv_ion_mobility from the TimsTOF file.
+#'
+#' @author Johannes Rainer
+#'
+#' @noRd
+.inv_ion_mobility <- function(x, BPPARAM = bpparam()) {
+    f <- as.factor(x@indices[, "file"])
+    res <- bplapply(split.data.frame(x@indices, f), function(z, x) {
+        fn <- names(x@fileNames)[match(z[1, "file"], x@fileNames)]
+        tmp <- unique(.query_tims(
+            fn, unique(z[, "frame"]), c("frame", "scan", "inv_ion_mobility")))
+        ids <- paste(z[, "frame"], z[, "scan"])
+        tmp_ids <- paste(tmp$frame, tmp$scan)
+        tmp[match(ids, tmp_ids), "inv_ion_mobility"]
+    }, x = x, BPPARAM = BPPARAM)
+    unsplit(res, f)
+}
+
+#' Function to use the `query` function from opentimsr to retrieve data from
+#' a single file.
+#'
+#' @param x `opentimsr::OpenTIMS` object or `character(1)`.
+#'
+#' @param frames `integer` with the IDs (indices) of the frames to retrieve
+#'     data from.
+#'
+#' @param columns `character` defining the columns to retrieve.
+#'
+#' @return `data.frame` with the requested data.
+#'
+#' @noRd
+#'
+#' @author Johannes Rainer
+.query_tims <- function(x, frames, columns) {
+    if (is.character(x)) {
+        x <- OpenTIMS(x)
+        on.exit(opentimsr::CloseTIMS(x))
+    }
+    if (any(notin <- !columns %in% x@all_columns))
+        stop("Column(s) ",
+             paste0("'", columns[notin], "'", collapse = ", "),
+             " not available.", call. = FALSE)
+    sd <- setdiff(columns, c("frame", "scan"))
+    query(x, unique(frames), c("frame", "scan", sd))
 }
 
 #' Lists all available peak columns in TIMS file
@@ -252,6 +324,8 @@ MsBackendTimsTof <- function() {
 
 #' @importFrom methods as
 #'
+#' @importFrom S4Vectors DataFrame
+#'
 #' @importFrom Spectra coreSpectraVariables
 .spectra_data <- function(x, columns = spectraVariables(x)) {
     if (!all(present <- columns %in% spectraVariables(x)))
@@ -262,7 +336,8 @@ MsBackendTimsTof <- function() {
     names(res) <- columns
     core_cols <- columns[columns %in% names(coreSpectraVariables())]
     frames_cols <- columns[columns %in% colnames(x@frames)]
-    tims_cols <- columns[columns %in% .TIMSTOF_COLUMNS]
+    tims_cols <- columns[
+        columns %in% .TIMSTOF_COLUMNS[!.TIMSTOF_COLUMNS == "inv_ion_mobility"]]
     if ("scanIndex" %in% columns) {
         res[["scanIndex"]] <- x@indices[, "scan"]
         core_cols <- core_cols[core_cols != "scanIndex"]
@@ -280,11 +355,21 @@ MsBackendTimsTof <- function() {
         core_cols <- setdiff(core_cols, frames_cols)
     }
     if (length(tims_cols)) {
-        res[tims_cols] <- lapply(tims_cols, function(col)
-            NumericList(lapply(.get_tims_columns(x, tims_cols, drop = FALSE),
-                               function(m) unname(m[, col])),
-                        compress = FALSE))
+        if ("inv_ion_mobility" %in% columns) {
+            pks <- .get_tims_columns(x, c(tims_cols, "inv_ion_mobility"),
+                                     drop = FALSE)
+            res[["inv_ion_mobility"]] <-
+                vapply(pks, function(m) unname(m[1L, "inv_ion_mobility"]),
+                       numeric(1))
+        } else
+            pks <- .get_tims_columns(x, tims_cols, drop = FALSE)
+        for (col in tims_cols)
+            res[[col]] <- NumericList(lapply(pks, function(m) unname(m[, col])),
+                                      compress = FALSE)
         core_cols <- setdiff(core_cols, tims_cols)
+    } else {
+        if ("inv_ion_mobility" %in% columns)
+            res[["inv_ion_mobility"]] <- .inv_ion_mobility(x)
     }
     if ("msLevel" %in% columns) {
         if ("MsMsType" %in% frames_cols) {
@@ -304,5 +389,5 @@ MsBackendTimsTof <- function() {
     }
     if (length(res))
         as(res, "DataFrame")
-    else NULL
+    else DataFrame()
 }
