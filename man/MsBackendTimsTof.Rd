@@ -17,6 +17,7 @@
 \alias{spectraData,MsBackendTimsTof-method}
 \alias{show,MsBackendTimsTof-method}
 \alias{msLevel,MsBackendTimsTof-method}
+\alias{$,MsBackendTimsTof-method}
 \title{TimsTOF data backend}
 \usage{
 MsBackendTimsTof()
@@ -44,6 +45,8 @@ MsBackendTimsTof()
 \S4method{show}{MsBackendTimsTof}(object)
 
 \S4method{msLevel}{MsBackendTimsTof}(object, ...)
+
+\S4method{$}{MsBackendTimsTof}(x, name)
 }
 \arguments{
 \item{object}{\code{MsBackendTimsTof} object.}
@@ -67,16 +70,22 @@ Defaults to \code{columns = c("mz", "intensity")}.}
 \item{j}{For \code{[}: not supported.}
 
 \item{drop}{For \code{[}: not considered.}
+
+\item{name}{For \code{$}: the name of the variable to access.}
 }
 \description{
 The \code{MsBackendTimsTof} class supports Bruker TimsTOF data files. New objects
-are created with the \code{MsBackendTimsTof} function.
+are created with the \code{MsBackendTimsTof} function. To ensure a small memory
+footprint, only general information is kept in memory (such as number of
+frames and scans) and all data (specifically the peaks data) is retrieved
+from the original file on-the-fly.
 }
 \section{Available methods}{
 
 
 The following methods are implemented:
 \itemize{
+\item \code{$}: access any of the \code{spectraVariables} of the backend.
 \item \code{[}: subset the backend. Only subsetting by element (\emph{row}/\code{i}) is
 allowed. First the \verb{@indices} slot of \code{object} is subsetted and then the
 \code{frames} and \code{fileNames} slots are subsetted accordingly. Note that \code{[}
@@ -101,9 +110,7 @@ spectrum). The length of the list is equal to the number of spectra in
 \code{object}.
 \item \code{peaksData}: gets the peak matrices of the spectra in the backend.
 Returns a \code{list} of \code{matrix} with columns defined by parameter \code{columns}
-(which defaults to \code{columns = c("mz", "intensity")}. Note that regardless
-of the order of requested columns in \code{columns}, \code{"mz"} and \code{"intensity"}
-(if requested) are always returned as the first columns.
+(which defaults to \code{columns = c("mz", "intensity")}.
 The length of the \code{list} is equal to the number of spectra in \code{object}.
 \item \code{rtime}: gets the retention times for each spectrum. Returns a \code{numeric}
 vector (length equal to the number of spectra) with the retention time

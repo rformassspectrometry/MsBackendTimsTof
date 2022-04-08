@@ -1,6 +1,6 @@
 Package: MsBackendTimsTof
 Title: Mass spectrometry Data Backend for Bruker TimsTOF Files
-Version: 0.0.8
+Version: 0.1.0
 Authors@R:
     c(person(given = "Johannes", family = "Rainer",
              email = "Johannes.Rainer@eurac.edu",
@@ -26,13 +26,14 @@ Description: Mass spectrometry (MS) data backend supporting import and
              raw data files.
 Depends:
     R (>= 4.1),
-    Spectra (>= 1.0)
+    Spectra (>= 1.5.14)
 Imports:
     IRanges,
     BiocParallel,
     methods,
     opentimsr (>= 1.0.11),
-    MsCoreUtils
+    MsCoreUtils,
+    S4Vectors
 Suggests:
     testthat,
     knitr (>= 1.1.0),

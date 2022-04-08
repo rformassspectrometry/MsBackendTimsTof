@@ -10,12 +10,11 @@ test_that("backendInitialize,MsBackendTimsTof works", {
     expect_equal(be@frames, expected_frames)
     expect_equal(be@fileNames,
                  setNames(c(1L, 2L), rep(normalizePath(path_d_folder), 2)))
-    frame_scan <- cbind(frame = rep(tms@frames$Id, tms@frames$NumScans),
-                        scan = sequence(tms@frames$NumScans))
-    expect_equal(be@indices, rbind(cbind(frame_scan, file = 1),
-                                   cbind(frame_scan, file = 2)))
+    tmp <- unique(query(tms, unique(be@frames$frame), c("frame", "scan")))
+    tmp <- rbind(cbind(tmp, file = 1),
+                 cbind(tmp, file = 2))
+    expect_equal(be@indices, as.matrix(tmp, rownames.force = FALSE))
 })
-
 
 test_that("[,MsBackendTimsTof works", {
     expect_error(MsBackendTimsTof()[1])
@@ -35,8 +34,8 @@ test_that("[,MsBackendTimsTof works", {
     res <- be[c(1000, 1, 222)]
     expect_true(validObject(res))
     expect_equal(res@indices, be@indices[c(1000, 1, 222), ])
-    expect_equal(res@frames$frameId, c(2, 1))
-    expect_equal(res@frames$file, c(1L, 1L))
+    expect_equal(res@frames$frameId, unique(res@indices[, "frame"]))
+    expect_equal(res@frames$file, c(1L, 1L, 1L))
     expect_equal(names(res@fileNames), normalizePath(path_d_folder))
     expect_equal(rtime(res), rtime(be)[c(1000, 1, 222)])
     expect_equal(mz(res), mz(be)[c(1000, 1, 222)])
@@ -45,8 +44,8 @@ test_that("[,MsBackendTimsTof works", {
     res <- be[c(1000, 2790, 1, 222, 1, 2790)]
     expect_true(validObject(res))
     expect_equal(res@indices, be@indices[c(1000, 2790, 1, 222, 1, 2790), ])
-    expect_equal(res@frames$frameId, c(2, 4, 1))
-    expect_equal(res@frames$file, c(1L, 1L, 1L))
+    expect_equal(res@frames$frameId, unique(res@indices[, "frame"]))
+    expect_equal(res@frames$file, c(1L, 1L, 1L, 1L))
     expect_equal(names(res@fileNames), normalizePath(path_d_folder))
     expect_equal(rtime(res), rtime(be)[c(1000, 2790, 1, 222, 1, 2790)])
     expect_equal(mz(res), mz(be)[c(1000, 2790, 1, 222, 1, 2790)])
@@ -100,7 +99,6 @@ test_that("rtime,MsBackendTimsTof works", {
     res <- rtime(be)
     expect_equal(length(res), length(be))
     expect_equal(res[1], be@frames[1, "rtime"])
-    expect_equal(res[be@frames$NumScans[1] + 1], be@frames[2, "rtime"])
     expect_equal(res[sum(be@frames[be@frames$Id == 1, "NumScans"]) + 1],
                  be@frames[1, "rtime"])
     expect_equal(rtime(be[sample_idxs]), res[sample_idxs])
@@ -131,13 +129,13 @@ test_that("spectraData,MsBackendTimsTof works", {
 
     expect_error(spectraData(be, "not spectra variable"), "not available")
 
-    res <- spectraData(be)
-    expect_identical(colnames(res), spectraVariables(be))
-    expect_identical(res$mz, mz(be))
-    expect_identical(res$intensity, intensity(be))
-    expect_identical(res$polarity, .get_frame_columns(be, "polarity"))
-    expect_identical(res$scanIndex, be@indices[, "scan"])
-    expect_identical(res$dataStorage, dataStorage(be))
+    res_all <- spectraData(be)
+    expect_identical(colnames(res_all), spectraVariables(be))
+    expect_identical(res_all$mz, mz(be))
+    expect_identical(res_all$intensity, intensity(be))
+    expect_identical(res_all$polarity, .get_frame_columns(be, "polarity"))
+    expect_identical(res_all$scanIndex, be@indices[, "scan"])
+    expect_identical(res_all$dataStorage, dataStorage(be))
 
     ## selecting only a few columns
     res <- spectraData(be, columns = c("msLevel","rtime"))
@@ -148,6 +146,30 @@ test_that("spectraData,MsBackendTimsTof works", {
     res <- spectraData(be, columns = "tof")
     expect_identical(colnames(res), "tof")
     expect_identical(nrow(res), length(be))
+
+    ## ion mobility.
+    res <- spectraData(be, columns = c("inv_ion_mobility"))
+    expect_identical(colnames(res), "inv_ion_mobility")
+    expect_identical(nrow(res), length(be))
+    expect_true(is.numeric(res$inv_ion_mobility))
+
+    res_2 <- spectraData(be, columns = c("mz", "inv_ion_mobility"))
+    expect_identical(colnames(res_2), c("mz", "inv_ion_mobility"))
+    expect_identical(nrow(res_2), length(be))
+    expect_true(is.numeric(res_2$inv_ion_mobility))
+    expect_equal(res$inv_ion_mobility, res_2$inv_ion_mobility)
+
+    ## Random order
+    idx <- sample(seq_along(be))
+    be_2 <- be[idx]
+
+    res <- spectraData(be_2)
+    expect_equal(res, res_all[idx, ])
+
+    ## duplicated values
+    be_2 <- be[c(2, 2, 1, 2)]
+    res <- spectraData(be_2)
+    expect_equal(res, res_all[c(2, 2, 1, 2), ])
 })
 
 test_that("msLevel,MsBackendTimsTof works", {
@@ -157,4 +179,14 @@ test_that("msLevel,MsBackendTimsTof works", {
     res <- msLevel(be)
     expect_identical(length(res), length(be))
     expect_identical(res, match(.get_frame_columns(be, "MsMsType"), c(0L, 8L)))
+})
+
+test_that("$,MsBackendTimsTof works", {
+    res_all <- spectraData(be)
+
+    res <- be$inv_ion_mobility
+    expect_equal(res, res_all$inv_ion_mobility)
+
+    res <- be$mz
+    expect_equal(res, res_all$mz)
 })

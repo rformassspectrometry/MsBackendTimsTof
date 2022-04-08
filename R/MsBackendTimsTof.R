@@ -5,12 +5,18 @@
 #' @aliases MsBackendTimsTof MsBackendTimsTof-class
 #'
 #' @description
+#'
 #' The `MsBackendTimsTof` class supports Bruker TimsTOF data files. New objects
-#' are created with the `MsBackendTimsTof` function.
+#' are created with the `MsBackendTimsTof` function. To ensure a small memory
+#' footprint, only general information is kept in memory (such as number of
+#' frames and scans) and all data (specifically the peaks data) is retrieved
+#' from the original file on-the-fly.
 #'
 #' @section Available methods:
 #'
 #' The following methods are implemented:
+#'
+#' - `$`: access any of the `spectraVariables` of the backend.
 #'
 #' - `[`: subset the backend. Only subsetting by element (*row*/`i`) is
 #'   allowed. First the `@indices` slot of `object` is subsetted and then the
@@ -42,9 +48,7 @@
 #'
 #' - `peaksData`: gets the peak matrices of the spectra in the backend.
 #'   Returns a `list` of `matrix` with columns defined by parameter `columns`
-#'   (which defaults to `columns = c("mz", "intensity")`. Note that regardless
-#'   of the order of requested columns in `columns`, `"mz"` and `"intensity"`
-#'   (if requested) are always returned as the first columns.
+#'   (which defaults to `columns = c("mz", "intensity")`.
 #'   The length of the `list` is equal to the number of spectra in `object`.
 #'
 #' - `rtime`: gets the retention times for each spectrum. Returns a `numeric`
@@ -75,6 +79,8 @@
 #' @param i For `[`: `integer`, `logical` to subset the object.
 #'
 #' @param j For `[`: not supported.
+#'
+#' @param name For `$`: the name of the variable to access.
 #'
 #' @param object `MsBackendTimsTof` object.
 #'
@@ -218,16 +224,18 @@ setMethod("[", "MsBackendTimsTof", function(x, i, j, ..., drop = FALSE) {
 #' @rdname MsBackendTimsTof
 setMethod("dataStorage", "MsBackendTimsTof", function(object) {
     if("file" %in% colnames(object@indices) && length(object@fileNames))
-        return (names(object@fileNames[match(object@indices[, "file"],
-                                             object@fileNames)]))
+        return(names(object@fileNames[match(object@indices[, "file"],
+                                            object@fileNames)]))
     character(0)
 })
 
 #' @importMethodsFrom Spectra spectraVariables
 #'
+#' @importFrom Spectra coreSpectraVariables
+#'
 #' @rdname MsBackendTimsTof
 setMethod("spectraVariables", "MsBackendTimsTof", function(object) {
-    unique(c(names(Spectra:::.SPECTRA_DATA_COLUMNS), .TIMSTOF_COLUMNS,
+    unique(c(names(coreSpectraVariables()), .TIMSTOF_COLUMNS,
              colnames(object@frames)))
 })
 
@@ -264,4 +272,14 @@ setMethod("show", "MsBackendTimsTof", function(object) {
 #' @rdname MsBackendTimsTof
 setMethod("msLevel", "MsBackendTimsTof", function(object, ...) {
     .get_msLevel(object)
+})
+
+#' @rdname MsBackendTimsTof
+setMethod("$", "MsBackendTimsTof", function(x, name) {
+    if (!any(spectraVariables(x) == name))
+        stop("spectra variable '", name, "' not available")
+    if (name == "inv_ion_mobility")
+        .inv_ion_mobility(x)
+    else
+        spectraData(x, name)[, 1L]
 })

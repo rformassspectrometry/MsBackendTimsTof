@@ -120,12 +120,14 @@ And the full data can be retrieved with `spectraData`:
 
 ```{r}
 all <- spectraData(be)
+all
 ```
 
 The data is organized by individual spectra, all spectra measured within the
-same *frame* have the same value in the spectra variable `"frameId"`. `"tof"`
-and `"inv_ion_mobility"` are available for each individual peak (not spectrum)
-and are thus additional *peaks variables*.
+same *frame* have the same value in the spectra variable `"frameId"`. Spectra
+variable `"inv_ion_mobility"` provides the *inverse ion mobility*
+information. This variable is available as a spectra variable, but also as a
+*peaks variable* along with e.g. `"tof"`.
 
 Below we subset the backend to a range of spectra and extract their `peaksData`.
 
@@ -135,40 +137,16 @@ peaksData(be_sub, columns = c("mz", "intensity", "tof", "inv_ion_mobility",
                               "retention_time"))
 ```
 
-Open questions:
-
-- is the data representation OK? Does it make sense to have `inv_ion_mobility`
-  as peaks variable, or should that be a spectra variable (seems to be the same
-  value for all peaks of one spectrum). Same for `retention_time`.
+Note however that both the `"inv_ion_mobility"` and `"retention_time"` have the
+same value for all peaks in each spectrum. Thus, these variables should be
+accessed not through `peaksData`, but through `spectraData` or using the `$`
+operator or the dedicated `rtime` function. Below we extract the inverse ion
+mobility values and display the first 6 of them.
 
 ```{r}
-## Check if retention time is the same for all peaks within a spectrum
-pks <- peaksData(be, columns = c("mz", "intensity", "tof", "inv_ion_mobility",
-                                 "retention_time"))
-rt <- vapply(pks, function(z) {
-    if (nrow(z)) {
-        if (length(unique(z[, "retention_time"])) != 1L)
-            stop("different values for retention_time")
-        z[1, "retention_time"]
-    } else NA_real_
-}, numeric(1))
-iim <- vapply(pks, function(z) {
-    if (nrow(z)) {
-        if (length(unique(z[, "inv_ion_mobility"])) != 1L)
-            stop("different values for inv_ion_mobility")
-        z[1, "inv_ion_mobility"]
-    } else NA_real_
-}, numeric(1))
-
-## Check if the retention times from peaks table match the ones from spectra
-## variables.
-all.equal(all$rtime[!is.na(rt)], rt[!is.na(rt)])
-
+head(be$inv_ion_mobility)
 ```
 
-So, summarizing: seems the retention time information in the peaks data is
-redundant and also the inverse ion mobility seems to be rather a spectra, not a
-peaks variable.
 
 # Session information
 
