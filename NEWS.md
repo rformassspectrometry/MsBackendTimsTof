@@ -1,5 +1,11 @@
 # MsBackendTimsTof 0.1
 
+## MsBackendTimsTof 0.1.1
+
+- Disable `opentimsr` parallel processing to not interfere with `BiocParallel`
+  (issue
+  [#16](https://github.com/rformassspectrometry/MsBackendTimsTof/issues/16)).
+
 ## MsBackendTimsTof 0.1.0
 
 - Import `coreSpectraVariables` from `Spectra` and thus depend on `Spectra`

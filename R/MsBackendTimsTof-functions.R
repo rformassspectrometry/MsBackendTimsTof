@@ -127,12 +127,14 @@ MsBackendTimsTof <- function() {
 #' @param drop `logical` if TRUE and `columns` has length 1 the result is
 #'   returned as list of `numeric` instead of as list of 1-column `matrix`.
 #'
-#' @importFrom opentimsr OpenTIMS CloseTIMS query
+#' @importFrom opentimsr OpenTIMS CloseTIMS query opentims_set_threads
 #'
 #' @importFrom MsCoreUtils rbindFill
 #'
 #' @noRd
 .get_tims_columns <- function(x, columns, drop = TRUE) {
+    ## Disable parallel processing in opentimsr as that breaks BiocParallel
+    opentims_set_threads(1L)
     res <- vector(mode = "list", length(x))
     nms <- names(x@fileNames)
     for (i in seq_len(length(nms))) {
@@ -165,42 +167,6 @@ MsBackendTimsTof <- function() {
         }
     }
     res
-}
-
-#' Parallel processing version of the function above
-#'
-#' @noRd
-.get_tims_columns_p <- function(x, columns, drop = TRUE, BPPARAM = bpparam()) {
-    f <- as.factor(x@indices[, "file"])
-    res <- bplapply(split.data.frame(x@indices, f), function(z, x) {
-        fn <- names(x@fileNames)[match(z[1, "file"], x@fileNames)]
-        tmp <- .query_tims(fn, unique(z[, "frame"]), columns)
-        ## subset tmp if we're about to extract only few scans.
-        if (nrow(z) < (nrow(tmp) / 10)) {
-            tmp <- tmp[tmp$scan %in% z[, "scan"], , drop = FALSE]
-            rownames(tmp) <- NULL
-        }
-        ids <- paste(z[, "frame"], z[, "scan"])
-        if (!nrow(tmp))
-            tmp <- rbindFill(tmp, data.frame(frame = 0L))
-        tmp_ids <- factor(paste(tmp$frame, tmp$scan), levels = unique(ids))
-        if (anyDuplicated(ids)) {
-            if (length(columns) == 1)
-                res <- split(tmp[, columns, drop], tmp_ids)[ids]
-            else
-                res <- split.data.frame(
-                    as.matrix(tmp[, columns, drop]), tmp_ids)[ids]
-        } else {
-            if (length(columns) == 1) {
-                res <- split(tmp[, columns, drop], tmp_ids)
-            } else {
-                res <- split.data.frame(
-                    as.matrix(tmp[, columns, drop]), tmp_ids)
-            }
-        }
-        unname(res)
-    }, x = x, BPPARAM = BPPARAM)
-    unsplit(res, f)
 }
 
 #' Extract the inv_ion_mobility from the TimsTOF file.

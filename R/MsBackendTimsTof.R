@@ -65,8 +65,8 @@
 #'   `spectraVariables,Spectra` method) are returned.
 #'
 #' @param BPPARAM Parameter object defining the parallel processing
-#' setup to import data in parallel. Defaults to `BPPARAM = bpparam()`.
-#' See [bpparam()] for more information.
+#'   setup to import data in parallel. Defaults to `BPPARAM = bpparam()`.
+#'   See [bpparam()] for more information.
 #'
 #' @param columns For `spectraData`: names of the spectra variables to extract
 #'   from `object`. For `peaksData`: names of the peak variables to extract.
