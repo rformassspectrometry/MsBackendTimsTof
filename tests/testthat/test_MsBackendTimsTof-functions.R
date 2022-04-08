@@ -65,38 +65,6 @@ test_that(".get_tims_columns works", {
     expect_equal(unlist(res[idx]), unlist(res_2))
 })
 
-test_that(".get_tims_columns_p works", {
-    register(SerialParam())
-    res <- .get_tims_columns_p(be, c("tof"))
-    expect_true(is.list(res))
-    expect_identical(length(res), length(be))
-    expect_true(all(lengths(res) > 0))
-
-    res <- .get_tims_columns_p(be, c("tof", "inv_ion_mobility"))
-    expect_identical(length(res), length(be))
-    expect_equal(colnames(res[[1]]), c("tof", "inv_ion_mobility"))
-
-    expect_error(.get_tims_columns_p(be, "bla"), "'bla' not available")
-
-    ## mz and intensity are always first.
-    be_sub <- be[200:300]
-    res <- .get_tims_columns_p(be_sub, c("intensity", "mz", "tof"))
-    expect_equal(colnames(res[[1L]]), c("intensity", "mz", "tof"))
-
-    res <- .get_tims_columns_p(be_sub, c("tof", "intensity"))
-    expect_equal(colnames(res[[1L]]), c("tof", "intensity"))
-
-    res <- .get_tims_columns_p(be_sub, c("tof", "inv_ion_mobility"))
-    expect_equal(colnames(res[[1L]]), c("tof", "inv_ion_mobility"))
-
-    ## random order
-    idx <- sample(seq_along(be))
-    be_2 <- be[idx]
-    res <- .get_tims_columns_p(be, "inv_ion_mobility")
-    res_2 <- .get_tims_columns_p(be_2, "inv_ion_mobility")
-    expect_equal(unlist(res[idx]), unlist(res_2))
-})
-
 test_that(".get_frame_columns works", {
     res <- .get_frame_columns(be, c("rtime", "polarity"))
     expect_true(is.data.frame(res))

@@ -144,7 +144,7 @@ operator or the dedicated `rtime` function. Below we extract the inverse ion
 mobility values and display the first 6 of them.
 
 ```{r}
-head(be$inv_ion_mobility)
+head(sps$inv_ion_mobility)
 ```
 
 
