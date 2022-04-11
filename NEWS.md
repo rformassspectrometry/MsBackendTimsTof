@@ -1,5 +1,9 @@
 # MsBackendTimsTof 0.1
 
+## MsBackendTimsTof 0.1.2
+
+- Add `peaksVariables` method.
+
 ## MsBackendTimsTof 0.1.1
 
 - Disable `opentimsr` parallel processing to not interfere with `BiocParallel`

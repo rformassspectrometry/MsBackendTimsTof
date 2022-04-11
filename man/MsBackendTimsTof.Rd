@@ -8,6 +8,7 @@
 \alias{backendInitialize,MsBackendTimsTof-method}
 \alias{length,MsBackendTimsTof-method}
 \alias{peaksData,MsBackendTimsTof-method}
+\alias{peaksVariables,MsBackendTimsTof-method}
 \alias{mz,MsBackendTimsTof-method}
 \alias{intensity,MsBackendTimsTof-method}
 \alias{rtime,MsBackendTimsTof-method}
@@ -27,6 +28,8 @@ MsBackendTimsTof()
 \S4method{length}{MsBackendTimsTof}(x)
 
 \S4method{peaksData}{MsBackendTimsTof}(object, columns = c("mz", "intensity"))
+
+\S4method{peaksVariables}{MsBackendTimsTof}(object)
 
 \S4method{mz}{MsBackendTimsTof}(object)
 
@@ -110,8 +113,11 @@ spectrum). The length of the list is equal to the number of spectra in
 \code{object}.
 \item \code{peaksData}: gets the peak matrices of the spectra in the backend.
 Returns a \code{list} of \code{matrix} with columns defined by parameter \code{columns}
-(which defaults to \code{columns = c("mz", "intensity")}.
+(which defaults to \code{columns = c("mz", "intensity")}. Use \code{peaksVariables}
+to list all supported and available columns for a backend.
 The length of the \code{list} is equal to the number of spectra in \code{object}.
+\item \code{peaksVariables}: gets the supported peak variables (columns) for the
+backend.
 \item \code{rtime}: gets the retention times for each spectrum. Returns a \code{numeric}
 vector (length equal to the number of spectra) with the retention time
 for each spectrum.

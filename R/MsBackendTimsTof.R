@@ -48,8 +48,12 @@
 #'
 #' - `peaksData`: gets the peak matrices of the spectra in the backend.
 #'   Returns a `list` of `matrix` with columns defined by parameter `columns`
-#'   (which defaults to `columns = c("mz", "intensity")`.
+#'   (which defaults to `columns = c("mz", "intensity")`. Use `peaksVariables`
+#'   to list all supported and available columns for a backend.
 #'   The length of the `list` is equal to the number of spectra in `object`.
+#'
+#' - `peaksVariables`: gets the supported peak variables (columns) for the
+#'   backend.
 #'
 #' - `rtime`: gets the retention times for each spectrum. Returns a `numeric`
 #'   vector (length equal to the number of spectra) with the retention time
@@ -180,6 +184,16 @@ setMethod(
         .get_tims_columns(object, columns)
 })
 
+#' @rdname MsBackendTimsTof
+#'
+#' @importMethodsFrom Spectra peaksVariables
+setMethod(
+    "peaksVariables", "MsBackendTimsTof",
+    function(object) {
+        if (length(object@fileNames)) {
+            .list_tims_columns(names(object@fileNames)[1L])
+        } else c("mz", "intensity")
+})
 
 #' @importFrom IRanges NumericList
 #'

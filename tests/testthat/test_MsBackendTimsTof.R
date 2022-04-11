@@ -91,6 +91,9 @@ test_that("peaksData,MsBackendTimsTof works", {
                       c("mz", "intensity")],
                   rownames.force = FALSE) * 1})
     expect_equal(res[sample_idxs], exp_res)
+
+    res <- peaksData(be, c("tof", "mz", "inv_ion_mobility"))
+    expect_equal(colnames(res[[1L]]), c("tof", "mz", "inv_ion_mobility"))
 })
 
 test_that("rtime,MsBackendTimsTof works", {
@@ -189,4 +192,13 @@ test_that("$,MsBackendTimsTof works", {
 
     res <- be$mz
     expect_equal(res, res_all$mz)
+})
+
+test_that("peaksVariables works", {
+    res <- peaksVariables(MsBackendTimsTof())
+    expect_equal(res, c("mz", "intensity"))
+
+    res <- peaksVariables(be)
+    expect_true(length(res) > 2)
+    expect_true(all(c("frame", "scan", "tof", "intensity") %in% res))
 })
