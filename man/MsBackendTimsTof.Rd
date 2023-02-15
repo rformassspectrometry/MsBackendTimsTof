@@ -18,6 +18,13 @@
 \alias{spectraData,MsBackendTimsTof-method}
 \alias{show,MsBackendTimsTof-method}
 \alias{msLevel,MsBackendTimsTof-method}
+\alias{precursorMz,MsBackendTimsTof-method}
+\alias{precursorCharge,MsBackendTimsTof-method}
+\alias{precursorIntensity,MsBackendTimsTof-method}
+\alias{collisionEnergy,MsBackendTimsTof-method}
+\alias{isolationWindowLowerMz,MsBackendTimsTof-method}
+\alias{isolationWindowTargetMz,MsBackendTimsTof-method}
+\alias{isolationWindowUpperMz,MsBackendTimsTof-method}
 \alias{$,MsBackendTimsTof-method}
 \title{TimsTOF data backend}
 \usage{
@@ -48,6 +55,20 @@ MsBackendTimsTof()
 \S4method{show}{MsBackendTimsTof}(object)
 
 \S4method{msLevel}{MsBackendTimsTof}(object, ...)
+
+\S4method{precursorMz}{MsBackendTimsTof}(object, ...)
+
+\S4method{precursorCharge}{MsBackendTimsTof}(object, ...)
+
+\S4method{precursorIntensity}{MsBackendTimsTof}(object, ...)
+
+\S4method{collisionEnergy}{MsBackendTimsTof}(object, ...)
+
+\S4method{isolationWindowLowerMz}{MsBackendTimsTof}(object, ...)
+
+\S4method{isolationWindowTargetMz}{MsBackendTimsTof}(object, ...)
+
+\S4method{isolationWindowUpperMz}{MsBackendTimsTof}(object, ...)
 
 \S4method{$}{MsBackendTimsTof}(x, name)
 }

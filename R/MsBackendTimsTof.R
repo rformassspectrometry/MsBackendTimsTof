@@ -288,6 +288,62 @@ setMethod("msLevel", "MsBackendTimsTof", function(object, ...) {
     .get_msLevel(object)
 })
 
+#' @importMethodsFrom Spectra precursorMz
+#'
+#' @rdname MsBackendTimsTof
+setMethod("precursorMz", "MsBackendTimsTof", function(object, ...) {
+    tbl <- .calculate_core_ms2_information(object)
+    tbl[, .TIMSTOF_MS2_COLUMNS == "precursorMz"]
+})
+
+#' @importMethodsFrom Spectra precursorCharge
+#'
+#' @rdname MsBackendTimsTof
+setMethod("precursorCharge", "MsBackendTimsTof", function(object, ...) {
+    tbl <- .calculate_core_ms2_information(object)
+    tbl[, .TIMSTOF_MS2_COLUMNS == "precursorCharge"]
+})
+
+#' @importMethodsFrom Spectra precursorIntensity
+#'
+#' @rdname MsBackendTimsTof
+setMethod("precursorIntensity", "MsBackendTimsTof", function(object, ...) {
+    tbl <- .calculate_core_ms2_information(object)
+    tbl[, .TIMSTOF_MS2_COLUMNS == "precursorIntensity"]
+})
+
+#' @importMethodsFrom Spectra collisionEnergy
+#'
+#' @rdname MsBackendTimsTof
+setMethod("collisionEnergy", "MsBackendTimsTof", function(object, ...) {
+    tbl <- .calculate_core_ms2_information(object)
+    tbl[, .TIMSTOF_MS2_COLUMNS == "collisionEnergy"]
+})
+
+#' @importMethodsFrom Spectra isolationWindowLowerMz
+#'
+#' @rdname MsBackendTimsTof
+setMethod("isolationWindowLowerMz", "MsBackendTimsTof", function(object, ...) {
+    tbl <- .calculate_core_ms2_information(object)
+    tbl[, .TIMSTOF_MS2_COLUMNS == "isolationWindowLowerMz"]
+})
+
+#' @importMethodsFrom Spectra isolationWindowTargetMz
+#'
+#' @rdname MsBackendTimsTof
+setMethod("isolationWindowTargetMz", "MsBackendTimsTof", function(object, ...) {
+    tbl <- .calculate_core_ms2_information(object)
+    tbl[, .TIMSTOF_MS2_COLUMNS == "isolationWindowTargetMz"]
+})
+
+#' @importMethodsFrom Spectra isolationWindowUpperMz
+#'
+#' @rdname MsBackendTimsTof
+setMethod("isolationWindowUpperMz", "MsBackendTimsTof", function(object, ...) {
+    tbl <- .calculate_core_ms2_information(object)
+    tbl[, .TIMSTOF_MS2_COLUMNS == "isolationWindowUpperMz"]
+})
+
 #' @rdname MsBackendTimsTof
 setMethod("$", "MsBackendTimsTof", function(x, name) {
     if (!any(spectraVariables(x) == name))
