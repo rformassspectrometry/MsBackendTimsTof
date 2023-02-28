@@ -357,7 +357,13 @@ MsBackendTimsTof <- function() {
     if (any(core_cols %in% .TIMSTOF_MS2_COLUMNS)) {
         res_ms2_data <- .calculate_core_ms2_information(x)
         for (col in core_cols[core_cols %in% .TIMSTOF_MS2_COLUMNS]) {
-            res[[col]] <- res_ms2_data[, which(.TIMSTOF_MS2_COLUMNS == col)]
+            if (col == "precursorCharge"){
+                res[[col]] <- as.integer(
+                    res_ms2_data[, which(.TIMSTOF_MS2_COLUMNS == col)]
+                )
+            } else {
+                res[[col]] <- res_ms2_data[, which(.TIMSTOF_MS2_COLUMNS == col)]    
+            }
             core_cols <- core_cols[core_cols != col]
         }
     }
