@@ -184,6 +184,48 @@ test_that("msLevel,MsBackendTimsTof works", {
     expect_identical(res, match(.get_frame_columns(be, "MsMsType"), c(0L, 8L)))
 })
 
+test_that("precursorMz,MsBackendTimsTof works", {
+    expect_identical(precursorMz(MsBackendTimsTof()), numeric(0))
+    res <- precursorMz(be)
+    expect_identical(length(res), length(be))
+})
+
+test_that("precursorCharge,MsBackendTimsTof works", {
+    expect_identical(precursorCharge(MsBackendTimsTof()), numeric(0))
+    res <- precursorCharge(be)
+    expect_identical(length(res), length(be))
+})
+
+test_that("precursorIntensity,MsBackendTimsTof works", {
+    expect_identical(precursorIntensity(MsBackendTimsTof()), numeric(0))
+    res <- precursorIntensity(be)
+    expect_identical(length(res), length(be))
+})
+
+test_that("collisionEnergy,MsBackendTimsTof works", {
+    expect_identical(collisionEnergy(MsBackendTimsTof()), numeric(0))
+    res <- collisionEnergy(be)
+    expect_identical(length(res), length(be))
+})
+
+test_that("isolationWindowLowerMz,MsBackendTimsTof works", {
+    expect_identical(isolationWindowLowerMz(MsBackendTimsTof()), numeric(0))
+    res <- isolationWindowLowerMz(be)
+    expect_identical(length(res), length(be))
+})
+
+test_that("isolationWindowTargetMz,MsBackendTimsTof works", {
+    expect_identical(isolationWindowTargetMz(MsBackendTimsTof()), numeric(0))
+    res <- isolationWindowTargetMz(be)
+    expect_identical(length(res), length(be))
+})
+
+test_that("isolationWindowUpperMz,MsBackendTimsTof works", {
+    expect_identical(isolationWindowUpperMz(MsBackendTimsTof()), numeric(0))
+    res <- isolationWindowUpperMz(be)
+    expect_identical(length(res), length(be))
+})
+
 test_that("$,MsBackendTimsTof works", {
     res_all <- spectraData(be)
 

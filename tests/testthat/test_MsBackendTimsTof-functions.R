@@ -145,3 +145,18 @@ test_that(".inv_ion_mobility works", {
     res_2 <- .inv_ion_mobility(be_2)
     expect_equal(res_2, res[idx])
 })
+
+test_that("calculate_core_ms2_information works", {
+    tbl <- .calculate_core_ms2_information(be)
+    expect_true(is.numeric(tbl))
+    expect_equal(ncol(tbl), length(.TIMSTOF_MS2_COLUMNS))
+    expect_equal(nrow(tbl), nrow(be@indices))
+    expect_true(!all(is.na(tbl)))
+    
+    #Check that it also works with subsets of scans
+    be_subset <- be[c(120:130, 17000:17010)] #From both file 1 and 2
+    tbl <- .calculate_core_ms2_information(be_subset)
+    expect_equal(ncol(tbl), length(.TIMSTOF_MS2_COLUMNS))
+    expect_equal(nrow(tbl), nrow(be_subset@indices))
+})
+

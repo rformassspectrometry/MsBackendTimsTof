@@ -288,6 +288,11 @@ MsBackendTimsTof <- function() {
 # can we assume that tms@all_coulmns is the same for all the TimsTOF?
 .TIMSTOF_COLUMNS <- c("mz", "intensity", "tof", "inv_ion_mobility")
 
+.TIMSTOF_MS2_COLUMNS <- c("precursorMz", "precursorCharge",
+                          "precursorIntensity", "collisionEnergy",
+                          "isolationWindowLowerMz", "isolationWindowTargetMz",
+                          "isolationWindowUpperMz")
+
 #' @importFrom methods as
 #'
 #' @importFrom S4Vectors DataFrame
@@ -349,6 +354,19 @@ MsBackendTimsTof <- function() {
         res[["dataStorage"]] <- dataStorage(x)
         core_cols <- core_cols[core_cols != "dataStorage"]
     }
+    if (any(core_cols %in% .TIMSTOF_MS2_COLUMNS)) {
+        res_ms2_data <- .calculate_core_ms2_information(x)
+        for (col in core_cols[core_cols %in% .TIMSTOF_MS2_COLUMNS]) {
+            if (col == "precursorCharge"){
+                res[[col]] <- as.integer(
+                    res_ms2_data[, which(.TIMSTOF_MS2_COLUMNS == col)]
+                )
+            } else {
+                res[[col]] <- res_ms2_data[, which(.TIMSTOF_MS2_COLUMNS == col)]    
+            }
+            core_cols <- core_cols[core_cols != col]
+        }
+    }
     if (length(core_cols)) {
         res[core_cols] <- lapply(coreSpectraVariables()[core_cols],
                                  function(z, n) rep(as(NA, z), n), length(x))
@@ -356,4 +374,54 @@ MsBackendTimsTof <- function() {
     if (length(res))
         as(res, "DataFrame")
     else DataFrame()
+}
+
+#' @importFrom BiocParallel bpmapply bpparam
+.calculate_core_ms2_information <- function(x){
+    if (is.null(names(x@fileNames))){
+        return(matrix(numeric(), nrow = 0, ncol = length(.TIMSTOF_MS2_COLUMNS)))
+    }
+    tbls <- bpmapply(FUN = .do_calculate_core_ms2_information,
+                     x = names(x@fileNames),
+                     indices = lapply(split(x@indices[,1:2], f = x@indices[,3]),
+                                      matrix, ncol = 2),
+                     SIMPLIFY = FALSE,
+                     BPPARAM = bpparam())
+    output <- do.call(rbind, tbls)
+    output[order(order(x@indices[,3])), ]
+}
+
+#' @importFrom opentimsr OpenTIMS CloseTIMS table2df
+#' @importFrom MsCoreUtils between
+.do_calculate_core_ms2_information <- function(x, indices){
+    tms <- opentimsr::OpenTIMS(x)
+    on.exit(opentimsr::CloseTIMS(tms))
+    if (missing(indices)) {
+        indices <- unique(.query_tims(tms, frames = tms@frames$Id,
+                                      columns = c("frame", "scan")))
+    }
+    output <- matrix(NA_real_,
+                     nrow = nrow(indices),
+                     ncol = length(.TIMSTOF_MS2_COLUMNS))
+    tbl <- opentimsr::table2df(tms, c("PASEFFrameMsMsInfo", "Precursors"))
+    for (i in seq(nrow(tbl[[1]]))) {
+        row <- tbl[[1]][i, ]
+        prec <- tbl[[2]][row$Precursor,]
+        target_rows <- which(indices[,1] == row$Frame &
+                             MsCoreUtils::between(indices[,2],
+                                                  c(row$ScanNumBegin,
+                                                    row$ScanNumEnd)))
+        if (length(target_rows)) {
+            output[target_rows, ] <- 
+                rep(c(prec$MonoisotopicMz,                       ## precursorMz
+                         prec$Charge,                            ## precursorCharge
+                         prec$Intensity,                         ## precursorIntensity
+                         row$CollisionEnergy,                    ## collisionEnergy
+                         row$IsolationMz - row$IsolationWidth,   ## isolationWindowLowerMz
+                         row$IsolationMz,                        ## isolationWindowTargetMz
+                         row$IsolationMz + row$IsolationWidth),  ## isolationWindowUpperMz
+                     each = length(target_rows))
+        }
+    }
+    output
 }
