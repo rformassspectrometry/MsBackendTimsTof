@@ -349,6 +349,10 @@ MsBackendTimsTof <- function() {
         res[["dataStorage"]] <- dataStorage(x)
         core_cols <- core_cols[core_cols != "dataStorage"]
     }
+    if ("dataOrigin" %in% columns) {
+        res[["dataOrigin"]] <- dataOrigin(x)
+        core_cols <- core_cols[core_cols != "dataOrigin"]
+    }
     if (length(core_cols)) {
         res[core_cols] <- lapply(coreSpectraVariables()[core_cols],
                                  function(z, n) rep(as(NA, z), n), length(x))

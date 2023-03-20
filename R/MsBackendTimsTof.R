@@ -29,9 +29,11 @@
 #'   is supposed to be called right after creating a `MsBackendTimsTof` object
 #'   with `MsBackendTimsTof` function.
 #'
-#' - `dataStorage`: gets a `character` of length equal to the number of spectra
+#' - `dataOrigin`: gets a `character` of length equal to the number of spectra
 #'   in `object` with the names of the '*.d' folders where each spectrum is
 #'   stored.
+#'
+#' - `dataStorage`: same as `dataOrigin`.
 #'
 #' - `intensity`: gets the intensity values from the spectra in the backend.
 #'   Returns a [NumericList()] of `numeric` vectors (intensity values for each
@@ -241,6 +243,13 @@ setMethod("dataStorage", "MsBackendTimsTof", function(object) {
         return(names(object@fileNames[match(object@indices[, "file"],
                                             object@fileNames)]))
     character(0)
+})
+
+#' @importMethodsFrom Spectra dataOrigin
+#'
+#' @rdname MsBackendTimsTof
+setMethod("dataOrigin", "MsBackendTimsTof", function(object) {
+    dataStorage(object)
 })
 
 #' @importMethodsFrom Spectra spectraVariables

@@ -14,6 +14,7 @@
 \alias{rtime,MsBackendTimsTof-method}
 \alias{[,MsBackendTimsTof-method}
 \alias{dataStorage,MsBackendTimsTof-method}
+\alias{dataOrigin,MsBackendTimsTof-method}
 \alias{spectraVariables,MsBackendTimsTof-method}
 \alias{spectraData,MsBackendTimsTof-method}
 \alias{show,MsBackendTimsTof-method}
@@ -40,6 +41,8 @@ MsBackendTimsTof()
 \S4method{[}{MsBackendTimsTof}(x, i, j, ..., drop = FALSE)
 
 \S4method{dataStorage}{MsBackendTimsTof}(object)
+
+\S4method{dataOrigin}{MsBackendTimsTof}(object)
 
 \S4method{spectraVariables}{MsBackendTimsTof}(object)
 
@@ -98,9 +101,10 @@ does not update the values of \code{frames} variables (such as \code{"MaxIntensi
 using TimsTOF data files whose path is specified by \code{files}. This method
 is supposed to be called right after creating a \code{MsBackendTimsTof} object
 with \code{MsBackendTimsTof} function.
-\item \code{dataStorage}: gets a \code{character} of length equal to the number of spectra
+\item \code{dataOrigin}: gets a \code{character} of length equal to the number of spectra
 in \code{object} with the names of the '*.d' folders where each spectrum is
 stored.
+\item \code{dataStorage}: same as \code{dataOrigin}.
 \item \code{intensity}: gets the intensity values from the spectra in the backend.
 Returns a \code{\link[=NumericList]{NumericList()}} of \code{numeric} vectors (intensity values for each
 spectrum). The length of the list is equal to the number of

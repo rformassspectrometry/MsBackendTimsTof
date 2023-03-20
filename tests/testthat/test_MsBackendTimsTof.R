@@ -113,6 +113,8 @@ test_that("dataStorage,MsBackendTimsTof works", {
     res <- dataStorage(be)
     expect_equal(length(res), length(be))
     expect_equal(res, names(be@fileNames[be@indices[, "file"]]))
+
+    expect_equal(dataStorage(be), dataOrigin(be))
 })
 
 test_that("spectraVariables,MsBackendTimsTof works", {
@@ -192,6 +194,9 @@ test_that("$,MsBackendTimsTof works", {
 
     res <- be$mz
     expect_equal(res, res_all$mz)
+
+    expect_equal(be$dataOrigin, dataOrigin(be))
+    expect_equal(be$dataStorage, dataStorage(be))
 })
 
 test_that("peaksVariables works", {
