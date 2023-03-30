@@ -61,6 +61,11 @@
 #'   vector (length equal to the number of spectra) with the retention time
 #'   for each spectrum.
 #'
+#' - `selectSpectraVariables`: reduces the available spectra variables to the
+#'   ones specified with parameter `spectraVariables`. For *core spectra
+#'   variables* ([coreSpectraVariables()]) only their values will be removed,
+#'   but not the variable itself.
+#'
 #' - `spectraData`: gets spectra variables (specified by `columns`) from
 #'   `object`.
 #'
@@ -89,6 +94,9 @@
 #' @param name For `$`: the name of the variable to access.
 #'
 #' @param object `MsBackendTimsTof` object.
+#'
+#' @param spectraVariables `character` with the names of the spectra variables
+#'     that should be retained in the returned object.
 #'
 #' @param x `MsBackendTimsTof` object.
 #'
@@ -197,6 +205,8 @@ setMethod(
 setMethod(
     "peaksVariables", "MsBackendTimsTof",
     function(object) {
+        ## TODO: should we return all available, or just the one
+        ## in @spectraVariables
         if (length(object@fileNames)) {
             .list_tims_columns(names(object@fileNames)[1L])
         } else c("mz", "intensity")
@@ -206,23 +216,29 @@ setMethod(
 #'
 #' @rdname MsBackendTimsTof
 setMethod("mz", "MsBackendTimsTof", function(object) {
-    NumericList(.get_tims_columns(object, "mz"), compress = FALSE)
+    if ("mz" %in% object@spectraVariables)
+        NumericList(.get_tims_columns(object, "mz"), compress = FALSE)
+    else spectraData(object, "mz")[, 1L]
 })
 
 #' @importFrom IRanges NumericList
 #'
 #' @rdname MsBackendTimsTof
 setMethod("intensity", "MsBackendTimsTof", function(object) {
-    NumericList(.get_tims_columns(object, "intensity"), compress = FALSE)
+    if ("intensity" %in% object@spectraVariables)
+        NumericList(.get_tims_columns(object, "intensity"), compress = FALSE)
+    else spectraData(object, "intensity")[, 1L]
 })
 
 #' @rdname MsBackendTimsTof
 setMethod("rtime", "MsBackendTimsTof", function(object) {
-    ## TODO: need to test this.
     if ("rtime" %in% colnames(object@localData))
         object@localData$rtime
-    else
-        .get_frame_columns(object, "rtime")
+    else {
+        if ("rtime" %in% object@spectraVariables)
+            .get_frame_columns(object, "rtime")
+        else spectraData(object, "rtime")[, 1L]
+    }
 })
 
 #' @importFrom methods "slot<-"
@@ -294,14 +310,17 @@ setMethod("show", "MsBackendTimsTof", function(object) {
 #'
 #' @rdname MsBackendTimsTof
 setMethod("msLevel", "MsBackendTimsTof", function(object, ...) {
-    .get_msLevel(object)
+    if ("msLevel" %in% object@spectraVariables)
+        .get_msLevel(object)
+    else spectraData(object, "msLevel")[, 1L]
 })
 
 #' @rdname MsBackendTimsTof
 setMethod("$", "MsBackendTimsTof", function(x, name) {
     if (!name %in% spectraVariables(x))
         stop("spectra variable '", name, "' not available")
-    if (name == "inv_ion_mobility")
+    if (name == "inv_ion_mobility" &&
+        "inv_ion_mobility" %in% x@spectraVariables)
         .inv_ion_mobility(x)
     else
         spectraData(x, name)[, 1L]
@@ -314,11 +333,15 @@ setMethod("spectraVariables", "MsBackendTimsTof", function(object, ...) {
     union(callNextMethod(), .TIMSTOF_COLUMNS)
 })
 
+#' @rdname MsBackendTimsTof
 setMethod(
     "selectSpectraVariables", "MsBackendTimsTof",
     function(object, spectraVariables = spectraVariables(object)) {
-        keep <- colnames(object@frames) %in% union(spectraVariables,
-                                                   c("frameId", "file"))
+        req_cols <- c("frameId", "file")
+        if ("msLevel" %in% spectraVariables) req_cols <- c(req_cols, "MsMsType")
+        keep <- colnames(object@frames) %in% union(spectraVariables, req_cols)
         object@frames <- object@frames[, keep, drop = FALSE]
         callNextMethod(object, spectraVariables)
     })
+
+## TODO: add $<- method.

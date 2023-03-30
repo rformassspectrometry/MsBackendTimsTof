@@ -20,6 +20,7 @@
 \alias{msLevel,MsBackendTimsTof-method}
 \alias{$,MsBackendTimsTof-method}
 \alias{spectraVariables,MsBackendTimsTof-method}
+\alias{selectSpectraVariables,MsBackendTimsTof-method}
 \title{TimsTOF data backend}
 \usage{
 MsBackendTimsTof()
@@ -53,6 +54,8 @@ MsBackendTimsTof()
 \S4method{$}{MsBackendTimsTof}(x, name)
 
 \S4method{spectraVariables}{MsBackendTimsTof}(object, ...)
+
+\S4method{selectSpectraVariables}{MsBackendTimsTof}(object, spectraVariables = spectraVariables(object))
 }
 \arguments{
 \item{object}{\code{MsBackendTimsTof} object.}
@@ -78,6 +81,9 @@ Defaults to \code{columns = c("mz", "intensity")}.}
 \item{drop}{For \code{[}: not considered.}
 
 \item{name}{For \code{$}: the name of the variable to access.}
+
+\item{spectraVariables}{\code{character} with the names of the spectra variables
+that should be retained in the returned object.}
 }
 \description{
 The \code{MsBackendTimsTof} class supports Bruker TimsTOF data files. New objects
@@ -125,6 +131,10 @@ backend.
 \item \code{rtime}: gets the retention times for each spectrum. Returns a \code{numeric}
 vector (length equal to the number of spectra) with the retention time
 for each spectrum.
+\item \code{selectSpectraVariables}: reduces the available spectra variables to the
+ones specified with parameter \code{spectraVariables}. For \emph{core spectra
+variables} (\code{\link[=coreSpectraVariables]{coreSpectraVariables()}}) only their values will be removed,
+but not the variable itself.
 \item \code{spectraData}: gets spectra variables (specified by \code{columns}) from
 \code{object}.
 \item \code{spectraVariables}: returns a \code{character} vector with the spectra variables

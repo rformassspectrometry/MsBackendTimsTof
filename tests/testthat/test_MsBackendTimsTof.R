@@ -223,4 +223,29 @@ test_that("selectSpectraVariables works", {
     res <- selectSpectraVariables(
         be, spectraVariables = c("msLevel", "rtime", "mz", "TimsId"))
     expect_true(validObject(res))
+    expect_true(all(c("msLevel", "rtime", "mz", "TimsId") %in%
+                    spectraVariables(res)))
+    expect_true(length(spectraVariables(res)) < length(spectraVariables(be)))
+    expect_equal(colnames(res@frames), c("frameId", "rtime", "MsMsType",
+                                         "TimsId", "file"))
+    sdat <- spectraData(res)
+    expect_true(all(lengths(sdat$intensity) == 0))
+
+    ## intensity has to be empty, but no error
+    expect_true(all(lengths(intensity(res)) == 0))
+    expect_equal(mz(res), sdat$mz)
+
+    res <- selectSpectraVariables(be, c("TimsId"))
+    sdat <- spectraData(res)
+    expect_true(all(is.na(rtime(res))))
+    expect_true(all(lengths(intensity(res)) == 0))
+    expect_true(all(lengths(mz(res)) == 0))
+    expect_equal(sdat$intensity, intensity(res))
+    expect_equal(sdat$mz, mz(res))
+    expect_true(all(is.na(res$rtime)))
+
+    ## peaksData; that tests might be tricky as it's not totally clear what
+    ## they should return.
+
+    ## TODO: remove/select added (cached) spectra variable
 })
