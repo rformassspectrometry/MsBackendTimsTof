@@ -1,5 +1,10 @@
 # MsBackendTimsTof 0.1
 
+## MsBackendTimsTof 0.1.4
+
+- `MsBackendTimsTof` extends `MsBackendCached` to support locally change or
+  adding new spectra variables.
+
 ## MsBackendTimsTof 0.1.3
 
 - Add `dataOrigin` method.

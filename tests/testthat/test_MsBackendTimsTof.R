@@ -14,6 +14,12 @@ test_that("backendInitialize,MsBackendTimsTof works", {
     tmp <- rbind(cbind(tmp, file = 1),
                  cbind(tmp, file = 2))
     expect_equal(be@indices, as.matrix(tmp, rownames.force = FALSE))
+
+    expect_equal(be@nspectra, nrow(be@indices))
+    expect_equal(be@spectraVariables, c(MsBackendTimsTof:::.TIMSTOF_COLUMNS,
+                                        colnames(be@frames)))
+    expect_equal(nrow(be@localData), be@nspectra)
+    expect_equal(ncol(be@localData), 0L)
 })
 
 test_that("[,MsBackendTimsTof works", {
@@ -175,6 +181,8 @@ test_that("spectraData,MsBackendTimsTof works", {
     be_2 <- be[c(2, 2, 1, 2)]
     res <- spectraData(be_2)
     expect_equal(res, res_all[c(2, 2, 1, 2), ])
+
+    ## TODO: add variables and extract them.
 })
 
 test_that("msLevel,MsBackendTimsTof works", {
@@ -206,4 +214,13 @@ test_that("peaksVariables works", {
     res <- peaksVariables(be)
     expect_true(length(res) > 2)
     expect_true(all(c("frame", "scan", "tof", "intensity") %in% res))
+})
+
+test_that("$<-,MsBackendTimsTof works", {
+})
+
+test_that("selectSpectraVariables works", {
+    res <- selectSpectraVariables(
+        be, spectraVariables = c("msLevel", "rtime", "mz", "TimsId"))
+    expect_true(validObject(res))
 })

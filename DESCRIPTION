@@ -1,6 +1,6 @@
 Package: MsBackendTimsTof
 Title: Mass spectrometry Data Backend for Bruker TimsTOF Files
-Version: 0.1.3
+Version: 0.1.4
 Authors@R:
     c(person(given = "Johannes", family = "Rainer",
              email = "Johannes.Rainer@eurac.edu",

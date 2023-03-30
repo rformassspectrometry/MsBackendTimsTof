@@ -288,76 +288,70 @@ MsBackendTimsTof <- function() {
 # can we assume that tms@all_coulmns is the same for all the TimsTOF?
 .TIMSTOF_COLUMNS <- c("mz", "intensity", "tof", "inv_ion_mobility")
 
-#' @importFrom methods as
+#' @importFrom methods as callNextMethod getMethod
 #'
 #' @importFrom S4Vectors DataFrame
 #'
+#' @importFrom S4Vectors extractCOLS
+#'
+#' @importFrom S4Vectors make_zero_col_DFrame
+#'
+#' @importFrom S4Vectors cbind.DataFrame
+#'
 #' @importFrom Spectra coreSpectraVariables
+#'
+#' @author Andrea Vicini, Johannes Rainer
 .spectra_data <- function(x, columns = spectraVariables(x)) {
     if (!all(present <- columns %in% spectraVariables(x)))
         stop("Column(s) ", paste0("\"", columns[!present], "\"",
                                   collapse = ", "),
              " not available.", call. = FALSE)
-    res <- vector(mode = "list", length = length(columns))
-    names(res) <- columns
-    core_cols <- columns[columns %in% names(coreSpectraVariables())]
-    frames_cols <- columns[columns %in% colnames(x@frames)]
-    tims_cols <- columns[
-        columns %in% .TIMSTOF_COLUMNS[!.TIMSTOF_COLUMNS == "inv_ion_mobility"]]
-    if ("scanIndex" %in% columns) {
-        res[["scanIndex"]] <- x@indices[, "scan"]
-        core_cols <- core_cols[core_cols != "scanIndex"]
-    }
-    if ("frameId" %in% frames_cols) {
-        res[["frameId"]] <- x@indices[, "frame"]
-        frames_cols <- frames_cols[frames_cols != "frameId"]
-    }
-    if ("file" %in% frames_cols) {
-        res[["file"]] <- x@indices[, "file"]
-        frames_cols <- frames_cols[frames_cols != "file"]
-    }
-    if (length(frames_cols)) {
-        res[frames_cols] <- .get_frame_columns(x, frames_cols, drop = FALSE)
-        core_cols <- setdiff(core_cols, frames_cols)
-    }
+    ## Get cached data first. This data.frame contains also core spectra
+    ## variables NOT provided by the Tims file as well as all cached variables.
+    cached <- intersect(
+        columns, getMethod("spectraVariables", "MsBackendCached")(x))
+    res <- getMethod("spectraData", "MsBackendCached")(x, columns = cached)
+    if (is.null(res))
+        res <- make_zero_col_DFrame(length(x))
+    ## get data only for columns that are NOT in colnames(res).
+    cols <- columns[!columns %in% colnames(res)]
+    frames_cols <- cols[cols %in% colnames(x@frames)]
+    tims_cols <- cols[
+        cols %in% .TIMSTOF_COLUMNS[!.TIMSTOF_COLUMNS == "inv_ion_mobility"]]
+
+    if ("scanIndex" %in% columns)
+        res$scanIndex <- x@indices[, "scan"]
+    if (length(frames_cols))
+        res <- cbind.DataFrame(
+            res, .get_frame_columns(x, frames_cols, drop = FALSE))
     if (length(tims_cols)) {
         if ("inv_ion_mobility" %in% columns) {
             pks <- .get_tims_columns(x, c(tims_cols, "inv_ion_mobility"),
                                      drop = FALSE)
-            res[["inv_ion_mobility"]] <-
-                vapply(pks, function(m) unname(m[1L, "inv_ion_mobility"]),
-                       numeric(1))
+            res$inv_ion_mobility <- vapply(
+                pks, function(m) unname(m[1L, "inv_ion_mobility"]), numeric(1))
         } else
             pks <- .get_tims_columns(x, tims_cols, drop = FALSE)
+        tms <- vector("list", length(tims_cols))
+        names(tms) <- tims_cols
         for (col in tims_cols)
-            res[[col]] <- NumericList(lapply(pks, function(m) unname(m[, col])),
+            tms[[col]] <- NumericList(lapply(pks, function(m) unname(m[, col])),
                                       compress = FALSE)
-        core_cols <- setdiff(core_cols, tims_cols)
+        res <- cbind.DataFrame(res, tms)
     } else {
         if ("inv_ion_mobility" %in% columns)
-            res[["inv_ion_mobility"]] <- .inv_ion_mobility(x)
+            res$inv_ion_mobility <- .inv_ion_mobility(x)
     }
     if ("msLevel" %in% columns) {
-        if ("MsMsType" %in% frames_cols) {
+        if ("MsMsType" %in% frames_cols)
             res[["msLevel"]] <- .get_msLevel(res[["MsMsType"]], TRUE)
-        } else {
+        else
             res[["msLevel"]] <- .get_msLevel(x)
-        }
-        core_cols <- core_cols[core_cols != "msLevel"]
     }
-    if ("dataStorage" %in% columns) {
-        res[["dataStorage"]] <- dataStorage(x)
-        core_cols <- core_cols[core_cols != "dataStorage"]
-    }
-    if ("dataOrigin" %in% columns) {
+    ## if ("dataStorage" %in% columns)
+    ##     res[["dataStorage"]] <- dataStorage(x)
+    if ("dataOrigin" %in% columns)
         res[["dataOrigin"]] <- dataOrigin(x)
-        core_cols <- core_cols[core_cols != "dataOrigin"]
-    }
-    if (length(core_cols)) {
-        res[core_cols] <- lapply(coreSpectraVariables()[core_cols],
-                                 function(z, n) rep(as(NA, z), n), length(x))
-    }
-    if (length(res))
-        as(res, "DataFrame")
+    if (length(res)) extractCOLS(res, columns)
     else DataFrame()
 }

@@ -126,20 +126,19 @@
 #' rtime(be_sub)
 #'
 #' pd <- peaksData(be_sub, columns = c("mz", "intensity", "tof", "inv_ion_mobility"))
-setClass("MsBackendTimsTof",
-         contains = "MsBackend",
-         slots = c(frames = "data.frame",
-                   indices = "matrix",
-                   fileNames = "integer"),
-         prototype = prototype(frames = data.frame(),
-                               indices = matrix(nrow = 0, ncol = 3,
-                                                dimnames = list(NULL,
-                                                                c("frame",
-                                                                  "scan",
-                                                                  "file"))),
-                               fileNames = integer(),
-                               readonly = TRUE,
-                               version = "0.1"))
+setClass(
+    "MsBackendTimsTof",
+    contains = "MsBackendCached",
+    slots = c(frames = "data.frame",
+              indices = "matrix",
+              fileNames = "integer"),
+    prototype = prototype(
+        frames = data.frame(),
+        indices = matrix(nrow = 0, ncol = 3,
+                         dimnames = list(NULL, c("frame", "scan", "file"))),
+        fileNames = integer(),
+        readonly = TRUE,
+        version = "0.2"))
 
 #' @importFrom methods validObject
 setValidity("MsBackendTimsTof", function(object) {
@@ -153,6 +152,8 @@ setValidity("MsBackendTimsTof", function(object) {
 #' @importFrom BiocParallel bplapply
 #'
 #' @importMethodsFrom Spectra backendInitialize
+#'
+#' @importClassesFrom Spectra MsBackendCached
 #'
 #' @rdname MsBackendTimsTof
 setMethod("backendInitialize", signature = "MsBackendTimsTof",
@@ -168,6 +169,10 @@ setMethod("backendInitialize", signature = "MsBackendTimsTof",
               if (length(msg))
                   stop(msg)
               object <- .initialize(object, files, BPPARAM)
+              object <- callNextMethod(
+                  object, nspectra = nrow(object@indices),
+                  spectraVariables = c(.TIMSTOF_COLUMNS,
+                                       colnames(object@frames)))
               validObject(object)
               object
           })
@@ -176,7 +181,7 @@ setMethod("backendInitialize", signature = "MsBackendTimsTof",
 #'
 #' @rdname MsBackendTimsTof
 setMethod("length", "MsBackendTimsTof", function(x) {
-    nrow(x@indices)
+    x@nspectra
 })
 
 #' @rdname MsBackendTimsTof
@@ -213,7 +218,11 @@ setMethod("intensity", "MsBackendTimsTof", function(object) {
 
 #' @rdname MsBackendTimsTof
 setMethod("rtime", "MsBackendTimsTof", function(object) {
-    .get_frame_columns(object, "rtime")
+    ## TODO: need to test this.
+    if ("rtime" %in% colnames(object@localData))
+        object@localData$rtime
+    else
+        .get_frame_columns(object, "rtime")
 })
 
 #' @importFrom methods "slot<-"
@@ -232,6 +241,7 @@ setMethod("[", "MsBackendTimsTof", function(x, i, j, ..., drop = FALSE) {
                        paste(x@frames$frameId, x@frames$file)), , drop = FALSE]
     slot(x, "fileNames", check = FALSE) <-
         x@fileNames[x@fileNames %in% unique(x@frames$file)]
+    x <- callNextMethod(x, i = i)
     x
 })
 
@@ -240,9 +250,9 @@ setMethod("[", "MsBackendTimsTof", function(x, i, j, ..., drop = FALSE) {
 #' @rdname MsBackendTimsTof
 setMethod("dataStorage", "MsBackendTimsTof", function(object) {
     if("file" %in% colnames(object@indices) && length(object@fileNames))
-        return(names(object@fileNames[match(object@indices[, "file"],
-                                            object@fileNames)]))
-    character(0)
+        names(object@fileNames[match(object@indices[, "file"],
+                                     object@fileNames)])
+    else character(0)
 })
 
 #' @importMethodsFrom Spectra dataOrigin
@@ -250,16 +260,6 @@ setMethod("dataStorage", "MsBackendTimsTof", function(object) {
 #' @rdname MsBackendTimsTof
 setMethod("dataOrigin", "MsBackendTimsTof", function(object) {
     dataStorage(object)
-})
-
-#' @importMethodsFrom Spectra spectraVariables
-#'
-#' @importFrom Spectra coreSpectraVariables
-#'
-#' @rdname MsBackendTimsTof
-setMethod("spectraVariables", "MsBackendTimsTof", function(object) {
-    unique(c(names(coreSpectraVariables()), .TIMSTOF_COLUMNS,
-             colnames(object@frames)))
 })
 
 #' @importMethodsFrom Spectra spectraData
@@ -299,10 +299,26 @@ setMethod("msLevel", "MsBackendTimsTof", function(object, ...) {
 
 #' @rdname MsBackendTimsTof
 setMethod("$", "MsBackendTimsTof", function(x, name) {
-    if (!any(spectraVariables(x) == name))
+    if (!name %in% spectraVariables(x))
         stop("spectra variable '", name, "' not available")
     if (name == "inv_ion_mobility")
         .inv_ion_mobility(x)
     else
         spectraData(x, name)[, 1L]
 })
+
+#' @importMethodsFrom Spectra spectraVariables
+#'
+#' @rdname MsBackendTimsTof
+setMethod("spectraVariables", "MsBackendTimsTof", function(object, ...) {
+    union(callNextMethod(), .TIMSTOF_COLUMNS)
+})
+
+setMethod(
+    "selectSpectraVariables", "MsBackendTimsTof",
+    function(object, spectraVariables = spectraVariables(object)) {
+        keep <- colnames(object@frames) %in% union(spectraVariables,
+                                                   c("frameId", "file"))
+        object@frames <- object@frames[, keep, drop = FALSE]
+        callNextMethod(object, spectraVariables)
+    })

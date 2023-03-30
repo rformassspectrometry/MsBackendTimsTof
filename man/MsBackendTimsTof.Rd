@@ -15,11 +15,11 @@
 \alias{[,MsBackendTimsTof-method}
 \alias{dataStorage,MsBackendTimsTof-method}
 \alias{dataOrigin,MsBackendTimsTof-method}
-\alias{spectraVariables,MsBackendTimsTof-method}
 \alias{spectraData,MsBackendTimsTof-method}
 \alias{show,MsBackendTimsTof-method}
 \alias{msLevel,MsBackendTimsTof-method}
 \alias{$,MsBackendTimsTof-method}
+\alias{spectraVariables,MsBackendTimsTof-method}
 \title{TimsTOF data backend}
 \usage{
 MsBackendTimsTof()
@@ -44,8 +44,6 @@ MsBackendTimsTof()
 
 \S4method{dataOrigin}{MsBackendTimsTof}(object)
 
-\S4method{spectraVariables}{MsBackendTimsTof}(object)
-
 \S4method{spectraData}{MsBackendTimsTof}(object, columns = spectraVariables(object))
 
 \S4method{show}{MsBackendTimsTof}(object)
@@ -53,6 +51,8 @@ MsBackendTimsTof()
 \S4method{msLevel}{MsBackendTimsTof}(object, ...)
 
 \S4method{$}{MsBackendTimsTof}(x, name)
+
+\S4method{spectraVariables}{MsBackendTimsTof}(object, ...)
 }
 \arguments{
 \item{object}{\code{MsBackendTimsTof} object.}
