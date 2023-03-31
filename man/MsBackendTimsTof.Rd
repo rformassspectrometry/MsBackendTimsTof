@@ -21,6 +21,7 @@
 \alias{$,MsBackendTimsTof-method}
 \alias{spectraVariables,MsBackendTimsTof-method}
 \alias{selectSpectraVariables,MsBackendTimsTof-method}
+\alias{$<-,MsBackendTimsTof-method}
 \title{TimsTOF data backend}
 \usage{
 MsBackendTimsTof()
@@ -56,6 +57,8 @@ MsBackendTimsTof()
 \S4method{spectraVariables}{MsBackendTimsTof}(object, ...)
 
 \S4method{selectSpectraVariables}{MsBackendTimsTof}(object, spectraVariables = spectraVariables(object))
+
+\S4method{$}{MsBackendTimsTof}(x, name) <- value
 }
 \arguments{
 \item{object}{\code{MsBackendTimsTof} object.}
@@ -84,13 +87,17 @@ Defaults to \code{columns = c("mz", "intensity")}.}
 
 \item{spectraVariables}{\code{character} with the names of the spectra variables
 that should be retained in the returned object.}
+
+\item{value}{For \verb{$<-}: the value to assign to the spectra variable.}
 }
 \description{
 The \code{MsBackendTimsTof} class supports Bruker TimsTOF data files. New objects
 are created with the \code{MsBackendTimsTof} function. To ensure a small memory
 footprint, only general information is kept in memory (such as number of
 frames and scans) and all data (specifically the peaks data) is retrieved
-from the original file on-the-fly.
+from the original file on-the-fly. By extending the \code{\link[=MsBackendCached]{MsBackendCached()}}
+backend from the \code{Spectra} package, adding or (locally) changing spectra
+values is also supported.
 }
 \section{Available methods}{
 
@@ -98,6 +105,11 @@ from the original file on-the-fly.
 The following methods are implemented:
 \itemize{
 \item \code{$}: access any of the \code{spectraVariables} of the backend.
+\item \verb{$<-}: add a new spectra variable or change values for an existing spectra
+variables. Values can be changed for any spectra variable except \emph{peaks
+variables} (\code{\link[=peaksVariables]{peaksVariables()}}) or special internal variables \code{"file"} and
+\code{"frameId"}. Note that changes to spectra variables are only cached within
+the object but not propagated to the original data files.
 \item \code{[}: subset the backend. Only subsetting by element (\emph{row}/\code{i}) is
 allowed. First the \verb{@indices} slot of \code{object} is subsetted and then the
 \code{frames} and \code{fileNames} slots are subsetted accordingly. Note that \code{[}
@@ -171,6 +183,17 @@ be_sub <- be[sort(sample(seq_along(be), 10))]
 rtime(be_sub)
 
 pd <- peaksData(be_sub, columns = c("mz", "intensity", "tof", "inv_ion_mobility"))
+
+## Add a new spectra variable
+be$new_var <- seq_along(be)
+
+head(be$new_var)
+
+## Changing values of a spectra variable. Note that these are only changed
+## *locally* within the object, but not in the original data files.
+head(rtime(be))
+be$rtime <- rtime(be) + 10
+head(rtime(be))
 }
 \author{
 Andrea Vicini, Johannes Rainer

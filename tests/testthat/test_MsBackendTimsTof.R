@@ -103,7 +103,8 @@ test_that("peaksData,MsBackendTimsTof works", {
 })
 
 test_that("rtime,MsBackendTimsTof works", {
-    expect_error(rtime(MsBackendTimsTof()), "'rtime' not available")
+    expect_true(is.numeric(rtime(MsBackendTimsTof())))
+    expect_true(length(rtime(MsBackendTimsTof())) == 0)
 
     res <- rtime(be)
     expect_equal(length(res), length(be))
@@ -181,8 +182,6 @@ test_that("spectraData,MsBackendTimsTof works", {
     be_2 <- be[c(2, 2, 1, 2)]
     res <- spectraData(be_2)
     expect_equal(res, res_all[c(2, 2, 1, 2), ])
-
-    ## TODO: add variables and extract them.
 })
 
 test_that("msLevel,MsBackendTimsTof works", {
@@ -247,5 +246,33 @@ test_that("selectSpectraVariables works", {
     ## peaksData; that tests might be tricky as it's not totally clear what
     ## they should return.
 
-    ## TODO: remove/select added (cached) spectra variable
+    ## Remove/select added (cached) spectra variable
+    tmp <- be
+    tmp$new_var <- "G"
+    res <- selectSpectraVariables(tmp, c("rtime", "msLevel", "tof"))
+    sdat <- spectraData(res)
+    expect_true("new_var" %in% spectraVariables(tmp))
+    expect_false("new_var" %in% spectraVariables(res))
+    expect_false("new_var" %in% colnames(sdat))
+    expect_error(res$new_var, "not available")
+})
+
+test_that("$<-,MsBackendTimsTof works", {
+    ## Errors
+    expect_error(be$mz <- 3, "not supported")
+    expect_error(be$frameId <- 5L, "not supported")
+
+    ## Add a new spectra variable
+    res <- be
+    res$new_var <- "G"
+    expect_true(all(res$new_var == "G"))
+    expect_identical(colnames(res@localData), c("new_var"))
+    res$new_var <- seq_along(res)
+    expect_equal(spectraData(res, "new_var")[, 1L], seq_along(res))
+
+    ## Replace an existing spectra variable
+    res$rtime <- rtime(res) + 10
+    expect_equal(res$rtime, rtime(be) + 10)
+    expect_equal(rtime(res), rtime(be) + 10)
+    expect_equal(spectraData(res, "rtime")[, 1L], rtime(be) + 10)
 })

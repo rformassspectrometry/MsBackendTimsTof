@@ -10,13 +10,21 @@
 #' are created with the `MsBackendTimsTof` function. To ensure a small memory
 #' footprint, only general information is kept in memory (such as number of
 #' frames and scans) and all data (specifically the peaks data) is retrieved
-#' from the original file on-the-fly.
+#' from the original file on-the-fly. By extending the [MsBackendCached()]
+#' backend from the `Spectra` package, adding or (locally) changing spectra
+#' values is also supported.
 #'
 #' @section Available methods:
 #'
 #' The following methods are implemented:
 #'
 #' - `$`: access any of the `spectraVariables` of the backend.
+#'
+#' - `$<-`: add a new spectra variable or change values for an existing spectra
+#'   variables. Values can be changed for any spectra variable except *peaks
+#'   variables* ([peaksVariables()]) or special internal variables `"file"` and
+#'   `"frameId"`. Note that changes to spectra variables are only cached within
+#'   the object but not propagated to the original data files.
 #'
 #' - `[`: subset the backend. Only subsetting by element (*row*/`i`) is
 #'   allowed. First the `@indices` slot of `object` is subsetted and then the
@@ -98,6 +106,8 @@
 #' @param spectraVariables `character` with the names of the spectra variables
 #'     that should be retained in the returned object.
 #'
+#' @param value For `$<-`: the value to assign to the spectra variable.
+#'
 #' @param x `MsBackendTimsTof` object.
 #'
 #' @param ... Additional arguments.
@@ -134,6 +144,17 @@
 #' rtime(be_sub)
 #'
 #' pd <- peaksData(be_sub, columns = c("mz", "intensity", "tof", "inv_ion_mobility"))
+#'
+#' ## Add a new spectra variable
+#' be$new_var <- seq_along(be)
+#'
+#' head(be$new_var)
+#'
+#' ## Changing values of a spectra variable. Note that these are only changed
+#' ## *locally* within the object, but not in the original data files.
+#' head(rtime(be))
+#' be$rtime <- rtime(be) + 10
+#' head(rtime(be))
 setClass(
     "MsBackendTimsTof",
     contains = "MsBackendCached",
@@ -344,4 +365,11 @@ setMethod(
         callNextMethod(object, spectraVariables)
     })
 
-## TODO: add $<- method.
+#' @rdname MsBackendTimsTof
+#'
+#' @export
+setReplaceMethod("$", "MsBackendTimsTof", function(x, name, value) {
+    if (name %in% union(peaksVariables(x), c("file", "frameId")))
+        stop("Replacing spectra variable \"", name, "\" is not supported.")
+    callNextMethod()
+})

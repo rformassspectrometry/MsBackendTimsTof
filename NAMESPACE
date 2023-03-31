@@ -2,6 +2,7 @@
 
 export(MsBackendTimsTof)
 exportClasses(MsBackendTimsTof)
+exportMethods("$<-")
 exportMethods(length)
 importClassesFrom(Spectra,MsBackendCached)
 importFrom(BiocParallel,bplapply)
