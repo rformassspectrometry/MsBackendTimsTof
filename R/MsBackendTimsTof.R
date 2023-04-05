@@ -37,11 +37,9 @@
 #'   is supposed to be called right after creating a `MsBackendTimsTof` object
 #'   with `MsBackendTimsTof` function.
 #'
-#' - `dataOrigin`: gets a `character` of length equal to the number of spectra
+#' - `dataStorage`: gets a `character` of length equal to the number of spectra
 #'   in `object` with the names of the '*.d' folders where each spectrum is
 #'   stored.
-#'
-#' - `dataStorage`: same as `dataOrigin`.
 #'
 #' - `intensity`: gets the intensity values from the spectra in the backend.
 #'   Returns a [NumericList()] of `numeric` vectors (intensity values for each
@@ -77,11 +75,20 @@
 #' - `spectraData`: gets spectra variables (specified by `columns`) from
 #'   `object`.
 #'
+#' - `spectraNames`: returns an *ID*/name for each spectrum. As IDs the index
+#'   of the spectrum within the object after the initialization is used. This
+#'   index/spectra name is unique and stable for each spectrum within the same
+#'   object.
+#'
 #' - `spectraVariables`: returns a `character` vector with the spectra variables
 #'   names of core spectra variables defined in the Spectra package and other
 #'   additional variables contained in `object`. Note that also `"mz"` and
 #'   `"intensity"` (which are by default not returned by the
 #'   `spectraVariables,Spectra` method) are returned.
+#'
+#' - `tic`: calculates the total ion count from the intensities of each
+#'   spectrum (for `initial = FALSE`). For `initial = TRUE` `NA` is returned
+#'   for all spectra.
 #'
 #' @param BPPARAM Parameter object defining the parallel processing
 #'   setup to import data in parallel. Defaults to `BPPARAM = bpparam()`.
@@ -94,6 +101,10 @@
 #' @param drop For `[`: not considered.
 #'
 #' @param files `character` specifying TimsTOF ’*.d’ folders names.
+#'
+#' @param initial For `tic`: `logical(1)` whether the original total ion count
+#'     should be returned (`initial = TRUE`, the default) or whether it
+#'     should be calculated on the spectras' intensities (`initial = FALSE`).
 #'
 #' @param i For `[`: `integer`, `logical` to subset the object.
 #'
@@ -201,7 +212,8 @@ setMethod("backendInitialize", signature = "MsBackendTimsTof",
               object <- callNextMethod(
                   object, nspectra = nrow(object@indices),
                   spectraVariables = c(.TIMSTOF_COLUMNS,
-                                       colnames(object@frames)))
+                                       colnames(object@frames),
+                                       "dataOrigin"))
               validObject(object)
               object
           })
@@ -292,13 +304,6 @@ setMethod("dataStorage", "MsBackendTimsTof", function(object) {
     else character(0)
 })
 
-#' @importMethodsFrom Spectra dataOrigin
-#'
-#' @rdname MsBackendTimsTof
-setMethod("dataOrigin", "MsBackendTimsTof", function(object) {
-    dataStorage(object)
-})
-
 #' @importMethodsFrom Spectra spectraData
 #'
 #' @rdname MsBackendTimsTof
@@ -372,4 +377,37 @@ setReplaceMethod("$", "MsBackendTimsTof", function(x, name, value) {
     if (name %in% union(peaksVariables(x), c("file", "frameId")))
         stop("Replacing spectra variable \"", name, "\" is not supported.")
     callNextMethod()
+})
+
+#' @rdname MsBackendTimsTof
+#'
+#' @importMethodsFrom ProtGenerics precScanNum
+#'
+#' @exportMethod precScanNum
+setMethod("precScanNum", "MsBackendTimsTof", function(object) {
+    spectraData(object, "precScanNum")[, 1L]
+})
+
+#' @exportMethod spectraNames
+#'
+#' @importMethodsFrom ProtGenerics spectraNames
+#'
+#' @rdname MsBackendTimsTof
+setMethod("spectraNames", "MsBackendTimsTof", function(object) {
+    row.names(object@indices)
+})
+
+#' @importMethodsFrom ProtGenerics tic
+#'
+#' @importFrom Spectra intensity
+#'
+#' @importFrom MsCoreUtils vapply1d
+#'
+#' @exportMethod tic
+#'
+#' @rdname MsBackendTimsTof
+setMethod("tic", "MsBackendTimsTof", function(object, initial = TRUE) {
+    if (initial)
+        rep(NA_real_, length(object))
+    else vapply1d(intensity(object), sum, na.rm = TRUE)
 })

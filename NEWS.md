@@ -1,5 +1,11 @@
 # MsBackendTimsTof 0.1
 
+## MsBackendTimsTof 0.1.5
+
+- Extend vignette and run all unit tests for `MsBackend` instances from the
+  *Spectra* package.
+- Add missing methods (`precScanNum`, `spectraNames` and `tic`).
+
 ## MsBackendTimsTof 0.1.4
 
 - `MsBackendTimsTof` extends `MsBackendCached` to support locally change or

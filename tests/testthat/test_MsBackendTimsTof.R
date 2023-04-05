@@ -13,13 +13,18 @@ test_that("backendInitialize,MsBackendTimsTof works", {
     tmp <- unique(query(tms, unique(be@frames$frame), c("frame", "scan")))
     tmp <- rbind(cbind(tmp, file = 1),
                  cbind(tmp, file = 2))
-    expect_equal(be@indices, as.matrix(tmp, rownames.force = FALSE))
+    a <- be@indices
+    row.names(a) <- NULL
+    expect_equal(a, as.matrix(tmp, rownames.force = FALSE))
 
     expect_equal(be@nspectra, nrow(be@indices))
-    expect_equal(be@spectraVariables, c(MsBackendTimsTof:::.TIMSTOF_COLUMNS,
-                                        colnames(be@frames)))
+    expect_equal(be@spectraVariables, c(.TIMSTOF_COLUMNS,
+                                        colnames(be@frames), "dataOrigin"))
     expect_equal(nrow(be@localData), be@nspectra)
     expect_equal(ncol(be@localData), 0L)
+
+    bla <- backendInitialize(MsBackendTimsTof(), path_d_folder)
+    expect_equal(dataOrigin(bla), dataStorage(bla))
 })
 
 test_that("[,MsBackendTimsTof works", {
@@ -229,6 +234,8 @@ test_that("selectSpectraVariables works", {
                                          "TimsId", "file"))
     sdat <- spectraData(res)
     expect_true(all(lengths(sdat$intensity) == 0))
+    expect_true(all(is.na(res$dataOrigin)))
+    expect_true(all(is.na(sdat$dataOrigin)))
 
     ## intensity has to be empty, but no error
     expect_true(all(lengths(intensity(res)) == 0))
@@ -275,4 +282,38 @@ test_that("$<-,MsBackendTimsTof works", {
     expect_equal(res$rtime, rtime(be) + 10)
     expect_equal(rtime(res), rtime(be) + 10)
     expect_equal(spectraData(res, "rtime")[, 1L], rtime(be) + 10)
+
+    res$dataOrigin <- "Z"
+    expect_true(all(dataOrigin(res) == "Z"))
+    expect_equal(dataOrigin(res), res$dataOrigin)
+    expect_equal(spectraData(res)$dataOrigin, res$dataOrigin)
+})
+
+test_that("precScanNum,MsBackendTimsTof works", {
+    res <- precScanNum(be)
+    expect_true(all(is.na(res)))
+    expect_true(is.integer(res))
+})
+
+test_that("tic,MsBackendTimsTof works", {
+    a <- tic(be, initial = FALSE)
+    expect_equal(length(a), length(be))
+    expect_true(is.numeric(a))
+
+    b <- tic(be, initial = TRUE)
+    expect_true(all(is.na(b)))
+    expect_equal(length(b), length(be))
+})
+
+test_that("spectraNames,MsBackendTimsTof works", {
+    res <- spectraNames(MsBackendTimsTof())
+    expect_true(length(res) == 0)
+
+    res <- spectraNames(be)
+    expect_true(length(res) == length(be))
+    expect_true(is.character(res))
+    expect_true(length(res) == length(unique(res)))
+
+    be_sub <- be[c(4, 14, 30)]
+    expect_equal(spectraNames(be_sub), c("4", "14", "30"))
 })

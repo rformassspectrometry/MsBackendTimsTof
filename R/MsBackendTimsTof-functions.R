@@ -32,6 +32,7 @@
     if (any(colnames(x@frames) == "polarity"))
         x@frames$polarity <- .format_polarity(x@frames$polarity)
     x@indices <- do.call(rbind, lapply(L, "[[", 2))
+    row.names(x@indices) <- seq_len(nrow(x@indices))
     x@fileNames <- setNames(seq_len(length(file)), file)
     x
 }
@@ -348,10 +349,8 @@ MsBackendTimsTof <- function() {
         else
             res[["msLevel"]] <- .get_msLevel(x)
     }
-    ## if ("dataStorage" %in% columns)
-    ##     res[["dataStorage"]] <- dataStorage(x)
-    if ("dataOrigin" %in% columns)
-        res[["dataOrigin"]] <- dataOrigin(x)
+    if ("dataOrigin" %in% cols && "dataOrigin" %in% x@spectraVariables)
+        res[["dataOrigin"]] <- dataStorage(x)
     if (length(res)) extractCOLS(res, columns)
     else DataFrame()
 }

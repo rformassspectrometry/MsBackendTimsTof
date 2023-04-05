@@ -29,9 +29,10 @@ library(BiocStyle)
 The `r Biocpkg("Spectra")` package provides a central infrastructure for the
 handling of Mass Spectrometry (MS) data. The package supports interchangeable
 use of different *backends* to import MS data from a variety of sources (such as
-mzML files). The `MsBackendTimsTof` package adds support for Bruker TimsTOF raw
-data files. This vignette shows how, and which data can be retrieved from such
-files.
+mzML files). The `r Biocpkg("MsBackendTimsTof")` package adds support for Bruker
+TimsTOF raw data files. This vignette shows how, and which data can be retrieved
+from such files.
+
 
 # Installation
 
@@ -70,15 +71,15 @@ wide, or within the *.Rprofile* file. An example entry in a *.Rprofile* could
 for example be:
 
 ```
-options(TIMSTOF_LIB = "/Users/jo/lib/libtimsdata.so")
+options(TIMSTOF_LIB = "/home/jo/lib/libtimsdata.so")
 ```
 
 
 # Accessing data from Bruker TimsTOF files
 
-The `MsBackendTimsTof` package adds support for Bruker TimsTOF files to
-`Spectra`-based analysis workflows. Below we load the package and in addition
-fetch the required shared library and store that to a temporary folder.
+The `r Biocpkg("MsBackendTimsTof")` package adds support for Bruker TimsTOF
+files to `Spectra`-based analysis workflows. Below we load the package and in
+addition fetch the required shared library and store that to a temporary folder.
 
 ```{r, message = FALSE}
 library(MsBackendTimsTof)
@@ -127,14 +128,19 @@ The data is organized by individual spectra, all spectra measured within the
 same *frame* have the same value in the spectra variable `"frameId"`. Spectra
 variable `"inv_ion_mobility"` provides the *inverse ion mobility*
 information. This variable is available as a spectra variable, but also as a
-*peaks variable* along with e.g. `"tof"`.
+*peaks variable* along with e.g. `"tof"`. Available peaks variables can be
+listed with the `peaksVariables` function.
+
+```{r}
+peaksVariables(sps)
+```
 
 Below we subset the backend to a range of spectra and extract their `peaksData`.
 
 ```{r}
-be_sub <- be[218:226]
-peaksData(be_sub, columns = c("mz", "intensity", "tof", "inv_ion_mobility",
-                              "retention_time"))
+sps_sub <- sps[224:227]
+peaksData(sps_sub, columns = c("mz", "intensity", "tof", "inv_ion_mobility",
+                               "retention_time")) |> as.list()
 ```
 
 Note however that both the `"inv_ion_mobility"` and `"retention_time"` have the
@@ -145,6 +151,35 @@ mobility values and display the first 6 of them.
 
 ```{r}
 head(sps$inv_ion_mobility)
+```
+
+The `MsBackendTimsTof` is a *on-disk* backend, hence reading peaks and spectra
+variables from the original data file(s) upon request. Modifying spectra
+variables within the raw data files is not possible (and also not desired), but,
+by directly extending the `MsBackendCached` backend from the
+`r Biocpkg("Spectra")` package `MsBackendTimsTof` supports changing or adding
+spectra variables by *caching* them locally within the object. Below we add a
+new spectra variable to the object.
+
+```{r}
+sps$new_variable <- seq_along(sps)
+```
+
+This new variable is now available within the object and can be extract like
+any other spectra variable.
+
+```{r}
+spectraVariables(sps)
+sps$new_variable |> head()
+```
+
+Analogously it is also possible to change existing spectra variables. Below we
+add a value to each retention time.
+
+```{r}
+rtime(sps) |> head()
+sps$rtime <- rtime(sps) + 10
+rtime(sps) |> head()
 ```
 
 

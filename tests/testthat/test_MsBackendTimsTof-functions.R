@@ -130,8 +130,11 @@ test_that(".initialize works", {
     expect_true(validObject(res))
     expect_s4_class(res, "MsBackendTimsTof")
     expect_true(length(res@fileNames) == 2)
-    expect_equal(res@indices[res@indices[, "file"] == 1L, -3],
-                 res@indices[res@indices[, "file"] == 2L, -3])
+    a <- res@indices[res@indices[, "file"] == 1L, -3]
+    b <- res@indices[res@indices[, "file"] == 2L, -3]
+    row.names(a) <- NULL
+    row.names(b) <- NULL
+    expect_equal(a, b)
 })
 
 test_that(".inv_ion_mobility works", {

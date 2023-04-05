@@ -14,7 +14,6 @@
 \alias{rtime,MsBackendTimsTof-method}
 \alias{[,MsBackendTimsTof-method}
 \alias{dataStorage,MsBackendTimsTof-method}
-\alias{dataOrigin,MsBackendTimsTof-method}
 \alias{spectraData,MsBackendTimsTof-method}
 \alias{show,MsBackendTimsTof-method}
 \alias{msLevel,MsBackendTimsTof-method}
@@ -22,6 +21,9 @@
 \alias{spectraVariables,MsBackendTimsTof-method}
 \alias{selectSpectraVariables,MsBackendTimsTof-method}
 \alias{$<-,MsBackendTimsTof-method}
+\alias{precScanNum,MsBackendTimsTof-method}
+\alias{spectraNames,MsBackendTimsTof-method}
+\alias{tic,MsBackendTimsTof-method}
 \title{TimsTOF data backend}
 \usage{
 MsBackendTimsTof()
@@ -44,8 +46,6 @@ MsBackendTimsTof()
 
 \S4method{dataStorage}{MsBackendTimsTof}(object)
 
-\S4method{dataOrigin}{MsBackendTimsTof}(object)
-
 \S4method{spectraData}{MsBackendTimsTof}(object, columns = spectraVariables(object))
 
 \S4method{show}{MsBackendTimsTof}(object)
@@ -59,6 +59,12 @@ MsBackendTimsTof()
 \S4method{selectSpectraVariables}{MsBackendTimsTof}(object, spectraVariables = spectraVariables(object))
 
 \S4method{$}{MsBackendTimsTof}(x, name) <- value
+
+\S4method{precScanNum}{MsBackendTimsTof}(object)
+
+\S4method{spectraNames}{MsBackendTimsTof}(object)
+
+\S4method{tic}{MsBackendTimsTof}(object, initial = TRUE)
 }
 \arguments{
 \item{object}{\code{MsBackendTimsTof} object.}
@@ -89,6 +95,10 @@ Defaults to \code{columns = c("mz", "intensity")}.}
 that should be retained in the returned object.}
 
 \item{value}{For \verb{$<-}: the value to assign to the spectra variable.}
+
+\item{initial}{For \code{tic}: \code{logical(1)} whether the original total ion count
+should be returned (\code{initial = TRUE}, the default) or whether it
+should be calculated on the spectras' intensities (\code{initial = FALSE}).}
 }
 \description{
 The \code{MsBackendTimsTof} class supports Bruker TimsTOF data files. New objects
@@ -119,10 +129,9 @@ does not update the values of \code{frames} variables (such as \code{"MaxIntensi
 using TimsTOF data files whose path is specified by \code{files}. This method
 is supposed to be called right after creating a \code{MsBackendTimsTof} object
 with \code{MsBackendTimsTof} function.
-\item \code{dataOrigin}: gets a \code{character} of length equal to the number of spectra
+\item \code{dataStorage}: gets a \code{character} of length equal to the number of spectra
 in \code{object} with the names of the '*.d' folders where each spectrum is
 stored.
-\item \code{dataStorage}: same as \code{dataOrigin}.
 \item \code{intensity}: gets the intensity values from the spectra in the backend.
 Returns a \code{\link[=NumericList]{NumericList()}} of \code{numeric} vectors (intensity values for each
 spectrum). The length of the list is equal to the number of
@@ -149,11 +158,18 @@ variables} (\code{\link[=coreSpectraVariables]{coreSpectraVariables()}}) only th
 but not the variable itself.
 \item \code{spectraData}: gets spectra variables (specified by \code{columns}) from
 \code{object}.
+\item \code{spectraNames}: returns an \emph{ID}/name for each spectrum. As IDs the index
+of the spectrum within the object after the initialization is used. This
+index/spectra name is unique and stable for each spectrum within the same
+object.
 \item \code{spectraVariables}: returns a \code{character} vector with the spectra variables
 names of core spectra variables defined in the Spectra package and other
 additional variables contained in \code{object}. Note that also \code{"mz"} and
 \code{"intensity"} (which are by default not returned by the
 \verb{spectraVariables,Spectra} method) are returned.
+\item \code{tic}: calculates the total ion count from the intensities of each
+spectrum (for \code{initial = FALSE}). For \code{initial = TRUE} \code{NA} is returned
+for all spectra.
 }
 }
 
