@@ -1,16 +1,34 @@
 # MsBackendTimsTof
 
-[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![R-CMD-check-bioc](https://github.com/RforMassSpectrometry/MsBackendTimsTof/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/RforMassSpectrometry/MsBackendTimsTof/actions?query=workflow%3AR-CMD-check-bioc)
-[![codecov.io](http://codecov.io/github/rformassspectrometry/MsBackendTimsTof/coverage.svg?branch=main)](http://codecov.io/github/rformassspectrometry/MsBackendTimsTof?branch=main)
+[![codecov](https://codecov.io/github/rformassspectrometry/MsBackendTimsTof/branch/main/graph/badge.svg?token=DMFOBVJFJQ)](https://codecov.io/github/rformassspectrometry/MsBackendTimsTof)
 [![license](https://img.shields.io/badge/license-Artistic--2.0-brightgreen.svg)](https://opensource.org/licenses/Artistic-2.0)
 
-Spectra backend supporting TimsTOF data files using the `opentimsr` package.
-
-The `opentimsr` package uses the C++ library from Bruker for data access. This
-needs to be downloaded locally (with
+Spectra backend supporting TimsTOF data files *via* the `opentimsr` package
+which bases on the [OpenTIMS](https://github.com/michalsta/opentims) C++
+library. To allow extraction of all spectra and peaks variables the C++ library
+from Bruker is required, which can be installed using
 `opentimsr::download_bruker_proprietary_code(<local folder>)` with `<local
-folder>` being the directory to which it should be downloaded) and loaded in
-each new R session using `setup_bruker_so("<local folder>/libtimsdata.so")`.
+folder>` being the directory to which it should be downloaded).
 
-See the package vignette for installation instructions and general usage.
+It is suggested to keep this library in a local folder and to define an
+environment variable called `TIMSTOF_LIB` that defines the full path where this
+file is located (i.e. a character string defining the full file path with the
+file name). This variable can either be defined system wide, or within the
+*.Rprofile* file. An example entry in a *.Rprofile* could for example be:
+
+```
+options(TIMSTOF_LIB = "/home/jo/lib/libtimsdata.so")
+```
+
+For more information see the package
+[homepage](https://rformassspectrometry.github.io/MsBackendTimsTof).
+
+
+# Contributions
+
+Contributions are highly welcome and should follow the [contribution
+guidelines](https://rformassspectrometry.github.io/RforMassSpectrometry/articles/RforMassSpectrometry.html#contributions).
+Also, please check the coding style guidelines in the [RforMassSpectrometry
+vignette](https://rformassspectrometry.github.io/RforMassSpectrometry/articles/RforMassSpectrometry.html).

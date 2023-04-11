@@ -130,8 +130,11 @@ test_that(".initialize works", {
     expect_true(validObject(res))
     expect_s4_class(res, "MsBackendTimsTof")
     expect_true(length(res@fileNames) == 2)
-    expect_equal(res@indices[res@indices[, "file"] == 1L, -3],
-                 res@indices[res@indices[, "file"] == 2L, -3])
+    a <- res@indices[res@indices[, "file"] == 1L, -3]
+    b <- res@indices[res@indices[, "file"] == 2L, -3]
+    row.names(a) <- NULL
+    row.names(b) <- NULL
+    expect_equal(a, b)
 })
 
 test_that(".inv_ion_mobility works", {
@@ -144,4 +147,61 @@ test_that(".inv_ion_mobility works", {
     be_2 <- be[idx]
     res_2 <- .inv_ion_mobility(be_2)
     expect_equal(res_2, res[idx])
+})
+
+test_that(".spectra_data works", {
+    b <- MsBackendTimsTof()
+    res <- .spectra_data(b)
+    expect_true(nrow(res) == 0)
+    expect_identical(colnames(res), spectraVariables(b))
+
+    expect_error(spectraData(be, "not spectra variable"), "not available")
+
+    res_all <- .spectra_data(be)
+    expect_identical(colnames(res_all), spectraVariables(be))
+    expect_identical(res_all$mz, mz(be))
+    expect_identical(res_all$intensity, intensity(be))
+    expect_identical(res_all$polarity, .get_frame_columns(be, "polarity"))
+    expect_identical(res_all$scanIndex, be@indices[, "scan"])
+    expect_identical(res_all$dataStorage, dataStorage(be))
+
+    ## selecting only a few columns
+    res <- .spectra_data(be, columns = c("msLevel", "rtime"))
+    expect_identical(colnames(res), c("msLevel", "rtime"))
+    expect_identical(res$msLevel,
+                     match(.get_frame_columns(be, "MsMsType"), c(0L, 8L)))
+    expect_identical(res$rtime, rtime(be))
+    ## only tims col
+    res <- .spectra_data(be, columns = "tof")
+    expect_identical(colnames(res), "tof")
+    expect_identical(nrow(res), length(be))
+    res <- .spectra_data(be, columns = "intensity")
+    expect_identical(colnames(res), "intensity")
+    expect_identical(res$intensity, intensity(be))
+    res <- .spectra_data(be, columns = "inv_ion_mobility")
+    expect_identical(colnames(res), "inv_ion_mobility")
+    expect_true(is.numeric(res$inv_ion_mobility))
+    res_2 <- spectraData(be, columns = c("mz", "inv_ion_mobility"))
+    expect_identical(colnames(res_2), c("mz", "inv_ion_mobility"))
+    expect_identical(nrow(res_2), length(be))
+    expect_true(is.numeric(res_2$inv_ion_mobility))
+    expect_equal(res$inv_ion_mobility, res_2$inv_ion_mobility)
+
+    ## only frames col
+    res <- .spectra_data(be, columns = "TimsId")
+    expect_identical(colnames(res), "TimsId")
+    expect_identical(nrow(res), length(be))
+
+    ## frames and tims cols
+    res <- .spectra_data(be, columns = c("TimsId", "intensity"))
+    expect_identical(colnames(res), c("TimsId", "intensity"))
+    expect_identical(nrow(res), length(be))
+
+    ## dataStorage, dataOrigin
+    res <- .spectra_data(be, columns = c("msLevel","dataStorage", "dataOrigin"))
+    expect_identical(colnames(res), c("msLevel", "dataStorage", "dataOrigin"))
+    expect_true(is.integer(res$msLevel))
+    expect_identical(res$msLevel, msLevel(be))
+    expect_equal(dataStorage(be), res$dataStorage)
+    expect_equal(dataOrigin(be), res$dataOrigin)
 })

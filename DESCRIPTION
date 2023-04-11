@@ -1,6 +1,6 @@
 Package: MsBackendTimsTof
 Title: Mass spectrometry Data Backend for Bruker TimsTOF Files
-Version: 0.1.3
+Version: 0.1.5
 Authors@R:
     c(person(given = "Johannes", family = "Rainer",
              email = "Johannes.Rainer@eurac.edu",
@@ -33,7 +33,8 @@ Imports:
     methods,
     opentimsr (>= 1.0.11),
     MsCoreUtils,
-    S4Vectors
+    S4Vectors,
+    ProtGenerics
 Suggests:
     testthat,
     knitr (>= 1.1.0),

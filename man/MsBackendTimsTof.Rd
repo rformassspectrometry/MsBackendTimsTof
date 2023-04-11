@@ -14,12 +14,16 @@
 \alias{rtime,MsBackendTimsTof-method}
 \alias{[,MsBackendTimsTof-method}
 \alias{dataStorage,MsBackendTimsTof-method}
-\alias{dataOrigin,MsBackendTimsTof-method}
-\alias{spectraVariables,MsBackendTimsTof-method}
 \alias{spectraData,MsBackendTimsTof-method}
 \alias{show,MsBackendTimsTof-method}
 \alias{msLevel,MsBackendTimsTof-method}
 \alias{$,MsBackendTimsTof-method}
+\alias{spectraVariables,MsBackendTimsTof-method}
+\alias{selectSpectraVariables,MsBackendTimsTof-method}
+\alias{$<-,MsBackendTimsTof-method}
+\alias{precScanNum,MsBackendTimsTof-method}
+\alias{spectraNames,MsBackendTimsTof-method}
+\alias{tic,MsBackendTimsTof-method}
 \title{TimsTOF data backend}
 \usage{
 MsBackendTimsTof()
@@ -42,10 +46,6 @@ MsBackendTimsTof()
 
 \S4method{dataStorage}{MsBackendTimsTof}(object)
 
-\S4method{dataOrigin}{MsBackendTimsTof}(object)
-
-\S4method{spectraVariables}{MsBackendTimsTof}(object)
-
 \S4method{spectraData}{MsBackendTimsTof}(object, columns = spectraVariables(object))
 
 \S4method{show}{MsBackendTimsTof}(object)
@@ -53,6 +53,18 @@ MsBackendTimsTof()
 \S4method{msLevel}{MsBackendTimsTof}(object, ...)
 
 \S4method{$}{MsBackendTimsTof}(x, name)
+
+\S4method{spectraVariables}{MsBackendTimsTof}(object, ...)
+
+\S4method{selectSpectraVariables}{MsBackendTimsTof}(object, spectraVariables = spectraVariables(object))
+
+\S4method{$}{MsBackendTimsTof}(x, name) <- value
+
+\S4method{precScanNum}{MsBackendTimsTof}(object)
+
+\S4method{spectraNames}{MsBackendTimsTof}(object)
+
+\S4method{tic}{MsBackendTimsTof}(object, initial = TRUE)
 }
 \arguments{
 \item{object}{\code{MsBackendTimsTof} object.}
@@ -78,13 +90,24 @@ Defaults to \code{columns = c("mz", "intensity")}.}
 \item{drop}{For \code{[}: not considered.}
 
 \item{name}{For \code{$}: the name of the variable to access.}
+
+\item{spectraVariables}{\code{character} with the names of the spectra variables
+that should be retained in the returned object.}
+
+\item{value}{For \verb{$<-}: the value to assign to the spectra variable.}
+
+\item{initial}{For \code{tic}: \code{logical(1)} whether the original total ion count
+should be returned (\code{initial = TRUE}, the default) or whether it
+should be calculated on the spectras' intensities (\code{initial = FALSE}).}
 }
 \description{
 The \code{MsBackendTimsTof} class supports Bruker TimsTOF data files. New objects
 are created with the \code{MsBackendTimsTof} function. To ensure a small memory
 footprint, only general information is kept in memory (such as number of
 frames and scans) and all data (specifically the peaks data) is retrieved
-from the original file on-the-fly.
+from the original file on-the-fly. By extending the \code{\link[=MsBackendCached]{MsBackendCached()}}
+backend from the \code{Spectra} package, adding or (locally) changing spectra
+values is also supported.
 }
 \section{Available methods}{
 
@@ -92,6 +115,11 @@ from the original file on-the-fly.
 The following methods are implemented:
 \itemize{
 \item \code{$}: access any of the \code{spectraVariables} of the backend.
+\item \verb{$<-}: add a new spectra variable or change values for an existing spectra
+variables. Values can be changed for any spectra variable except \emph{peaks
+variables} (\code{\link[=peaksVariables]{peaksVariables()}}) or special internal variables \code{"file"} and
+\code{"frameId"}. Note that changes to spectra variables are only cached within
+the object but not propagated to the original data files.
 \item \code{[}: subset the backend. Only subsetting by element (\emph{row}/\code{i}) is
 allowed. First the \verb{@indices} slot of \code{object} is subsetted and then the
 \code{frames} and \code{fileNames} slots are subsetted accordingly. Note that \code{[}
@@ -101,10 +129,9 @@ does not update the values of \code{frames} variables (such as \code{"MaxIntensi
 using TimsTOF data files whose path is specified by \code{files}. This method
 is supposed to be called right after creating a \code{MsBackendTimsTof} object
 with \code{MsBackendTimsTof} function.
-\item \code{dataOrigin}: gets a \code{character} of length equal to the number of spectra
+\item \code{dataStorage}: gets a \code{character} of length equal to the number of spectra
 in \code{object} with the names of the '*.d' folders where each spectrum is
 stored.
-\item \code{dataStorage}: same as \code{dataOrigin}.
 \item \code{intensity}: gets the intensity values from the spectra in the backend.
 Returns a \code{\link[=NumericList]{NumericList()}} of \code{numeric} vectors (intensity values for each
 spectrum). The length of the list is equal to the number of
@@ -125,13 +152,24 @@ backend.
 \item \code{rtime}: gets the retention times for each spectrum. Returns a \code{numeric}
 vector (length equal to the number of spectra) with the retention time
 for each spectrum.
+\item \code{selectSpectraVariables}: reduces the available spectra variables to the
+ones specified with parameter \code{spectraVariables}. For \emph{core spectra
+variables} (\code{\link[=coreSpectraVariables]{coreSpectraVariables()}}) only their values will be removed,
+but not the variable itself.
 \item \code{spectraData}: gets spectra variables (specified by \code{columns}) from
 \code{object}.
+\item \code{spectraNames}: returns an \emph{ID}/name for each spectrum. As IDs the index
+of the spectrum within the object after the initialization is used. This
+index/spectra name is unique and stable for each spectrum within the same
+object.
 \item \code{spectraVariables}: returns a \code{character} vector with the spectra variables
 names of core spectra variables defined in the Spectra package and other
 additional variables contained in \code{object}. Note that also \code{"mz"} and
 \code{"intensity"} (which are by default not returned by the
 \verb{spectraVariables,Spectra} method) are returned.
+\item \code{tic}: calculates the total ion count from the intensities of each
+spectrum (for \code{initial = FALSE}). For \code{initial = TRUE} \code{NA} is returned
+for all spectra.
 }
 }
 
@@ -161,6 +199,17 @@ be_sub <- be[sort(sample(seq_along(be), 10))]
 rtime(be_sub)
 
 pd <- peaksData(be_sub, columns = c("mz", "intensity", "tof", "inv_ion_mobility"))
+
+## Add a new spectra variable
+be$new_var <- seq_along(be)
+
+head(be$new_var)
+
+## Changing values of a spectra variable. Note that these are only changed
+## *locally* within the object, but not in the original data files.
+head(rtime(be))
+be$rtime <- rtime(be) + 10
+head(rtime(be))
 }
 \author{
 Andrea Vicini, Johannes Rainer

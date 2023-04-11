@@ -13,7 +13,18 @@ test_that("backendInitialize,MsBackendTimsTof works", {
     tmp <- unique(query(tms, unique(be@frames$frame), c("frame", "scan")))
     tmp <- rbind(cbind(tmp, file = 1),
                  cbind(tmp, file = 2))
-    expect_equal(be@indices, as.matrix(tmp, rownames.force = FALSE))
+    a <- be@indices
+    row.names(a) <- NULL
+    expect_equal(a, as.matrix(tmp, rownames.force = FALSE))
+
+    expect_equal(be@nspectra, nrow(be@indices))
+    expect_equal(be@spectraVariables, c(.TIMSTOF_COLUMNS,
+                                        colnames(be@frames), "dataOrigin"))
+    expect_equal(nrow(be@localData), be@nspectra)
+    expect_equal(ncol(be@localData), 0L)
+
+    bla <- backendInitialize(MsBackendTimsTof(), path_d_folder)
+    expect_equal(dataOrigin(bla), dataStorage(bla))
 })
 
 test_that("[,MsBackendTimsTof works", {
@@ -97,7 +108,8 @@ test_that("peaksData,MsBackendTimsTof works", {
 })
 
 test_that("rtime,MsBackendTimsTof works", {
-    expect_error(rtime(MsBackendTimsTof()), "'rtime' not available")
+    expect_true(is.numeric(rtime(MsBackendTimsTof())))
+    expect_true(length(rtime(MsBackendTimsTof())) == 0)
 
     res <- rtime(be)
     expect_equal(length(res), length(be))
@@ -206,4 +218,102 @@ test_that("peaksVariables works", {
     res <- peaksVariables(be)
     expect_true(length(res) > 2)
     expect_true(all(c("frame", "scan", "tof", "intensity") %in% res))
+})
+
+test_that("$<-,MsBackendTimsTof works", {
+})
+
+test_that("selectSpectraVariables works", {
+    res <- selectSpectraVariables(
+        be, spectraVariables = c("msLevel", "rtime", "mz", "TimsId"))
+    expect_true(validObject(res))
+    expect_true(all(c("msLevel", "rtime", "mz", "TimsId") %in%
+                    spectraVariables(res)))
+    expect_true(length(spectraVariables(res)) < length(spectraVariables(be)))
+    expect_equal(colnames(res@frames), c("frameId", "rtime", "MsMsType",
+                                         "TimsId", "file"))
+    sdat <- spectraData(res)
+    expect_true(all(lengths(sdat$intensity) == 0))
+    expect_true(all(is.na(res$dataOrigin)))
+    expect_true(all(is.na(sdat$dataOrigin)))
+
+    ## intensity has to be empty, but no error
+    expect_true(all(lengths(intensity(res)) == 0))
+    expect_equal(mz(res), sdat$mz)
+
+    res <- selectSpectraVariables(be, c("TimsId"))
+    sdat <- spectraData(res)
+    expect_true(all(is.na(rtime(res))))
+    expect_true(all(lengths(intensity(res)) == 0))
+    expect_true(all(lengths(mz(res)) == 0))
+    expect_equal(sdat$intensity, intensity(res))
+    expect_equal(sdat$mz, mz(res))
+    expect_true(all(is.na(res$rtime)))
+
+    ## peaksData; that tests might be tricky as it's not totally clear what
+    ## they should return.
+
+    ## Remove/select added (cached) spectra variable
+    tmp <- be
+    tmp$new_var <- "G"
+    res <- selectSpectraVariables(tmp, c("rtime", "msLevel", "tof"))
+    sdat <- spectraData(res)
+    expect_true("new_var" %in% spectraVariables(tmp))
+    expect_false("new_var" %in% spectraVariables(res))
+    expect_false("new_var" %in% colnames(sdat))
+    expect_error(res$new_var, "not available")
+})
+
+test_that("$<-,MsBackendTimsTof works", {
+    ## Errors
+    expect_error(be$mz <- 3, "not supported")
+    expect_error(be$frameId <- 5L, "not supported")
+
+    ## Add a new spectra variable
+    res <- be
+    res$new_var <- "G"
+    expect_true(all(res$new_var == "G"))
+    expect_identical(colnames(res@localData), c("new_var"))
+    res$new_var <- seq_along(res)
+    expect_equal(spectraData(res, "new_var")[, 1L], seq_along(res))
+
+    ## Replace an existing spectra variable
+    res$rtime <- rtime(res) + 10
+    expect_equal(res$rtime, rtime(be) + 10)
+    expect_equal(rtime(res), rtime(be) + 10)
+    expect_equal(spectraData(res, "rtime")[, 1L], rtime(be) + 10)
+
+    res$dataOrigin <- "Z"
+    expect_true(all(dataOrigin(res) == "Z"))
+    expect_equal(dataOrigin(res), res$dataOrigin)
+    expect_equal(spectraData(res)$dataOrigin, res$dataOrigin)
+})
+
+test_that("precScanNum,MsBackendTimsTof works", {
+    res <- precScanNum(be)
+    expect_true(all(is.na(res)))
+    expect_true(is.integer(res))
+})
+
+test_that("tic,MsBackendTimsTof works", {
+    a <- tic(be, initial = FALSE)
+    expect_equal(length(a), length(be))
+    expect_true(is.numeric(a))
+
+    b <- tic(be, initial = TRUE)
+    expect_true(all(is.na(b)))
+    expect_equal(length(b), length(be))
+})
+
+test_that("spectraNames,MsBackendTimsTof works", {
+    res <- spectraNames(MsBackendTimsTof())
+    expect_true(length(res) == 0)
+
+    res <- spectraNames(be)
+    expect_true(length(res) == length(be))
+    expect_true(is.character(res))
+    expect_true(length(res) == length(unique(res)))
+
+    be_sub <- be[c(4, 14, 30)]
+    expect_equal(spectraNames(be_sub), c("4", "14", "30"))
 })
