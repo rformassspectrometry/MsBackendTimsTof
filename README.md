@@ -26,6 +26,14 @@ For more information see the package
 [homepage](https://rformassspectrometry.github.io/MsBackendTimsTof).
 
 
+**Note**: currently `opentimsr` is no longer available on CRAN and needs to be
+installed from github:
+
+```r
+install_github("michalsta/opentims", subdir="opentimsr")
+```
+
+
 # Contributions
 
 Contributions are highly welcome and should follow the [contribution
