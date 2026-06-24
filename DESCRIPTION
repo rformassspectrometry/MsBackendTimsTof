@@ -42,7 +42,7 @@ Suggests:
     BiocStyle (>= 2.5.19),
     rmarkdown
 Remotes:
-    michalsta/opentims/opentimsr
+    michalsta/opentims/src/opentimsr
 License: Artistic-2.0
 LazyData: yes
 Encoding: UTF-8
