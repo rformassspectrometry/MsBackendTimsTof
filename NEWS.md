@@ -1,3 +1,9 @@
+# MsBackendTimsTof 0.2
+
+## MsBackendTimsTof 0.2.0
+
+- Add `extractByIndex()` method and update to newer *Spectra* package.
+
 # MsBackendTimsTof 0.1
 
 ## MsBackendTimsTof 0.1.5

@@ -38,9 +38,11 @@ from such files.
 
 The package depends on the [OpenTIMS](https://github.com/michalsta/opentims) C++
 library to access data in timsTOF Pro data format (TDF) which is provided by the
-`opentimsr` R package. The `MsBackendTimsTof` package can be installed with:
+*opentimsr* R package. The *opentimsr* and *MsBackendTimsTof* package can be
+installed with:
 
 ```{r, eval = FALSE}
+BiocManager::install("michalsta/opentims/src/opentimsr")
 BiocManager::install("RforMassSpectrometry/MsBackendTimsTof")
 ```
 
@@ -56,7 +58,7 @@ so_file <- download_bruker_proprietary_code(so_folder)
 This downloads the shared library to a temporary folder. Note however that at
 present this shared library is **only available for Windows and Linux** (i.e. no
 macOS support). Next, to use this library, it has to be registered with the
-`opentimsr` package:
+*opentimsr* package:
 
 ```{r, eval = FALSE}
 setup_bruker_so(so_file)
@@ -129,7 +131,7 @@ same *frame* have the same value in the spectra variable `"frameId"`. Spectra
 variable `"inv_ion_mobility"` provides the *inverse ion mobility*
 information. This variable is available as a spectra variable, but also as a
 *peaks variable* along with e.g. `"tof"`. Available peaks variables can be
-listed with the `peaksVariables` function.
+listed with the `peaksVariables()` function.
 
 ```{r}
 peaksVariables(sps)
@@ -145,8 +147,8 @@ peaksData(sps_sub, columns = c("mz", "intensity", "tof", "inv_ion_mobility",
 
 Note however that both the `"inv_ion_mobility"` and `"retention_time"` have the
 same value for all peaks in each spectrum. Thus, these variables should be
-accessed not through `peaksData`, but through `spectraData` or using the `$`
-operator or the dedicated `rtime` function. Below we extract the inverse ion
+accessed not through `peaksData()`, but through `spectraData()` or using the `$`
+operator or the dedicated `rtime()` function. Below we extract the inverse ion
 mobility values and display the first 6 of them.
 
 ```{r}

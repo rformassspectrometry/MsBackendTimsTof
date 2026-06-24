@@ -7,11 +7,11 @@
 #' @description
 #'
 #' The `MsBackendTimsTof` class supports Bruker TimsTOF data files. New objects
-#' are created with the `MsBackendTimsTof` function. To ensure a small memory
+#' are created with the `MsBackendTimsTof()` function. To ensure a small memory
 #' footprint, only general information is kept in memory (such as number of
 #' frames and scans) and all data (specifically the peaks data) is retrieved
 #' from the original file on-the-fly. By extending the [MsBackendCached()]
-#' backend from the `Spectra` package, adding or (locally) changing spectra
+#' backend from the *Spectra* package, adding or (locally) changing spectra
 #' values is also supported.
 #'
 #' @section Available methods:
@@ -32,61 +32,62 @@
 #'   does not update the values of `frames` variables (such as `"MaxIntensity"`,
 #'   `"SummedIntensities"`, `"NumScans"` and `"NumPeaks"`).
 #'
-#' - `backendInitialize`: initializes `object` (the `MsBackendTimsTof` object)
+#' - `backendInitialize()`: initializes `object` (the `MsBackendTimsTof` object)
 #'   using TimsTOF data files whose path is specified by `files`. This method
 #'   is supposed to be called right after creating a `MsBackendTimsTof` object
-#'   with `MsBackendTimsTof` function.
+#'   with `MsBackendTimsTof()` function.
 #'
-#' - `dataStorage`: gets a `character` of length equal to the number of spectra
-#'   in `object` with the names of the '*.d' folders where each spectrum is
-#'   stored.
+#' - `dataStorage()`: gets a `character` of length equal to the number of
+#'   spectra in `object` with the names of the '*.d' folders where each
+#'   spectrum is stored.
 #'
-#' - `intensity`: gets the intensity values from the spectra in the backend.
+#' - `intensity()`: gets the intensity values from the spectra in the backend.
 #'   Returns a [NumericList()] of `numeric` vectors (intensity values for each
 #'   spectrum). The length of the list is equal to the number of
 #'   spectra in `object`.
 #'
-#' - `msLevel`: gets the spectra MS level. Returns an integer vector (of length
-#'    equal to the number of spectra) with the MS level for each spectrum.
+#' - `msLevel()`: gets the spectra MS level. Returns an integer vector (of
+#'    length equal to the number of spectra) with the MS level for each
+#'   spectrum.
 #'
-#' - `mz`: gets the mass-to-charge ratios (m/z) from the spectra in the backend.
-#'   Returns a [NumericList()] of `numeric` vectors (m/z values for each
-#'   spectrum). The length of the list is equal to the number of spectra in
+#' - `mz()`: gets the mass-to-charge ratios (m/z) from the spectra in the
+#'   backend. Returns a [NumericList()] of `numeric` vectors (m/z values for
+#'   each spectrum). The length of the list is equal to the number of spectra in
 #'   `object`.
 #'
-#' - `peaksData`: gets the peak matrices of the spectra in the backend.
+#' - `peaksData()`: gets the peak matrices of the spectra in the backend.
 #'   Returns a `list` of `matrix` with columns defined by parameter `columns`
-#'   (which defaults to `columns = c("mz", "intensity")`. Use `peaksVariables`
+#'   (which defaults to `columns = c("mz", "intensity")`. Use `peaksVariables()`
 #'   to list all supported and available columns for a backend.
 #'   The length of the `list` is equal to the number of spectra in `object`.
 #'
-#' - `peaksVariables`: gets the supported peak variables (columns) for the
+#' - `peaksVariables()`: gets the supported peak variables (columns) for the
 #'   backend.
 #'
-#' - `rtime`: gets the retention times for each spectrum. Returns a `numeric`
+#' - `rtime()`: gets the retention times for each spectrum. Returns a `numeric`
 #'   vector (length equal to the number of spectra) with the retention time
 #'   for each spectrum.
 #'
-#' - `selectSpectraVariables`: reduces the available spectra variables to the
+#' - `selectSpectraVariables()`: reduces the available spectra variables to the
 #'   ones specified with parameter `spectraVariables`. For *core spectra
 #'   variables* ([coreSpectraVariables()]) only their values will be removed,
 #'   but not the variable itself.
 #'
-#' - `spectraData`: gets spectra variables (specified by `columns`) from
+#' - `spectraData()`: gets spectra variables (specified by `columns`) from
 #'   `object`.
 #'
-#' - `spectraNames`: returns an *ID*/name for each spectrum. As IDs the index
+#' - `spectraNames()`: returns an *ID*/name for each spectrum. As IDs the index
 #'   of the spectrum within the object after the initialization is used. This
 #'   index/spectra name is unique and stable for each spectrum within the same
 #'   object.
 #'
-#' - `spectraVariables`: returns a `character` vector with the spectra variables
-#'   names of core spectra variables defined in the Spectra package and other
-#'   additional variables contained in `object`. Note that also `"mz"` and
-#'   `"intensity"` (which are by default not returned by the
-#'   `spectraVariables,Spectra` method) are returned.
+#' - `spectraVariables()`: returns a `character` vector with the spectra
+#'   variables names of core spectra variables defined in the Spectra package
+#'   and other additional variables contained in `object`.
+#'   Note that also `"mz"` and `"intensity"` (which are by default not returned
+#'   by the `spectraVariables,Spectra` method) are returned.
 #'
-#' - `tic`: calculates the total ion count from the intensities of each
+#' - `tic()`: calculates the total ion count from the intensities of each
 #'   spectrum (for `initial = FALSE`). For `initial = TRUE` `NA` is returned
 #'   for all spectra.
 #'
@@ -94,15 +95,15 @@
 #'   setup to import data in parallel. Defaults to `BPPARAM = bpparam()`.
 #'   See [bpparam()] for more information.
 #'
-#' @param columns For `spectraData`: names of the spectra variables to extract
-#'   from `object`. For `peaksData`: names of the peak variables to extract.
+#' @param columns For `spectraData()`: names of the spectra variables to extract
+#'   from `object`. For `peaksData()`: names of the peak variables to extract.
 #'   Defaults to `columns = c("mz", "intensity")`.
 #'
 #' @param drop For `[`: not considered.
 #'
 #' @param files `character` specifying TimsTOF ’*.d’ folders names.
 #'
-#' @param initial For `tic`: `logical(1)` whether the original total ion count
+#' @param initial For `tic()`: `logical(1)` whether the original total ion count
 #'     should be returned (`initial = TRUE`, the default) or whether it
 #'     should be calculated on the spectras' intensities (`initial = FALSE`).
 #'
@@ -283,15 +284,16 @@ setMethod("[", "MsBackendTimsTof", function(x, i, j, ..., drop = FALSE) {
     if (missing(i))
         return(x)
     i <- i2index(i, length(x))
-    slot(x, "indices", check = FALSE) <- x@indices[i, , drop = FALSE]
-    ff_indices <- paste(x@indices[, "frame"], x@indices[, "file"])
-    slot(x, "frames", check = FALSE) <-
-        x@frames[match(unique(ff_indices),
-                       paste(x@frames$frameId, x@frames$file)), , drop = FALSE]
-    slot(x, "fileNames", check = FALSE) <-
-        x@fileNames[x@fileNames %in% unique(x@frames$file)]
-    x <- callNextMethod(x, i = i)
-    x
+    extractByIndex(x, i)
+})
+
+#' @importMethodsFrom ProtGenerics extractByIndex
+#'
+#' @rdname MsBackendTimsTof
+setMethod("extractByIndex", c("MsBackendTimsTof", "ANY"), function(object, i) {
+    object <- .subset_backend(object, i)
+    object <- callNextMethod(object, i = i)
+    object
 })
 
 #' @importMethodsFrom Spectra dataStorage

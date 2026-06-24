@@ -354,3 +354,15 @@ MsBackendTimsTof <- function() {
     if (length(res)) extractCOLS(res, columns)
     else DataFrame()
 }
+
+.subset_backend <- function(x, i) {
+    slot(x, "indices", check = FALSE) <- x@indices[i, , drop = FALSE]
+    ff_indices <- paste(x@indices[, "frame"], x@indices[, "file"])
+    slot(x, "frames", check = FALSE) <-
+        x@frames[match(unique(ff_indices),
+                       paste(x@frames$frameId,
+                             x@frames$file)), , drop = FALSE]
+    slot(x, "fileNames", check = FALSE) <-
+        x@fileNames[x@fileNames %in% unique(x@frames$file)]
+    x
+}
