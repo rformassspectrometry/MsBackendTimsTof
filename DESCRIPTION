@@ -1,6 +1,6 @@
 Package: MsBackendTimsTof
 Title: Mass spectrometry Data Backend for Bruker TimsTOF Files
-Version: 0.1.5
+Version: 0.2.0
 Authors@R:
     c(person(given = "Johannes", family = "Rainer",
              email = "Johannes.Rainer@eurac.edu",
@@ -42,7 +42,7 @@ Suggests:
     BiocStyle (>= 2.5.19),
     rmarkdown
 Remotes:
-    michalsta/opentims/opentimsr
+    michalsta/opentims/src/opentimsr
 License: Artistic-2.0
 LazyData: yes
 Encoding: UTF-8
@@ -51,4 +51,4 @@ BugReports: https://github.com/RforMassSpectrometry/MsBackendTimsTof/issues
 URL: https://github.com/RforMassSpectrometry/MsBackendTimsTof
 biocViews: Infrastructure, MassSpectrometry, Metabolomics, DataImport
 Roxygen: list(markdown=TRUE)
-RoxygenNote: 7.2.3
+Config/roxygen2/version: 8.0.0

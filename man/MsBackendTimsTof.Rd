@@ -13,6 +13,7 @@
 \alias{intensity,MsBackendTimsTof-method}
 \alias{rtime,MsBackendTimsTof-method}
 \alias{[,MsBackendTimsTof-method}
+\alias{extractByIndex,MsBackendTimsTof,ANY-method}
 \alias{dataStorage,MsBackendTimsTof-method}
 \alias{spectraData,MsBackendTimsTof-method}
 \alias{show,MsBackendTimsTof-method}
@@ -43,6 +44,8 @@ MsBackendTimsTof()
 \S4method{rtime}{MsBackendTimsTof}(object)
 
 \S4method{[}{MsBackendTimsTof}(x, i, j, ..., drop = FALSE)
+
+\S4method{extractByIndex}{MsBackendTimsTof,ANY}(object, i)
 
 \S4method{dataStorage}{MsBackendTimsTof}(object)
 
@@ -75,12 +78,12 @@ MsBackendTimsTof()
 
 \item{BPPARAM}{Parameter object defining the parallel processing
 setup to import data in parallel. Defaults to \code{BPPARAM = bpparam()}.
-See \code{\link[=bpparam]{bpparam()}} for more information.}
+See \code{\link[BiocParallel:bpparam]{bpparam()}} for more information.}
 
 \item{x}{\code{MsBackendTimsTof} object.}
 
-\item{columns}{For \code{spectraData}: names of the spectra variables to extract
-from \code{object}. For \code{peaksData}: names of the peak variables to extract.
+\item{columns}{For \code{spectraData()}: names of the spectra variables to extract
+from \code{object}. For \code{peaksData()}: names of the peak variables to extract.
 Defaults to \code{columns = c("mz", "intensity")}.}
 
 \item{i}{For \code{[}: \code{integer}, \code{logical} to subset the object.}
@@ -96,17 +99,17 @@ that should be retained in the returned object.}
 
 \item{value}{For \verb{$<-}: the value to assign to the spectra variable.}
 
-\item{initial}{For \code{tic}: \code{logical(1)} whether the original total ion count
+\item{initial}{For \code{tic()}: \code{logical(1)} whether the original total ion count
 should be returned (\code{initial = TRUE}, the default) or whether it
 should be calculated on the spectras' intensities (\code{initial = FALSE}).}
 }
 \description{
 The \code{MsBackendTimsTof} class supports Bruker TimsTOF data files. New objects
-are created with the \code{MsBackendTimsTof} function. To ensure a small memory
+are created with the \code{MsBackendTimsTof()} function. To ensure a small memory
 footprint, only general information is kept in memory (such as number of
 frames and scans) and all data (specifically the peaks data) is retrieved
-from the original file on-the-fly. By extending the \code{\link[=MsBackendCached]{MsBackendCached()}}
-backend from the \code{Spectra} package, adding or (locally) changing spectra
+from the original file on-the-fly. By extending the \code{\link[Spectra:MsBackendCached]{MsBackendCached()}}
+backend from the \emph{Spectra} package, adding or (locally) changing spectra
 values is also supported.
 }
 \section{Available methods}{
@@ -117,7 +120,7 @@ The following methods are implemented:
 \item \code{$}: access any of the \code{spectraVariables} of the backend.
 \item \verb{$<-}: add a new spectra variable or change values for an existing spectra
 variables. Values can be changed for any spectra variable except \emph{peaks
-variables} (\code{\link[=peaksVariables]{peaksVariables()}}) or special internal variables \code{"file"} and
+variables} (\code{\link[ProtGenerics:peaksVariables]{peaksVariables()}}) or special internal variables \code{"file"} and
 \code{"frameId"}. Note that changes to spectra variables are only cached within
 the object but not propagated to the original data files.
 \item \code{[}: subset the backend. Only subsetting by element (\emph{row}/\code{i}) is
@@ -125,49 +128,50 @@ allowed. First the \verb{@indices} slot of \code{object} is subsetted and then t
 \code{frames} and \code{fileNames} slots are subsetted accordingly. Note that \code{[}
 does not update the values of \code{frames} variables (such as \code{"MaxIntensity"},
 \code{"SummedIntensities"}, \code{"NumScans"} and \code{"NumPeaks"}).
-\item \code{backendInitialize}: initializes \code{object} (the \code{MsBackendTimsTof} object)
+\item \code{backendInitialize()}: initializes \code{object} (the \code{MsBackendTimsTof} object)
 using TimsTOF data files whose path is specified by \code{files}. This method
 is supposed to be called right after creating a \code{MsBackendTimsTof} object
-with \code{MsBackendTimsTof} function.
-\item \code{dataStorage}: gets a \code{character} of length equal to the number of spectra
-in \code{object} with the names of the '*.d' folders where each spectrum is
-stored.
-\item \code{intensity}: gets the intensity values from the spectra in the backend.
-Returns a \code{\link[=NumericList]{NumericList()}} of \code{numeric} vectors (intensity values for each
+with \code{MsBackendTimsTof()} function.
+\item \code{dataStorage()}: gets a \code{character} of length equal to the number of
+spectra in \code{object} with the names of the '*.d' folders where each
+spectrum is stored.
+\item \code{intensity()}: gets the intensity values from the spectra in the backend.
+Returns a \code{\link[IRanges:NumericList]{NumericList()}} of \code{numeric} vectors (intensity values for each
 spectrum). The length of the list is equal to the number of
 spectra in \code{object}.
-\item \code{msLevel}: gets the spectra MS level. Returns an integer vector (of length
-equal to the number of spectra) with the MS level for each spectrum.
-\item \code{mz}: gets the mass-to-charge ratios (m/z) from the spectra in the backend.
-Returns a \code{\link[=NumericList]{NumericList()}} of \code{numeric} vectors (m/z values for each
-spectrum). The length of the list is equal to the number of spectra in
+\item \code{msLevel()}: gets the spectra MS level. Returns an integer vector (of
+length equal to the number of spectra) with the MS level for each
+spectrum.
+\item \code{mz()}: gets the mass-to-charge ratios (m/z) from the spectra in the
+backend. Returns a \code{\link[IRanges:NumericList]{NumericList()}} of \code{numeric} vectors (m/z values for
+each spectrum). The length of the list is equal to the number of spectra in
 \code{object}.
-\item \code{peaksData}: gets the peak matrices of the spectra in the backend.
+\item \code{peaksData()}: gets the peak matrices of the spectra in the backend.
 Returns a \code{list} of \code{matrix} with columns defined by parameter \code{columns}
-(which defaults to \code{columns = c("mz", "intensity")}. Use \code{peaksVariables}
+(which defaults to \code{columns = c("mz", "intensity")}. Use \code{peaksVariables()}
 to list all supported and available columns for a backend.
 The length of the \code{list} is equal to the number of spectra in \code{object}.
-\item \code{peaksVariables}: gets the supported peak variables (columns) for the
+\item \code{peaksVariables()}: gets the supported peak variables (columns) for the
 backend.
-\item \code{rtime}: gets the retention times for each spectrum. Returns a \code{numeric}
+\item \code{rtime()}: gets the retention times for each spectrum. Returns a \code{numeric}
 vector (length equal to the number of spectra) with the retention time
 for each spectrum.
-\item \code{selectSpectraVariables}: reduces the available spectra variables to the
+\item \code{selectSpectraVariables()}: reduces the available spectra variables to the
 ones specified with parameter \code{spectraVariables}. For \emph{core spectra
-variables} (\code{\link[=coreSpectraVariables]{coreSpectraVariables()}}) only their values will be removed,
+variables} (\code{\link[Spectra:coreSpectraVariables]{coreSpectraVariables()}}) only their values will be removed,
 but not the variable itself.
-\item \code{spectraData}: gets spectra variables (specified by \code{columns}) from
+\item \code{spectraData()}: gets spectra variables (specified by \code{columns}) from
 \code{object}.
-\item \code{spectraNames}: returns an \emph{ID}/name for each spectrum. As IDs the index
+\item \code{spectraNames()}: returns an \emph{ID}/name for each spectrum. As IDs the index
 of the spectrum within the object after the initialization is used. This
 index/spectra name is unique and stable for each spectrum within the same
 object.
-\item \code{spectraVariables}: returns a \code{character} vector with the spectra variables
-names of core spectra variables defined in the Spectra package and other
-additional variables contained in \code{object}. Note that also \code{"mz"} and
-\code{"intensity"} (which are by default not returned by the
-\verb{spectraVariables,Spectra} method) are returned.
-\item \code{tic}: calculates the total ion count from the intensities of each
+\item \code{spectraVariables()}: returns a \code{character} vector with the spectra
+variables names of core spectra variables defined in the Spectra package
+and other additional variables contained in \code{object}.
+Note that also \code{"mz"} and \code{"intensity"} (which are by default not returned
+by the \verb{spectraVariables,Spectra} method) are returned.
+\item \code{tic()}: calculates the total ion count from the intensities of each
 spectrum (for \code{initial = FALSE}). For \code{initial = TRUE} \code{NA} is returned
 for all spectra.
 }
