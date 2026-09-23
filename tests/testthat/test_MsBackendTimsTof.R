@@ -18,8 +18,9 @@ test_that("backendInitialize,MsBackendTimsTof works", {
     expect_equal(a, as.matrix(tmp, rownames.force = FALSE))
 
     expect_equal(be@nspectra, nrow(be@indices))
-    expect_equal(be@spectraVariables, c(.TIMSTOF_COLUMNS,
-                                        colnames(be@frames), "dataOrigin"))
+    expect_equal(be@spectraVariables,
+                 c(.TIMSTOF_COLUMNS, colnames(be@frames),
+                   .MS2_COLUMNS, "dataOrigin"))
     expect_equal(nrow(be@localData), be@nspectra)
     expect_equal(ncol(be@localData), 0L)
 
@@ -187,6 +188,15 @@ test_that("spectraData,MsBackendTimsTof works", {
     be_2 <- be[c(2, 2, 1, 2)]
     res <- spectraData(be_2)
     expect_equal(res, res_all[c(2, 2, 1, 2), ])
+
+    ## MS2 data
+    res <- spectraData(be, "precursorMz")
+    expect_s4_class(res, "DataFrame")
+    expect_equal(colnames(res), "precursorMz")
+    expect_true(!all(is.na(res$precursorMz)))
+    res_2 <- spectraData(be, c("collisionEnergy", "precursorMz"))
+    expect_equal(colnames(res_2), c("collisionEnergy", "precursorMz"))
+    expect_equal(res$precursorMz, res_2$precursorMz)
 })
 
 test_that("msLevel,MsBackendTimsTof works", {
@@ -209,6 +219,11 @@ test_that("$,MsBackendTimsTof works", {
 
     expect_equal(be$dataOrigin, dataOrigin(be))
     expect_equal(be$dataStorage, dataStorage(be))
+
+    res <- spectraData(be)
+    expect_equal(res$precursorMz, be$precursorMz)
+    expect_equal(res$collisionEnergy, be$collisionEnergy)
+    expect_equal(res$rtime, be$rtime)
 })
 
 test_that("peaksVariables works", {
@@ -221,6 +236,12 @@ test_that("peaksVariables works", {
 })
 
 test_that("$<-,MsBackendTimsTof works", {
+    a <- backendInitialize(MsBackendTimsTof(), rep(path_d_folder, 2))
+    a$precursorMz <- a$precursorMz + 10
+    expect_equal(a$precursorMz, be$precursorMz + 10)
+    a$new_var <- seq_along(a)
+    expect_equal(a@localData$new_var, seq_along(a))
+    rm(a)
 })
 
 test_that("selectSpectraVariables works", {

@@ -25,7 +25,7 @@
 \alias{precScanNum,MsBackendTimsTof-method}
 \alias{spectraNames,MsBackendTimsTof-method}
 \alias{tic,MsBackendTimsTof-method}
-\title{TimsTOF data backend}
+\title{TimsTOF MS data backend}
 \usage{
 MsBackendTimsTof()
 
@@ -104,13 +104,29 @@ should be returned (\code{initial = TRUE}, the default) or whether it
 should be calculated on the spectras' intensities (\code{initial = FALSE}).}
 }
 \description{
-The \code{MsBackendTimsTof} class supports Bruker TimsTOF data files. New objects
-are created with the \code{MsBackendTimsTof()} function. To ensure a small memory
-footprint, only general information is kept in memory (such as number of
-frames and scans) and all data (specifically the peaks data) is retrieved
-from the original file on-the-fly. By extending the \code{\link[Spectra:MsBackendCached]{MsBackendCached()}}
-backend from the \emph{Spectra} package, adding or (locally) changing spectra
-values is also supported.
+The \code{MsBackendTimsTof} class adds support for Bruker TimsTOF data files (\emph{.d}
+files) to \code{\link[Spectra:Spectra]{Spectra()}} objects. New objects are created with the
+\code{MsBackendTimsTof()} function and initialized using the \code{backendInitialize()}
+function. To ensure a small memory footprint, only general information is
+kept in memory (such as number of frames and scans) and all data
+(specifically the peaks data) are retrieved from the original data files
+on-the-fly. \code{MsBackendTimsTof} directly extends the \code{\link[Spectra:MsBackendCached]{MsBackendCached()}}
+backend from the \emph{Spectra} package and supports therefore adding or locally
+caching spectra variables.
+}
+\details{
+The (DDA) MS2 data for MS2 spectra is retrieved from the \emph{analytis.tdf}
+SQLite databases within the \emph{.d} folder. Per default, the m/z of the largest
+peak in the isolation window is reported as \code{precursorMz} (SQLite database
+column \code{"LargestPeakMz"}). Alternatively, the content of database columns
+\code{"AverageMz"} or \code{"IsolationMz"} could be reported instead. To use e.g. the
+\code{"AverageMz"} as \code{precursorMz} set
+\code{options(TIMSTOF_PRECURSOR_MZ = "AverageMz")}.
+
+The reported \code{isolationWindowLowerMz} and \code{isolationWindowUpperMz} are
+calculated based on the \code{"IsolationMz"} and \code{"IsolationWidth"} database
+columns, i.e., \code{isolationWindowLowerMz <- IsolationMz - IsolationWidth / 2}
+and \code{isolationWindowUpperMz <- IsolationMz + IsolationWidth / 2}.
 }
 \section{Available methods}{
 
@@ -120,8 +136,9 @@ The following methods are implemented:
 \item \code{$}: access any of the \code{spectraVariables} of the backend.
 \item \verb{$<-}: add a new spectra variable or change values for an existing spectra
 variables. Values can be changed for any spectra variable except \emph{peaks
-variables} (\code{\link[ProtGenerics:peaksVariables]{peaksVariables()}}) or special internal variables \code{"file"} and
-\code{"frameId"}. Note that changes to spectra variables are only cached within
+variables} (\code{\link[Spectra:peaksVariables]{Spectra::peaksVariables()}}) or special internal variables
+\code{"file"} and \code{"frameId"}.
+Note that changes to spectra variables are only cached within
 the object but not propagated to the original data files.
 \item \code{[}: subset the backend. Only subsetting by element (\emph{row}/\code{i}) is
 allowed. First the \verb{@indices} slot of \code{object} is subsetted and then the
@@ -179,8 +196,11 @@ for all spectra.
 
 \examples{
 
-## Load the opentimsr package to retrieve the required shared library
-## from Bruker.
+## Load the *opentimsr* package to retrieve the required shared library
+## from Bruker. Ideally, this file should be stored in a regular folder,
+## which allows then to point to that existing location with
+## `options(TIMSTOF_LIB = "<path to folder>/libtimsdata.so")`
+## without needing to download the file again
 so_folder <- tempdir()
 library(opentimsr)
 so_file <- download_bruker_proprietary_code(so_folder, method = "wget")
@@ -198,11 +218,24 @@ be
 ## Available spectra variables
 spectraVariables(be)
 
+## Available peaks variables
+peaksVariables(be)
+
 ## Subset to 10 randomly selected spectra.
 be_sub <- be[sort(sample(seq_along(be), 10))]
 rtime(be_sub)
 
-pd <- peaksData(be_sub, columns = c("mz", "intensity", "tof", "inv_ion_mobility"))
+## Get the peaks data, i.e. m/z, intensity as well as tof and ion mobility
+pd <- peaksData(be_sub,
+    columns = c("mz", "intensity", "tof", "inv_ion_mobility"))
+pd
+
+## Filter to data set to MS2 spectra only
+be_ms2 <- filterMsLevel(be, 2L)
+be_ms2
+
+## Get the full spectra data (including peaks variables)
+spectraData(be_ms2)
 
 ## Add a new spectra variable
 be$new_var <- seq_along(be)

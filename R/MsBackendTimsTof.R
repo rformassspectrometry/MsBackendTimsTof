@@ -1,4 +1,4 @@
-#' @title TimsTOF data backend
+#' @title TimsTOF MS data backend
 #'
 #' @name MsBackendTimsTof
 #'
@@ -6,13 +6,30 @@
 #'
 #' @description
 #'
-#' The `MsBackendTimsTof` class supports Bruker TimsTOF data files. New objects
-#' are created with the `MsBackendTimsTof()` function. To ensure a small memory
-#' footprint, only general information is kept in memory (such as number of
-#' frames and scans) and all data (specifically the peaks data) is retrieved
-#' from the original file on-the-fly. By extending the [MsBackendCached()]
-#' backend from the *Spectra* package, adding or (locally) changing spectra
-#' values is also supported.
+#' The `MsBackendTimsTof` class adds support for Bruker TimsTOF data files (*.d*
+#' files) to [Spectra()] objects. New objects are created with the
+#' `MsBackendTimsTof()` function and initialized using the `backendInitialize()`
+#' function. To ensure a small memory footprint, only general information is
+#' kept in memory (such as number of frames and scans) and all data
+#' (specifically the peaks data) are retrieved from the original data files
+#' on-the-fly. `MsBackendTimsTof` directly extends the [MsBackendCached()]
+#' backend from the *Spectra* package and supports therefore adding or locally
+#' caching spectra variables.
+#'
+#' @details
+#'
+#' The (DDA) MS2 data for MS2 spectra is retrieved from the *analytis.tdf*
+#' SQLite databases within the *.d* folder. Per default, the m/z of the largest
+#' peak in the isolation window is reported as `precursorMz` (SQLite database
+#' column `"LargestPeakMz"`). Alternatively, the content of database columns
+#' `"AverageMz"` or `"IsolationMz"` could be reported instead. To use e.g. the
+#' `"AverageMz"` as `precursorMz` set
+#' `options(TIMSTOF_PRECURSOR_MZ = "AverageMz")`.
+#'
+#' The reported `isolationWindowLowerMz` and `isolationWindowUpperMz` are
+#' calculated based on the `"IsolationMz"` and `"IsolationWidth"` database
+#' columns, i.e., `isolationWindowLowerMz <- IsolationMz - IsolationWidth / 2`
+#' and `isolationWindowUpperMz <- IsolationMz + IsolationWidth / 2`.
 #'
 #' @section Available methods:
 #'
@@ -22,8 +39,9 @@
 #'
 #' - `$<-`: add a new spectra variable or change values for an existing spectra
 #'   variables. Values can be changed for any spectra variable except *peaks
-#'   variables* ([peaksVariables()]) or special internal variables `"file"` and
-#'   `"frameId"`. Note that changes to spectra variables are only cached within
+#'   variables* ([Spectra::peaksVariables()]) or special internal variables
+#'   `"file"` and `"frameId"`.
+#'   Note that changes to spectra variables are only cached within
 #'   the object but not propagated to the original data files.
 #'
 #' - `[`: subset the backend. Only subsetting by element (*row*/`i`) is
@@ -132,8 +150,11 @@
 #'
 #' @examples
 #'
-#' ## Load the opentimsr package to retrieve the required shared library
-#' ## from Bruker.
+#' ## Load the *opentimsr* package to retrieve the required shared library
+#' ## from Bruker. Ideally, this file should be stored in a regular folder,
+#' ## which allows then to point to that existing location with
+#' ## `options(TIMSTOF_LIB = "<path to folder>/libtimsdata.so")`
+#' ## without needing to download the file again
 #' so_folder <- tempdir()
 #' library(opentimsr)
 #' so_file <- download_bruker_proprietary_code(so_folder, method = "wget")
@@ -151,11 +172,24 @@
 #' ## Available spectra variables
 #' spectraVariables(be)
 #'
+#' ## Available peaks variables
+#' peaksVariables(be)
+#'
 #' ## Subset to 10 randomly selected spectra.
 #' be_sub <- be[sort(sample(seq_along(be), 10))]
 #' rtime(be_sub)
 #'
-#' pd <- peaksData(be_sub, columns = c("mz", "intensity", "tof", "inv_ion_mobility"))
+#' ## Get the peaks data, i.e. m/z, intensity as well as tof and ion mobility
+#' pd <- peaksData(be_sub,
+#'     columns = c("mz", "intensity", "tof", "inv_ion_mobility"))
+#' pd
+#'
+#' ## Filter to data set to MS2 spectra only
+#' be_ms2 <- filterMsLevel(be, 2L)
+#' be_ms2
+#'
+#' ## Get the full spectra data (including peaks variables)
+#' spectraData(be_ms2)
 #'
 #' ## Add a new spectra variable
 #' be$new_var <- seq_along(be)
@@ -214,7 +248,7 @@ setMethod("backendInitialize", signature = "MsBackendTimsTof",
                   object, nspectra = nrow(object@indices),
                   spectraVariables = c(.TIMSTOF_COLUMNS,
                                        colnames(object@frames),
-                                       "dataOrigin"))
+                                       .MS2_COLUMNS, "dataOrigin"))
               validObject(object)
               object
           })

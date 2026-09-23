@@ -1,3 +1,8 @@
+# MsBackendTimsTof 0.98
+
+- Extract MS2 information (precursor m/z, collision energy, isolation window
+  etc) from the SQLite databases in the *.d* folder(s).
+
 # MsBackendTimsTof 0.2
 
 ## MsBackendTimsTof 0.2.0

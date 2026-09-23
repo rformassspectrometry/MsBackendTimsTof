@@ -29,9 +29,11 @@ test_that(".valid_fileNames works", {
     tmpf <- tempfile()
     write("hello", file = tmpf)
     expect_match(.valid_fileNames(setNames(c(1L, 3L), c(NA, tmpf))),
-                 "'NA' values in fileNames")
-    expect_match(.valid_fileNames(setNames(c(1L, 3L), c("x", tmpf))), "not found")
+                 "of 'fileNames' are not allowed")
+    expect_match(.valid_fileNames(setNames(c(1L, 3L), c("x", tmpf))),
+                 "not found")
     expect_null(.valid_fileNames(setNames(3L, tmpf)))
+    expect_match(.valid_fileNames(NA), "'NA' values in 'fileNames'")
 })
 
 test_that(".get_tims_columns works", {
@@ -204,4 +206,99 @@ test_that(".spectra_data works", {
     expect_identical(res$msLevel, msLevel(be))
     expect_equal(dataStorage(be), res$dataStorage)
     expect_equal(dataOrigin(be), res$dataOrigin)
+})
+
+test_that(".analysis_tdf works", {
+    expect_error(res <- .analysis_tdf(tempdir()), "not found")
+    res <- .analysis_tdf(path_d_folder)
+    expect_s4_class(res, "SQLiteConnection")
+    dbDisconnect(res)
+})
+
+test_that(".ms2_frames works", {
+    res <- .ms2_frames(be)
+    expect_true(is.list(res))
+    expect_equal(length(res), length(be@fileNames))
+})
+
+test_that(".ms2_cols works", {
+    res <- .ms2_cols()
+    expect_equal(res, character())
+    res <- .ms2_cols("precursorMz")
+    expect_equal(res, "LargestPeakMz")
+    res <- .ms2_cols("isolationWindowUpperMz")
+    expect_equal(res, c("IsolationMz", "IsolationWidth"))
+    res <- .ms2_cols(c("precursorMz", "isolationWindowTargetMz",
+                       "precursorCharge", "precursorIntensity",
+                       "collisionEnergy"))
+    expect_equal(sort(res), sort(c("LargestPeakMz", "Intensity",
+                                   "CollisionEnergy", "Charge",
+                                   "IsolationMz", "IsolationWidth")))
+})
+
+test_that(".ms2_d works", {
+    res <- .ms2_d(path_d_folder, c(31, 32))
+    rownames(res) <- NULL
+    expect_true(is.data.frame(res))
+    expect_equal(colnames(res), c("frame", "scan", "precursorMz",
+                                  "precursorIntensity", "collisionEnergy",
+                                  "precursorCharge", "isolationWindowTargetMz",
+                                  "isolationWindowLowerMz",
+                                  "isolationWindowUpperMz"))
+    expect_equal(unique(res$frame), c(31L, 32L))
+
+    res_2 <- .ms2_d(path_d_folder, c(32))
+    ref <- res[res$frame == 32, ]
+    rownames(ref) <- NULL
+    expect_equal(res_2, ref)
+
+    res_s <- .ms2_d(path_d_folder, c(31, 32),
+                    c("isolationWindowLowerMz", "precursorCharge"))
+    expect_equal(colnames(res_s), c("frame", "scan", "precursorCharge",
+                                    "isolationWindowLowerMz"))
+    expect_equal(res$frame, res_s$frame)
+    expect_equal(res$scan, res_s$scan)
+    expect_equal(res$precursorCharge, res_s$precursorCharge)
+    expect_equal(res$isolationWindowLowerMz, res_s$isolationWindowLowerMz)
+})
+
+test_that(".ms2_spectra_data works", {
+    res <- .ms2_spectra_data(be, columns = c("precursorMz"))
+    expect_true(is.data.frame(res))
+    expect_equal(colnames(res), "precursorMz")
+    expect_equal(nrow(res), length(be))
+    ## data at the right places
+    expect_equal(!is.na(res[, 1L]), msLevel(be) == 2)
+
+    ## No MS2 data.
+    b <- be[c(5:20)]
+    res <- .ms2_spectra_data(b)
+    expect_equal(nrow(res), length(b))
+    expect_true(all(is.na(res$precursorMz)))
+    expect_equal(colnames(res), c("precursorMz", "precursorIntensity",
+                                  "collisionEnergy", "precursorCharge",
+                                  "isolationWindowTargetMz",
+                                  "isolationWindowLowerMz",
+                                  "isolationWindowUpperMz"))
+    ## With MS2 data
+    b <- be[msLevel(be) == 2L]
+    res <- .ms2_spectra_data(b, c("precursorCharge", "precursorIntensity"))
+    expect_equal(nrow(res), length(b))
+    expect_equal(colnames(res), c("precursorCharge", "precursorIntensity"))
+    expect_equal(res$precursorIntensity[1:50], res$precursorIntensity[51:100])
+})
+
+test_that(".precursor_mz_column works", {
+    res <- .precursor_mz_column()
+    expect_true(is.character(res))
+    expect_equal(length(res), 1L)
+})
+
+test_that(".ms2_d_empty", {
+    res <- .ms2_d_empty()
+    expect_true(is.data.frame(res))
+    expect_true(nrow(res) == 0L)
+    res <- .ms2_d_empty(c("collisionEnergy", "precursorMz"))
+    expect_equal(colnames(res), c("frame", "scan", "collisionEnergy",
+                                  "precursorMz", "file"))
 })

@@ -1,4 +1,10 @@
-#' Initialize the `MsBackendTimsTOF` object `x`
+#' @description
+#'
+#' Initialize the `MsBackendTimsTOF` object `x`:
+#' - iterate over the files, for each file:
+#' - get the *frame* information and build the `@indices` matrix with the
+#'   frame index, scan index and file index columns.
+#' - fix polarity information
 #'
 #' @author Andrea Vicini, Johannes Rainer
 #'
@@ -32,7 +38,7 @@
     if (any(colnames(x@frames) == "polarity"))
         x@frames$polarity <- .format_polarity(x@frames$polarity)
     x@indices <- do.call(rbind, lapply(L, "[[", 2))
-    row.names(x@indices) <- seq_len(nrow(x@indices))
+    row.names(x@indices) <- seq_len(nrow(x@indices)) # do we need rownames?
     x@fileNames <- setNames(seq_len(length(file)), file)
     x
 }
@@ -46,7 +52,6 @@
 #' @param columns `character` specifying the required columns.
 #'
 #' @noRd
-#'
 .valid_required_columns <- function(x, columns = character(0)) {
     if (nrow(x)) {
         missing_cn <- setdiff(columns, colnames(x))
@@ -99,10 +104,10 @@
 .valid_fileNames <- function(x) {
     msg <- NULL
     if (anyNA(x))
-        msg <- "'NA' values in fileNames names are not allowed."
+        msg <- "'NA' values in 'fileNames' are not allowed."
     nms <- names(x)
     if (anyNA(nms))
-        msg <- "'NA' values in fileNames names are not allowed."
+        msg <- "'NA' values in 'names()' of 'fileNames' are not allowed."
     msg <- c(msg, Spectra:::.valid_ms_backend_files_exist(unique(nms)))
     msg
 }
@@ -116,6 +121,8 @@ MsBackendTimsTof <- function() {
     new("MsBackendTimsTof")
 }
 
+#' @description
+#'
 #' Get `x@all_columns` variables (including "`mz`" and "`intensity`") from `x`
 #' splitted by spectra. At least one variable among `x@all_columns` and
 #' different from `"frame"` and "`scan`" has to be provided via `columns`
@@ -170,7 +177,9 @@ MsBackendTimsTof <- function() {
     res
 }
 
-#' Extract the inv_ion_mobility from the TimsTOF file.
+#' @description
+#'
+#' Extract the inv_ion_mobility information from the TimsTOF file.
 #'
 #' @author Johannes Rainer
 #'
@@ -188,8 +197,10 @@ MsBackendTimsTof <- function() {
     unsplit(res, f)
 }
 
-#' Function to use the `query` function from opentimsr to retrieve data from
-#' a single file.
+#' @description
+#'
+#' Function to use the `query()` function from *opentimsr* to retrieve data
+#' from a **single** file.
 #'
 #' @param x `opentimsr::OpenTIMS` object or `character(1)`.
 #'
@@ -200,9 +211,9 @@ MsBackendTimsTof <- function() {
 #'
 #' @return `data.frame` with the requested data.
 #'
-#' @noRd
-#'
 #' @author Johannes Rainer
+#'
+#' @noRd
 .query_tims <- function(x, frames, columns) {
     if (is.character(x)) {
         x <- OpenTIMS(x)
@@ -216,6 +227,8 @@ MsBackendTimsTof <- function() {
     query(x, unique(frames), c("frame", "scan", sd))
 }
 
+#' @description
+#'
 #' Lists all available peak columns in TIMS file
 #'
 #' @param x `character(1)` with the file name.
@@ -229,6 +242,8 @@ MsBackendTimsTof <- function() {
     tms@all_columns
 }
 
+#' @description
+#'
 #' Extract columns from @frames given the @indices in `x`. The function takes
 #' care of eventually duplicating values.
 #'
@@ -252,6 +267,8 @@ MsBackendTimsTof <- function() {
     x@frames[idx, columns, drop]
 }
 
+#' @description
+#'
 #' Mapping of spectra variables to frames column names.
 #'
 #' @noRd
@@ -268,6 +285,8 @@ MsBackendTimsTof <- function() {
     xn
 }
 
+#' @description
+#'
 #' Get the msLevel for each spectra. `x` is interpreted either as
 #' `MsBackendTimsTof` if `isMsMsType` is `FALSE` or as `numeric` with the
 #' MsMsType of each spectra if `isMsMsType` is `TRUE`.
@@ -289,6 +308,16 @@ MsBackendTimsTof <- function() {
 # can we assume that tms@all_coulmns is the same for all the TimsTOF?
 .TIMSTOF_COLUMNS <- c("mz", "intensity", "tof", "inv_ion_mobility")
 
+#' @description
+#'
+#' Main function to extract the `spectraData` from the backend. The
+#' `.ms2_spectra_data()` function is used to retrieve the MS2 information for
+#' DDA MS2 data from the *analysis.tdf* SQLite databases of the .d files.
+#'
+#' @param x `MsBackendTimsTof`
+#'
+#' @param columns `character` with the column names.
+#'
 #' @importFrom methods as callNextMethod getMethod
 #'
 #' @importFrom S4Vectors DataFrame
@@ -302,23 +331,24 @@ MsBackendTimsTof <- function() {
 #' @importFrom Spectra coreSpectraVariables
 #'
 #' @author Andrea Vicini, Johannes Rainer
+#'
+#' @noRd
 .spectra_data <- function(x, columns = spectraVariables(x)) {
-    if (!all(present <- columns %in% spectraVariables(x)))
-        stop("Column(s) ", paste0("\"", columns[!present], "\"",
-                                  collapse = ", "),
-             " not available.", call. = FALSE)
-    ## Get cached data first. This data.frame contains also core spectra
-    ## variables NOT provided by the Tims file as well as all cached variables.
-    cached <- intersect(
-        columns, getMethod("spectraVariables", "MsBackendCached")(x))
-    res <- getMethod("spectraData", "MsBackendCached")(x, columns = cached)
+    if (length(miss <- setdiff(columns, spectraVariables(x)))) {
+        msg <- paste0("\"", miss, "\"")
+        stop("Column(s) ", msg, " not available.", call. = FALSE)
+    }
+    ## Get the cached variables and core spectra variables that can not be
+    ## read from the data files.
+    cached_cols <- getMethod("spectraVariables", "MsBackendCached")(x)
+    ## Get the data for these from the parent object
+    res <- getMethod("spectraData", "MsBackendCached")(x, columns = cached_cols)
     if (is.null(res))
         res <- make_zero_col_DFrame(length(x))
-    ## get data only for columns that are NOT in colnames(res).
-    cols <- columns[!columns %in% colnames(res)]
-    frames_cols <- cols[cols %in% colnames(x@frames)]
-    tims_cols <- cols[
-        cols %in% .TIMSTOF_COLUMNS[!.TIMSTOF_COLUMNS == "inv_ion_mobility"]]
+    ## define columns that are not retrieved from the cache.
+    cols <- setdiff(columns, colnames(res))
+    frames_cols <- intersect(cols, colnames(x@frames))
+    tims_cols <- intersect(cols, setdiff(.TIMSTOF_COLUMNS, "inv_ion_mobility"))
 
     if ("scanIndex" %in% columns)
         res$scanIndex <- x@indices[, "scan"]
@@ -351,13 +381,35 @@ MsBackendTimsTof <- function() {
     }
     if ("dataOrigin" %in% cols && "dataOrigin" %in% x@spectraVariables)
         res[["dataOrigin"]] <- dataStorage(x)
+    ## DDA MS2 columns
+    if (length(ms2_cols <- cols[cols %in% .MS2_COLUMNS]))
+        res <- cbind(res, .ms2_spectra_data(x, columns = ms2_cols))
     if (length(res)) extractCOLS(res, columns)
     else DataFrame()
 }
 
+#' @description
+#'
+#' Subset the `MsBackendTimsTof` by index `i`.
+#'
+#' `@indices` and `@frames` slots are subset and ordered according to `i`.
+#' `@fileNames` is only subset but **not** re-ordered! Also, the contents
+#' of the `matrix` are not updated, i.e. the content of columns `"frame"`,
+#' `"scan"` and `"file"` are unchanged, only the rows are subset and reordered.
+#'
+#' @param x `MsBackendTimsTof`
+#'
+#' @param i `integer` vector with the **same** length than `x`.
+#'
+#' @return subset `MsBackendTimsTof`.
+#'
+#' @author Johannes Rainer
+#'
+#' @noRd
 .subset_backend <- function(x, i) {
     slot(x, "indices", check = FALSE) <- x@indices[i, , drop = FALSE]
     ff_indices <- paste(x@indices[, "frame"], x@indices[, "file"])
+    ## would a `left_join` be faster?
     slot(x, "frames", check = FALSE) <-
         x@frames[match(unique(ff_indices),
                        paste(x@frames$frameId,
@@ -365,4 +417,205 @@ MsBackendTimsTof <- function() {
     slot(x, "fileNames", check = FALSE) <-
         x@fileNames[x@fileNames %in% unique(x@frames$file)]
     x
+}
+
+#' @description
+#'
+#' Get a `DBconnection` to the *analysis.tdf* SQLite database of the provided
+#' *.d* directory.
+#'
+#' @param x `character(1)` with the path and directory name of **one** TimsTof
+#'     *.d* file.
+#'
+#' @importFrom RSQLite SQLite
+#'
+#' @importMethodsFrom DBI dbConnect
+#'
+#' @noRd
+.analysis_tdf <- function(x) {
+    fl <- file.path(x, c("analysis.tdf", "Analysis.tdf"))
+    fl <- fl[file.exists(fl)]
+    if (!length(fl))
+        stop("\"analysis.tdf\" not found in \"", x, "\"")
+    dbConnect(SQLite(), fl)
+}
+
+#' @description
+#'
+#' Get the frame IDs with (DDA) MS2 scans.
+#'
+#' @param x (initialized) `MsBackendTimsTof`.
+#'
+#' @return `list` of `integer` with the IDs of the frames.
+#'
+#' @noRd
+.ms2_frames <- function(x, ms_ms_type = 8L) {
+    sel <- which(x@frames$MsMsType == ms_ms_type)
+    split(x@frames$frameId[sel], as.factor(x@frames$file[sel]))
+}
+
+#' @description
+#'
+#' Helper function to get the SQLite column name to report as precursor m/z.
+#'
+#' @noRd
+.precursor_mz_column <- function() {
+    getOption("TIMSTOF_PRECURSOR_MZ")
+}
+
+#' The column names for which we must query the analysis.tdf SQLite database
+#'
+#' @noRd
+.MS2_COLUMNS <- c("precursorMz", "precursorIntensity", "collisionEnergy",
+                  "precursorCharge", "isolationWindowTargetMz",
+                  "isolationWindowLowerMz", "isolationWindowUpperMz")
+
+#' @description
+#'
+#' Get (DDA) MS2 information from a **single** .d file. Needs the file name and
+#' the IDs (indices) of the frames for which to extract the data.
+#'
+#' @param d `character(1)` with the path/file name of **one** .d file.
+#'
+#' @param frames `integer` with the IDs of the frames that contain MS2 scans.
+#'
+#' @param columns `character` with the columns/information that should be
+#'     returned. Matches the `coreSpectraVariables()` with MS2 content.
+#'
+#' @return a `data.frame` with the MS2 information for **all** (potential)
+#'     scans in each of the provided `frames`. The returned contains all
+#'     columns defined with `columns` as well as `"frame"` and `"scan"` that
+#'     can then be used to join the `data.frame` with the `@indices`. Note that
+#'     the order of the columns does **not** match the order in `columns`!
+#'
+#' @author Johannes Rainer
+#'
+#' @importMethodsFrom DBI dbDisconnect dbGetQuery
+#'
+#' @noRd
+.ms2_d <- function(d = character(), frames = integer(),
+                   columns = .MS2_COLUMNS) {
+    con <- .analysis_tdf(d)
+    on.exit(dbDisconnect(con))
+    cols <- c("Frame", "ScanNumBegin", "ScanNumEnd", .ms2_cols(columns))
+    db <- dbGetQuery(
+        con, paste0("select ", paste0(cols, collapse = ","), " from ",
+                    "PasefFrameMsMsInfo join Precursors on ",
+                    "(PasefFrameMsMsInfo.Precursor = Precursors.Id) where ",
+                    "Frame in (", paste0(frames, collapse = ","), ")"))
+    ## define the number of times we need to replicate each
+    rp <- db$ScanNumEnd - db$ScanNumBegin + 1L
+    ## build the base results data.frame
+    res <- data.frame(frame = rep(db$Frame, rp),
+                      scan = sequence(rp, from = db$ScanNumBegin))
+    ## add info depending on `columnns`
+    if ("precursorMz" %in% columns)
+        res$precursorMz <- rep(db[[.precursor_mz_column()]])
+    if ("precursorIntensity" %in% columns)
+        res$precursorIntensity <- rep(as.numeric(db$Intensity), rp)
+    if ("collisionEnergy" %in% columns)
+        res$collisionEnergy <- rep(as.numeric(db$CollisionEnergy), rp)
+    if ("precursorCharge" %in% columns)
+        res$precursorCharge <- rep(as.integer(db$Charge), rp)
+    if ("isolationWindowTargetMz" %in% columns)
+        res$isolationWindowTargetMz <- rep(as.numeric(db$IsolationMz), rp)
+    if ("isolationWindowLowerMz" %in% columns)
+        res$isolationWindowLowerMz <- rep(
+            db$IsolationMz - db$IsolationWidth / 2.0, rp)
+    if ("isolationWindowUpperMz" %in% columns)
+        res$isolationWindowUpperMz <- rep(
+        db$IsolationMz + db$IsolationWidth / 2.0, rp)
+    res
+}
+
+#' @description
+#'
+#' Helper to create an *empty* `data.frame` for the `.ms2_spectra_data()`
+#' function.
+#'
+#' @author Johannes Rainer
+#'
+#' @noRd
+.ms2_d_empty <- function(columns = .MS2_COLUMNS) {
+    data.frame(frame = integer(),
+               scan = integer(),
+               precursorMz = numeric(),
+               precursorIntensity = numeric(),
+               collisionEnergy = numeric(),
+               precursorCharge = integer(),
+               isolationWindowTargetMz = numeric(),
+               isolationWindowLowerMz = numeric(),
+               isolationWindowUpperMz = numeric(),
+               file = integer())[, c("frame", "scan", columns, "file")]
+}
+
+#' @description
+#'
+#' Helper function to retrieve (DDA) MS2 data from the SQLite databases of the
+#' .d files in an `MsBackendTimsTof` for all spectra.
+#'
+#' @param x `MsBackendTimsTof`
+#'
+#' @param columns `character` with the names of the columns to extract.
+#'
+#' @param drop `logical(1)` whether the dimensions of the returned `data.frame`
+#'     should be dropped in case a single column is requested.
+#'
+#' @return `data.frame` with columns `columns` (in the order of `columns`). The
+#'     row order matches the order of spectra in `MsBackendTimsTof`.
+#'
+#' @importFrom dplyr left_join
+#'
+#' @importFrom data.table rbindlist
+#'
+#' @importFrom BiocParallel bpmapply bpparam
+#'
+#' @author Johannes Rainer, Roger Gine
+#'
+#' @noRd
+.ms2_spectra_data <- function(x, columns = .MS2_COLUMNS, drop = FALSE,
+                              BPPARAM = bpparam()) {
+    frms <- .ms2_frames(x)
+    frms <- frms[lengths(frms) > 0]
+    if (length(frms)) {
+        res <- as.data.frame(rbindlist(
+            bpmapply(function(fr, index, fileNames, columns) {
+                d <- names(fileNames)[which(fileNames == index)]
+                ms2 <- .ms2_d(d, frames = fr, columns = columns)
+                ms2$file <- rep(index, nrow(ms2))
+                ms2
+            }, frms, as.integer(names(frms)),
+            MoreArgs = list(fileNames = x@fileNames, columns = columns),
+            SIMPLIFY = FALSE, USE.NAMES = FALSE, BPPARAM = BPPARAM)))
+    } else res <- .ms2_d_empty(columns)
+    left_join(as.data.frame(x@indices), res,
+              by = c(file = "file", frame = "frame",
+                     scan = "scan"))[, columns, drop = drop]
+}
+
+#' @description
+#'
+#' Helper function to define the SQLite column names required for specified
+#' spectra variables.
+#'
+#' @param x `character` with (core spectra) variables to request
+#'
+#' @return `character` with the database column names needed for these
+#'     variables.
+#'
+#' @noRd
+.ms2_cols <- function(x = character()) {
+    cols <- character()
+    if ("precursorMz" %in% x)
+        cols <- c(cols, .precursor_mz_column())
+    if ("precursorIntensity" %in% x)
+        cols <- c(cols, "Intensity")
+    if ("collisionEnergy" %in% x)
+        cols <- c(cols, "CollisionEnergy")
+    if ("precursorCharge" %in% x)
+        cols <- c(cols, "Charge")
+    if (any(c("isolationWindowTargetMz", "isolationWindowLowerMz",
+              "isolationWindowUpperMz") %in% x))
+        cols <- c(cols, c("IsolationMz", "IsolationWidth"))
+    cols
 }
