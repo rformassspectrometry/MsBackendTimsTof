@@ -324,9 +324,7 @@ MsBackendTimsTof <- function() {
 #'
 #' @importFrom methods as callNextMethod getMethod
 #'
-#' @importFrom S4Vectors DataFrame
-#'
-#' @importFrom S4Vectors extractCOLS
+#' @importFrom S4Vectors DataFrame extractCOLS
 #'
 #' @importFrom S4Vectors cbind.DataFrame make_zero_col_DFrame
 #'
