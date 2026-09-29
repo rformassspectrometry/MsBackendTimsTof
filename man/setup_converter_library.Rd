@@ -7,7 +7,7 @@ library to convert tof-to-mz and scan-to-inv_ion_mobility.
 When the Burker option is selected the library is downloaded automatically
 using \code{opentimsr::download_bruker_proprietary_code()}.}
 \usage{
-setup_converter_library(opensource = TRUE, path = NULL)
+setup_converter_library(opensource = TRUE, path = NULL, force = FALSE)
 }
 \arguments{
 \item{opensource}{\code{logical} determine if use the built-in open-source
@@ -17,6 +17,9 @@ Bruker.}
 \item{path}{\code{character(1)} where save the Bruker library. If \code{NULL} the
 library is cached using \code{BiocFileCache}. Used only with the Bruker
 library.}
+
+\item{force}{\code{logical} force to redownload the Bruker library (default:
+\code{FALSE}).}
 }
 \description{
 Function to setup the required built-in open-source converters or the Bruker

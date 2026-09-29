@@ -381,6 +381,9 @@ MsBackendTimsTof <- function() {
 #'     library is cached using `BiocFileCache`. Used only with the Bruker
 #'     library.
 #'
+#' @param force `logical` force to redownload the Bruker library (default:
+#'     `FALSE`).
+#'
 #' @importFrom opentimsr download_bruker_proprietary_code
 #' @importFrom opentimsr setup_bruker_so
 #' @importFrom opentimsr setup_opensource
@@ -399,7 +402,8 @@ MsBackendTimsTof <- function() {
 #' setup_converter_library(opensource = FALSE, path = tempdir())
 #'
 #' @export
-setup_converter_library <- function(opensource = TRUE, path = NULL) {
+setup_converter_library <- function(opensource = TRUE, path = NULL,
+                                    force = FALSE) {
     if(opensource) {
         setup_opensource()
     } else {
@@ -414,7 +418,10 @@ setup_converter_library <- function(opensource = TRUE, path = NULL) {
             bfc <- BiocFileCache::BiocFileCache()
             cached <- BiocFileCache::bfcquery(bfc, bruker_libs_name,
                                             exact = TRUE)
-            if(!nrow(cached)){
+            if(!nrow(cached) | force){
+                if(nrow(cached) & force)
+                    BiocFileCache::bfcremove(bfc, cached$rid)
+
                 bruker_library <- download_bruker_proprietary_code(tempdir())
                 bruker_location <- BiocFileCache::bfcadd(bfc,
                                         rname = basename(bruker_library),
@@ -426,7 +433,10 @@ setup_converter_library <- function(opensource = TRUE, path = NULL) {
         } else {
             cached <- list.files(path, pattern = bruker_libs_name,
                                 full.names = TRUE)
-            if(!length(cached)){
+            if(!length(cached) | force){
+                if(length(cached) & force)
+                    file.remove(cached)
+
                 bruker_location <- download_bruker_proprietary_code(path)
             } else {
                 bruker_location <- cached[1]
