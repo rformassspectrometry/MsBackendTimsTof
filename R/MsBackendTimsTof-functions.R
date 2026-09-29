@@ -31,7 +31,7 @@
         indices$file <- fl_idx
         list(frames, as.matrix(indices, rownames.force = FALSE))
     }, BPPARAM = BPPARAM)
-    x@frames <- do.call(rbindFill, lapply(L, "[[", 1))
+    x@frames <- as.data.frame(rbindlist(lapply(L, "[[", 1), fill = TRUE))
     idx <- match(colnames(x@frames), .SPECTRA_VARIABLE_MAPPINGS)
     not_na <- !is.na(idx)
     colnames(x@frames)[not_na] <- names(.SPECTRA_VARIABLE_MAPPINGS)[idx[not_na]]
@@ -124,7 +124,7 @@ MsBackendTimsTof <- function() {
 #' @description
 #'
 #' Get `x@all_columns` variables (including "`mz`" and "`intensity`") from `x`
-#' splitted by spectra. At least one variable among `x@all_columns` and
+#' split by spectra. At least one variable among `x@all_columns` and
 #' different from `"frame"` and "`scan`" has to be provided via `columns`
 #' parameter.
 #'
@@ -145,7 +145,7 @@ MsBackendTimsTof <- function() {
     opentims_set_threads(1L)
     res <- vector(mode = "list", length(x))
     nms <- names(x@fileNames)
-    for (i in seq_len(length(nms))) {
+    for (i in seq_len(length(nms))) { # bplapply instead to fetch in parallel?
         I <- which(x@indices[, "file"] == x@fileNames[i])
         i_frame <- x@indices[I, "frame"]
         tmp <- .query_tims(nms[i], unique(i_frame), columns)
@@ -156,8 +156,11 @@ MsBackendTimsTof <- function() {
             rownames(tmp) <- NULL
             ids <- paste(i_frame, i_scan)
         } else ids <- paste(i_frame, x@indices[I, "scan"])
-        if (!nrow(tmp))
-            tmp <- rbindFill(tmp, data.frame(frame = 0L))
+        ## Not quite sure why we had the code below; .query_tims would return
+        ## nothing if it would not find the selected frames - but these frames
+        ## are read from the .d file, so they should be there.
+        ## if (!nrow(tmp))
+        ##     tmp <- rbindFill(tmp, data.frame(frame = 0L))
         f <- factor(paste(tmp$frame, tmp$scan), levels = unique(ids))
         if (anyDuplicated(ids)) {
             if (length(columns) == 1)
@@ -219,10 +222,10 @@ MsBackendTimsTof <- function() {
         x <- OpenTIMS(x)
         on.exit(opentimsr::CloseTIMS(x))
     }
-    if (any(notin <- !columns %in% x@all_columns))
-        stop("Column(s) ",
-             paste0("'", columns[notin], "'", collapse = ", "),
-             " not available.", call. = FALSE)
+    if (any(notin <- !columns %in% x@all_columns)) {
+        msg <- paste0("'", columns[notin], "'", collapse = ", ")
+        stop("Column(s) ", msg, " not available.", call. = FALSE)
+    }
     sd <- setdiff(columns, c("frame", "scan"))
     query(x, unique(frames), c("frame", "scan", sd))
 }
@@ -258,10 +261,11 @@ MsBackendTimsTof <- function() {
 #'
 #' @noRd
 .get_frame_columns <- function(x, columns, drop = TRUE) {
-    if (!all(columns %in% colnames(x@frames)))
-        stop("Column(s) ",
-             paste0("'", columns[!columns %in% colnames(x@frames)],
-                    "'", collapse = ", "), " not available.", call. = FALSE)
+    if (!all(columns %in% colnames(x@frames))) {
+        msg <- paste0("'", columns[!columns %in% colnames(x@frames)],
+                      "'", collapse = ", ")
+        stop("Column(s) ", msg, " not available.", call. = FALSE)
+    }
     idx <- match(paste(x@indices[, "frame"], x@indices[, "file"]),
                  paste(x@frames$frameId, x@frames$file))
     x@frames[idx, columns, drop]
@@ -296,7 +300,7 @@ MsBackendTimsTof <- function() {
     # msLevel=1 should correspond to MsMsType = 0. msLevel=2 to MsMsType = 8?
     if (!isMsMsType) {
         if (!"MsMsType" %in% colnames(x@frames))
-            return(rep(as(NA, "integer"), length(x)))
+            return(rep(NA_integer_, length(x)))
         else x <- .get_frame_columns(x, "MsMsType")
     }
     map <- c(0L, 8L)
@@ -324,11 +328,13 @@ MsBackendTimsTof <- function() {
 #'
 #' @importFrom S4Vectors extractCOLS
 #'
-#' @importFrom S4Vectors make_zero_col_DFrame
-#'
-#' @importFrom S4Vectors cbind.DataFrame
+#' @importFrom S4Vectors cbind.DataFrame make_zero_col_DFrame
 #'
 #' @importFrom Spectra coreSpectraVariables
+#'
+#' @importMethodsFrom Spectra spectraVariables
+#'
+#' @return `DataFrame` with columns identical to `columns`, always.
 #'
 #' @author Andrea Vicini, Johannes Rainer
 #'
@@ -338,25 +344,24 @@ MsBackendTimsTof <- function() {
         msg <- paste0("\"", miss, "\"")
         stop("Column(s) ", msg, " not available.", call. = FALSE)
     }
-    ## Get the cached variables and core spectra variables that can not be
-    ## read from the data files.
-    cached_cols <- getMethod("spectraVariables", "MsBackendCached")(x)
-    ## Get the data for these from the parent object
-    res <- getMethod("spectraData", "MsBackendCached")(x, columns = cached_cols)
+    ## Get cached data and data for core variables not provided through .d
+    res <- getMethod("spectraData", "MsBackendCached")(x, columns = columns)
     if (is.null(res))
         res <- make_zero_col_DFrame(length(x))
     ## define columns that are not retrieved from the cache.
     cols <- setdiff(columns, colnames(res))
+    ## Columns stored in @frames
     frames_cols <- intersect(cols, colnames(x@frames))
+    ## Columns retrieved with querying through opentimsr
     tims_cols <- intersect(cols, setdiff(.TIMSTOF_COLUMNS, "inv_ion_mobility"))
 
-    if ("scanIndex" %in% columns)
+    if ("scanIndex" %in% cols)
         res$scanIndex <- x@indices[, "scan"]
     if (length(frames_cols))
         res <- cbind.DataFrame(
             res, .get_frame_columns(x, frames_cols, drop = FALSE))
     if (length(tims_cols)) {
-        if ("inv_ion_mobility" %in% columns) {
+        if ("inv_ion_mobility" %in% cols) {
             pks <- .get_tims_columns(x, c(tims_cols, "inv_ion_mobility"),
                                      drop = FALSE)
             res$inv_ion_mobility <- vapply(
@@ -370,22 +375,21 @@ MsBackendTimsTof <- function() {
                                       compress = FALSE)
         res <- cbind.DataFrame(res, tms)
     } else {
-        if ("inv_ion_mobility" %in% columns)
+        if ("inv_ion_mobility" %in% cols)
             res$inv_ion_mobility <- .inv_ion_mobility(x)
     }
-    if ("msLevel" %in% columns) {
+    if ("msLevel" %in% cols) {
         if ("MsMsType" %in% frames_cols)
             res[["msLevel"]] <- .get_msLevel(res[["MsMsType"]], TRUE)
         else
             res[["msLevel"]] <- .get_msLevel(x)
     }
-    if ("dataOrigin" %in% cols && "dataOrigin" %in% x@spectraVariables)
+    if ("dataOrigin" %in% cols)
         res[["dataOrigin"]] <- dataStorage(x)
     ## DDA MS2 columns
     if (length(ms2_cols <- cols[cols %in% .MS2_COLUMNS]))
         res <- cbind(res, .ms2_spectra_data(x, columns = ms2_cols))
-    if (length(res)) extractCOLS(res, columns)
-    else DataFrame()
+    extractCOLS(res, columns)
 }
 
 #' @description

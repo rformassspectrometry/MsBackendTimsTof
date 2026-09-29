@@ -1,6 +1,6 @@
-library(testthat)
-library(opentimsr)
 tms <- OpenTIMS(path_d_folder)
+qry <- query(tms, tms@frames$Id, c("frame", "scan", "mz", "intensity"))
+sample_idxs <- seq(length(be), 1, by = -1000)
 
 test_that("backendInitialize,MsBackendTimsTof works", {
     expected_frames <- rbind(cbind(tms@frames, file = 1),
@@ -20,12 +20,62 @@ test_that("backendInitialize,MsBackendTimsTof works", {
     expect_equal(be@nspectra, nrow(be@indices))
     expect_equal(be@spectraVariables,
                  c(.TIMSTOF_COLUMNS, colnames(be@frames),
-                   .MS2_COLUMNS, "dataOrigin"))
+                   .MS2_COLUMNS, "dataOrigin", "msLevel", "scanIndex"))
     expect_equal(nrow(be@localData), be@nspectra)
     expect_equal(ncol(be@localData), 0L)
 
     bla <- backendInitialize(MsBackendTimsTof(), path_d_folder)
     expect_equal(dataOrigin(bla), dataStorage(bla))
+
+    ## Errors
+    expect_error(backendInitialize(MsBackendTimsTof()), "mandatory")
+    expect_error(backendInitialize(MsBackendTimsTof(), files = 1:3),
+                 "character vector")
+    expect_error(backendInitialize(MsBackendTimsTof(), files = "not exists"),
+                 "not found")
+})
+
+test_that("show,MsBackendTimsTof works", {
+    expect_output(show(be), paste0(length(be), " spectra"))
+})
+
+test_that("replacing/caching values works as expected", {
+    tmp <- be
+
+    tmp$msLevel <- 3L
+    expect_true("msLevel" %in% colnames(tmp@localData))
+    expect_true(all(msLevel(tmp) == 3L))
+    expect_true(all(tmp$msLevel == 3L))
+    expect_true(all(spectraData(tmp, "msLevel")$msLevel == 3L))
+
+    tmp$rtime <- tmp$rtime + 10
+    expect_true("rtime" %in% colnames(tmp@localData))
+    expect_equal(rtime(tmp), rtime(be) + 10)
+    expect_equal(tmp$rtime, be$rtime + 10)
+    expect_equal(spectraData(tmp, "rtime")$rtime, be$rtime + 10)
+
+    tmp$polarity <- -1L
+    expect_true("polarity" %in% colnames(tmp@localData))
+    expect_true(all(polarity(tmp) == -1L))
+    expect_true(all(tmp$polarity == -1L))
+    expect_true(all(spectraData(tmp, "polarity")$polarity == -1L))
+
+    tmp$precursorMz <- 123.4
+    expect_true("precursorMz" %in% colnames(tmp@localData))
+    expect_true(all(precursorMz(tmp) == 123.4))
+    expect_true(all(tmp$precursorMz == 123.4))
+    expect_true(all(spectraData(tmp, "precursorMz")$precursorMz == 123.4))
+
+    tmp$centroided <- TRUE
+    expect_true("centroided" %in% colnames(tmp@localData))
+    expect_true(all(tmp$centroided == TRUE))
+    expect_true(all(centroided(tmp) == TRUE))
+    expect_true(all(spectraData(tmp)$centroided == TRUE))
+})
+
+test_that("length,MsBackendTimsTof works", {
+    expect_equal(length(MsBackendTimsTof()), 0L)
+    expect_equal(length(be), be@nspectra)
 })
 
 test_that("[,MsBackendTimsTof works", {
@@ -63,11 +113,11 @@ test_that("[,MsBackendTimsTof works", {
     expect_equal(mz(res), mz(be)[c(1000, 2790, 1, 222, 1, 2790)])
     expect_equal(intensity(res), intensity(be)[c(1000, 2790, 1, 222, 1, 2790)])
 
+    res <- be[]
+    expect_equal(length(res), length(be))
+
     expect_error(be[10^7], "index out of bounds")
 })
-
-qry <- query(tms, tms@frames$Id, c("frame", "scan", "mz", "intensity"))
-sample_idxs <- seq(length(be), 1, by = -1000)
 
 test_that("mz,MsBackendTimsTof works", {
     expect_equal(mz(MsBackendTimsTof()), NumericList(compress = FALSE))
@@ -128,12 +178,15 @@ test_that("dataStorage,MsBackendTimsTof works", {
     expect_equal(res, names(be@fileNames[be@indices[, "file"]]))
 
     expect_equal(dataStorage(be), dataOrigin(be))
+
+    res <- spectraData(be, "dataStorage")[, 1L]
+    expect_equal(length(res), length(be))
+    expect_equal(res, names(be@fileNames[be@indices[, "file"]]))
 })
 
 test_that("spectraVariables,MsBackendTimsTof works", {
     expect_identical(spectraVariables(MsBackendTimsTof()),
-                     unique(c(names(Spectra:::.SPECTRA_DATA_COLUMNS),
-                              .TIMSTOF_COLUMNS)))
+                     unique(c(names(Spectra:::.SPECTRA_DATA_COLUMNS))))
     res <- spectraVariables(be)
     expect_true(all(res %in% c(colnames(be@frames), .TIMSTOF_COLUMNS,
                                names(Spectra:::.SPECTRA_DATA_COLUMNS))))

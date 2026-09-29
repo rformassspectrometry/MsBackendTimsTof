@@ -17,9 +17,7 @@
 \alias{dataStorage,MsBackendTimsTof-method}
 \alias{spectraData,MsBackendTimsTof-method}
 \alias{show,MsBackendTimsTof-method}
-\alias{msLevel,MsBackendTimsTof-method}
 \alias{$,MsBackendTimsTof-method}
-\alias{spectraVariables,MsBackendTimsTof-method}
 \alias{selectSpectraVariables,MsBackendTimsTof-method}
 \alias{$<-,MsBackendTimsTof-method}
 \alias{precScanNum,MsBackendTimsTof-method}
@@ -53,11 +51,7 @@ MsBackendTimsTof()
 
 \S4method{show}{MsBackendTimsTof}(object)
 
-\S4method{msLevel}{MsBackendTimsTof}(object, ...)
-
 \S4method{$}{MsBackendTimsTof}(x, name)
-
-\S4method{spectraVariables}{MsBackendTimsTof}(object, ...)
 
 \S4method{selectSpectraVariables}{MsBackendTimsTof}(object, spectraVariables = spectraVariables(object))
 
@@ -131,7 +125,9 @@ and \code{isolationWindowUpperMz <- IsolationMz + IsolationWidth / 2}.
 \section{Available methods}{
 
 
-The following methods are implemented:
+The methods listed below are specifically implemented for
+\code{MsBackendTimsTof}. The backend inherits and thus supports all other methods
+from the \link[Spectra:MsBackend]{Spectra::MsBackend} class.
 \itemize{
 \item \code{$}: access any of the \code{spectraVariables} of the backend.
 \item \verb{$<-}: add a new spectra variable or change values for an existing spectra
@@ -156,9 +152,6 @@ spectrum is stored.
 Returns a \code{\link[IRanges:NumericList]{NumericList()}} of \code{numeric} vectors (intensity values for each
 spectrum). The length of the list is equal to the number of
 spectra in \code{object}.
-\item \code{msLevel()}: gets the spectra MS level. Returns an integer vector (of
-length equal to the number of spectra) with the MS level for each
-spectrum.
 \item \code{mz()}: gets the mass-to-charge ratios (m/z) from the spectra in the
 backend. Returns a \code{\link[IRanges:NumericList]{NumericList()}} of \code{numeric} vectors (m/z values for
 each spectrum). The length of the list is equal to the number of spectra in

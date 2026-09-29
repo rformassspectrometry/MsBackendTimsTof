@@ -33,7 +33,9 @@
 #'
 #' @section Available methods:
 #'
-#' The following methods are implemented:
+#' The methods listed below are specifically implemented for
+#' `MsBackendTimsTof`. The backend inherits and thus supports all other methods
+#' from the [Spectra::MsBackend] class.
 #'
 #' - `$`: access any of the `spectraVariables` of the backend.
 #'
@@ -63,10 +65,6 @@
 #'   Returns a [NumericList()] of `numeric` vectors (intensity values for each
 #'   spectrum). The length of the list is equal to the number of
 #'   spectra in `object`.
-#'
-#' - `msLevel()`: gets the spectra MS level. Returns an integer vector (of
-#'    length equal to the number of spectra) with the MS level for each
-#'   spectrum.
 #'
 #' - `mz()`: gets the mass-to-charge ratios (m/z) from the spectra in the
 #'   backend. Returns a [NumericList()] of `numeric` vectors (m/z values for
@@ -234,21 +232,25 @@ setValidity("MsBackendTimsTof", function(object) {
 setMethod("backendInitialize", signature = "MsBackendTimsTof",
           function(object, files, ..., BPPARAM = bpparam()) {
               if (missing(files) || !length(files))
-                  stop("Parameter 'files' is mandatory for 'MsBackendMzR'")
+                  stop("Parameter 'files' is mandatory for 'MsBackendTimsTof'",
+                       call. = FALSE)
               if (!is.character(files))
                   stop("Parameter 'files' is expected to be a character vector",
                        " with the files names from where data should be",
-                       " imported")
+                       " imported", call. = FALSE)
               files <- normalizePath(files, mustWork = FALSE)
               msg <- Spectra:::.valid_ms_backend_files_exist(files)
               if (length(msg))
-                  stop(msg)
+                  stop(msg, call. = FALSE)
               object <- .initialize(object, files, BPPARAM)
               object <- callNextMethod(
                   object, nspectra = nrow(object@indices),
-                  spectraVariables = c(.TIMSTOF_COLUMNS,
+                  ## Define all spectra variables that can be retrieved from
+                  ## the .d file(s).
+                  spectraVariables = unique(c(.TIMSTOF_COLUMNS,
                                        colnames(object@frames),
-                                       .MS2_COLUMNS, "dataOrigin"))
+                                       .MS2_COLUMNS, "dataOrigin",
+                                       "msLevel", "scanIndex")))
               validObject(object)
               object
           })
@@ -274,7 +276,9 @@ setMethod(
     "peaksVariables", "MsBackendTimsTof",
     function(object) {
         ## TODO: should we return all available, or just the one
-        ## in @spectraVariables
+        ## in @spectraVariables: `selectSpectraVariables()` should subset
+        ## the ones in @spectraVariables. Would need to check how it behaves
+        ## when we subset peaks variables - check other backends behave.
         if (length(object@fileNames)) {
             .list_tims_columns(names(object@fileNames)[1L])
         } else c("mz", "intensity")
@@ -368,15 +372,6 @@ setMethod("show", "MsBackendTimsTof", function(object) {
     }
 })
 
-#' @importMethodsFrom Spectra msLevel
-#'
-#' @rdname MsBackendTimsTof
-setMethod("msLevel", "MsBackendTimsTof", function(object, ...) {
-    if ("msLevel" %in% object@spectraVariables)
-        .get_msLevel(object)
-    else spectraData(object, "msLevel")[, 1L]
-})
-
 #' @rdname MsBackendTimsTof
 setMethod("$", "MsBackendTimsTof", function(x, name) {
     if (!name %in% spectraVariables(x))
@@ -386,13 +381,6 @@ setMethod("$", "MsBackendTimsTof", function(x, name) {
         .inv_ion_mobility(x)
     else
         spectraData(x, name)[, 1L]
-})
-
-#' @importMethodsFrom Spectra spectraVariables
-#'
-#' @rdname MsBackendTimsTof
-setMethod("spectraVariables", "MsBackendTimsTof", function(object, ...) {
-    union(callNextMethod(), .TIMSTOF_COLUMNS)
 })
 
 #' @rdname MsBackendTimsTof
@@ -411,7 +399,8 @@ setMethod(
 #' @export
 setReplaceMethod("$", "MsBackendTimsTof", function(x, name, value) {
     if (name %in% union(peaksVariables(x), c("file", "frameId")))
-        stop("Replacing spectra variable \"", name, "\" is not supported.")
+        stop("Replacing spectra/peaks variable \"", name,
+             "\" is not supported.", call. = FALSE)
     callNextMethod()
 })
 

@@ -1,5 +1,3 @@
-library(opentimsr)
-
 test_that(".valid_required_columns works", {
     df <- data.frame()
     expect_null(.valid_required_columns(df))
@@ -65,6 +63,28 @@ test_that(".get_tims_columns works", {
     res <- .get_tims_columns(be, "inv_ion_mobility")
     res_2 <- .get_tims_columns(be_2, "inv_ion_mobility")
     expect_equal(unlist(res[idx]), unlist(res_2))
+
+    ## duplicated entries
+    idx <- c(3, 5, 13, 5, 3, 3, 1)
+    be_2 <- be[idx]
+    res <- .get_tims_columns(be, c("tof", "mz"))
+    res_2 <- .get_tims_columns(be_2, c("tof", "mz"))
+    expect_equal(res_2[[1L]], res_2[[5L]])
+    expect_equal(res_2[[1L]], res_2[[6L]])
+    expect_equal(res_2[[2L]], res_2[[4L]])
+    expect_equal(res_2[[1L]], res[[3L]])
+    expect_equal(res_2[[2L]], res[[5L]])
+    expect_equal(res_2[[3L]], res[[13L]])
+
+    res <- .get_tims_columns(be, "intensity")
+    res_2 <- .get_tims_columns(be_2, "intensity")
+    expect_true(is.numeric(res_2[[1L]]))
+    expect_equal(res_2[[1L]], res_2[[5L]])
+    expect_equal(res_2[[1L]], res_2[[6L]])
+    expect_equal(res_2[[2L]], res_2[[4L]])
+    expect_equal(res_2[[1L]], res[[3L]])
+    expect_equal(res_2[[2L]], res[[5L]])
+    expect_equal(res_2[[3L]], res[[13L]])
 })
 
 test_that(".get_frame_columns works", {
@@ -102,6 +122,13 @@ test_that(".get_msLevel works", {
     expect_identical(.get_msLevel(MsMsType, isMsMsType = TRUE), res)
     expect_identical(.get_msLevel(c(8L, NA, 0L), TRUE), c(2L, NA, 1L))
     expect_warning(.get_msLevel(c(8L, 2L, 0L), TRUE), "not recognized")
+
+    tmp <- be
+    tmp@frames <- tmp@frames[, colnames(tmp@frames) != "MsMsType"]
+    res <- .get_msLevel(tmp)
+    expect_true(all(is.na(res)))
+    expect_true(is.integer(res))
+    expect_equal(length(res), length(tmp))
 })
 
 test_that(".query_tims works", {
@@ -156,6 +183,8 @@ test_that(".spectra_data works", {
     res <- .spectra_data(b)
     expect_true(nrow(res) == 0)
     expect_identical(colnames(res), spectraVariables(b))
+    res <- .spectra_data(b, c("msLevel", "rtime"))
+    expect_identical(colnames(res), c("msLevel", "rtime"))
 
     expect_error(spectraData(be, "not spectra variable"), "not available")
 
