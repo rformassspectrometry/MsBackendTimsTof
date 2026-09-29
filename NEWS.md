@@ -1,3 +1,16 @@
+# MsBackendTimsTof 0.98
+
+## MsBackendTimsTof 0.98.1
+
+- Fix caching mechanism of the `MsBackendTimsTof`.
+- Fix extraction of MS2-related information.
+- Expand unit test coverage.
+
+## MsBackendTimsTof 0.98.0
+
+- Extract MS2 information (precursor m/z, collision energy, isolation window
+  etc) from the SQLite databases in the *.d* folder(s).
+
 # MsBackendTimsTof 0.2
 
 ## MsBackendTimsTof 0.2.0

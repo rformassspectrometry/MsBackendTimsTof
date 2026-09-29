@@ -8,38 +8,56 @@ exportMethods(precScanNum)
 exportMethods(spectraNames)
 exportMethods(tic)
 importClassesFrom(Spectra,MsBackendCached)
-importFrom(BiocParallel,bplapply)
-importFrom(BiocParallel,bpparam)
+importFrom(BiocParallel,
+  bplapply,
+  bpmapply,
+  bpparam
+)
 importFrom(IRanges,NumericList)
-importFrom(MsCoreUtils,i2index)
-importFrom(MsCoreUtils,rbindFill)
-importFrom(MsCoreUtils,vapply1d)
-importFrom(S4Vectors,DataFrame)
-importFrom(S4Vectors,cbind.DataFrame)
-importFrom(S4Vectors,extractCOLS)
-importFrom(S4Vectors,make_zero_col_DFrame)
-importFrom(Spectra,coreSpectraVariables)
-importFrom(Spectra,intensity)
-importFrom(methods,"slot<-")
-importFrom(methods,as)
-importFrom(methods,callNextMethod)
-importFrom(methods,getMethod)
-importFrom(methods,new)
-importFrom(methods,validObject)
-importFrom(opentimsr,CloseTIMS)
-importFrom(opentimsr,OpenTIMS)
-importFrom(opentimsr,opentims_set_threads)
-importFrom(opentimsr,query)
-importFrom(opentimsr,setup_bruker_so)
+importFrom(MsCoreUtils,
+  i2index,
+  rbindFill,
+  vapply1d
+)
+importFrom(RSQLite,SQLite)
+importFrom(S4Vectors,
+  DataFrame,
+  cbind.DataFrame,
+  extractCOLS,
+  make_zero_col_DFrame
+)
+importFrom(Spectra,
+  coreSpectraVariables,
+  intensity
+)
+importFrom(data.table,rbindlist)
+importFrom(dplyr,left_join)
+importFrom(methods,
+  "slot<-",
+  as,
+  callNextMethod,
+  getMethod,
+  new,
+  validObject
+)
+importFrom(opentimsr,
+  CloseTIMS,
+  OpenTIMS,
+  opentims_set_threads,
+  query,
+  setup_bruker_so
+)
 importFrom(stats,setNames)
 importFrom(utils,capture.output)
+importMethodsFrom(DBI,dbConnect)
+importMethodsFrom(DBI,dbDisconnect)
+importMethodsFrom(DBI,dbGetQuery)
 importMethodsFrom(ProtGenerics,extractByIndex)
 importMethodsFrom(ProtGenerics,precScanNum)
 importMethodsFrom(ProtGenerics,spectraNames)
 importMethodsFrom(ProtGenerics,tic)
 importMethodsFrom(Spectra,backendInitialize)
 importMethodsFrom(Spectra,dataStorage)
-importMethodsFrom(Spectra,msLevel)
 importMethodsFrom(Spectra,peaksVariables)
 importMethodsFrom(Spectra,spectraData)
 importMethodsFrom(Spectra,spectraVariables)

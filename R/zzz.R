@@ -13,4 +13,11 @@
                               "to read TimsTOF files. See the package ",
                               "vignette for more information.")
     else opentimsr::setup_bruker_so(so)
+    ## could use: LargestPeakMz, AverageMz, IsolationMz as precursor m/z
+    pmz <- getOption("TIMSTOF_PRECURSOR_MZ", default = NA)
+    if (is.na(pmz))
+        pmz <- Sys.getenv("TIMSTOF_PRECURSOR_MZ", unset = NA)
+    if (is.na(pmz))
+        pmz <- "LargestPeakMz"
+    options(TIMSTOF_PRECURSOR_MZ = pmz)
 }
