@@ -205,3 +205,45 @@ test_that(".spectra_data works", {
     expect_equal(dataStorage(be), res$dataStorage)
     expect_equal(dataOrigin(be), res$dataOrigin)
 })
+
+test_that("setup_converter_library with BiocFileCache works", {
+    ## Test BiocFileCache first download
+    skip_if_not_installed("BiocFileCache")
+    expect_no_error(setup_converter_library(opensource = FALSE))
+
+    bruker_libs_name <- c("libtimsdata.so", "timsdata.dll")
+    bfc <- BiocFileCache::BiocFileCache()
+    cached <- BiocFileCache::bfcquery(bfc, bruker_libs_name, exact = TRUE)
+    expect_true(nrow(cached) >= 1)
+
+    ## Retry using the cached file
+    expect_no_error(setup_converter_library(opensource = FALSE))
+
+    cached_2 <- BiocFileCache::bfcquery(bfc, bruker_libs_name, exact = TRUE)
+    expect_true(nrow(cached_2) >= 1)
+    expect_equal(cached$rid, cached_2$rid)
+
+})
+
+test_that("setup_converter_library works", {
+    ## Test opensource
+    expect_no_error(setup_converter_library(opensource = TRUE))
+
+    ## Test on selected folder
+    tmp_dir <- tempdir()
+    expect_no_error(setup_converter_library(opensource = FALSE, path = tmp_dir))
+
+    bruker_libs_name <- c("libtimsdata.so", "timsdata.dll")
+    cached <- list.files(tmp_dir, pattern = bruker_libs_name, full.names = TRUE)
+    expect_true(length(cached) >= 1)
+
+    ## Retry using the cached file
+    expect_no_error(setup_converter_library(opensource = FALSE, path = tmp_dir))
+
+    bruker_libs_name <- c("libtimsdata.so", "timsdata.dll")
+    cached_2 <- list.files(tmp_dir, pattern = bruker_libs_name,
+                            full.names = TRUE)
+    expect_true(length(cached_2) >= 1)
+    expect_equal(cached, cached_2)
+
+})
