@@ -2,18 +2,18 @@
 % Please edit documentation in R/MsBackendTimsTof-functions.R
 \name{setup_converter_library}
 \alias{setup_converter_library}
-\title{Setuo converter library for Bruker files}
+\title{Setup converter library for Bruker files}
 \usage{
 setup_converter_library(opensource = TRUE, path = NULL, force = FALSE)
 }
 \arguments{
 \item{opensource}{\code{logical(1)} determine if use the built-in open-source
 converters of \emph{opentimsr} (defaults) or the proprietary library from
-Bruker.}
+Bruker. Defaults to \code{opensource = TRUE}.}
 
 \item{path}{\code{character(1)} where save the Bruker library. If \code{NULL} the
 library is cached using \emph{BiocFileCache}. Used only with the Bruker
-library.}
+library. Defaults to \code{path = NULL}.}
 
 \item{force}{\code{logical(1)} force to redownload the Bruker library (default:
 \code{FALSE}).}
@@ -24,17 +24,24 @@ library to convert tof-to-mz and scan-to-inv_ion_mobility.
 When the Burker option is selected the library is downloaded automatically
 using \code{opentimsr::download_bruker_proprietary_code()}.
 }
+\note{
+This function is called during package startup, thus it most cases it is not
+required to be used. This will use the \code{\link[opentimsr:setup_opensource]{opentimsr::setup_opensource()}}
+function. To use Bruker's proprietary library, call
+\code{setup_converter_library()} with parameter \code{opensource = FALSE}. This will
+download the library with \code{\link[opentimsr:download_bruker_proprietary_code]{opentimsr::download_bruker_proprietary_code()}} and
+cache the file in the local \emph{BiocFileCache}.
+}
 \examples{
 
 ## To setup the open-source built-in library
 setup_converter_library()
 
-## To use the Bruker library and cache it
-setup_converter_library(opensource = FALSE)
-
-## To use the Bruker library and save it in a personal folder:
-## setup_converter_library(opensource = FALSE, path = tempdir())
-
+## Use `setup_converter_library(opensource = FALSE)` to download and use the
+## proprietary library from Bruker. The library file is downloaded and
+## cached with *BiocFileCache* package. Alternatively, to download the
+## library to a specific local path use the `path` parameter.
+#'
 }
 \author{
 Gabriele Tomè

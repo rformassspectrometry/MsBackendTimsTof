@@ -26,23 +26,12 @@ The *MsBackendTimsTof* package can then be installed from GitHub using
 remotes::install_github("RforMassSpectrometry/MsBackendTimsTof")
 ```
 
-For extraction of all spectra and peaks variables from the TimsTOF file format,
-the shared C++ library from Bruker is required. This has to be installed using
-`opentimsr::download_bruker_proprietary_code(<local folder>)` with `<local
-folder>` being the directory to which it should be downloaded).
-
-It is suggested to keep this library in a local folder and to define an
-environment variable called `TIMSTOF_LIB` that defines the full path where this
-file is located (i.e., a character string defining the full file path with the
-file name). This variable can either be defined system-wide, or within the
-*.Rprofile* file in a user's home folder. An example entry in a *.Rprofile*:
-
-```
-options(TIMSTOF_LIB = "/home/jo/lib/libtimsdata.so")
-```
-
-For more information see the package
-[homepage](https://rformassspectrometry.github.io/MsBackendTimsTof).
+For extraction of all spectra and peaks variables from the TimsTOF file format a
+*converter library* is needed. This can be either the *open-source* library
+shipped with *opentimsr*, or the shared C++ library from Bruker. By default,
+*MsBackendTimsTof* uses, and loads the open-source library during the
+`library(MsBackendTimsTof)` call. The `setup_converter_library()` function
+can be used to download and select the Bruker library instead.
 
 ---
 
