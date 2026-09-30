@@ -1,5 +1,5 @@
 ---
-title: "Description and usage of MsBackendTimsTof"
+title: "Description and usage of *MsBackendTimsTof*"
 output:
     BiocStyle::html_document:
         toc_float: true
@@ -12,27 +12,19 @@ vignette: >
 ---
 
 ```{r style, echo = FALSE, results = 'asis', message=FALSE}
-BiocStyle::markdown()
-```
-
-**Package**: `r Biocpkg("MsBackendTimsTof")`<br />
-**Authors**: `r packageDescription("MsBackendTimsTof")[["Author"]] `<br />
-**Compiled**: `r date()`
-
-```{r, echo = FALSE, message = FALSE}
-library(Spectra)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 library(BiocStyle)
+BiocStyle::markdown()
 ```
 
 # Introduction
 
-The `r Biocpkg("Spectra")` package provides a central infrastructure for the
-handling of Mass Spectrometry (MS) data. The package supports interchangeable
-use of different *backends* to import MS data from a variety of sources (such as
-mzML files). The `r Biocpkg("MsBackendTimsTof")` package adds support for Bruker
-TimsTOF raw data files. This vignette shows how, and which data can be retrieved
-from such files.
-
+The `r Biocpkg("Spectra")` package provides a central infrastructure for Mass
+Spectrometry (MS) data in R. The package supports interchangeable use of
+different *backends* to represent or import MS data from a variety of formats
+and sources (such as mzML files). The *MsBackendTimsTof"* package adds support
+for MS data from Bruker TimsTOF raw data files. This vignette shows how, and
+which data can be retrieved from such files.
 
 # Installation
 
@@ -41,7 +33,7 @@ library to access data in timsTOF Pro data format (TDF) which is provided by the
 *opentimsr* R package. The *opentimsr* and *MsBackendTimsTof* package can be
 installed with:
 
-```{r, eval = FALSE}
+```{r installation, eval = FALSE}
 BiocManager::install("michalsta/opentims/src/opentimsr")
 BiocManager::install("RforMassSpectrometry/MsBackendTimsTof")
 ```
@@ -75,7 +67,7 @@ The `r Biocpkg("MsBackendTimsTof")` package adds support for Bruker TimsTOF
 files to `Spectra`-based analysis workflows. Below we load the package which
 will also automatically setup the use of the open-source converter library.
 
-```{r, message = FALSE}
+```{r load-library, message = FALSE}
 library(MsBackendTimsTof)
 ```
 
@@ -85,61 +77,76 @@ environment variable `TIMSTOF_LIB`.
 
 We next load the TDF test file which is bundled within this package.
 
-```{r}
+```{r initialize}
+## Get the path/file name of the example file
 fl <- system.file("ddaPASEF.d", package = "MsBackendTimsTof")
 
+## Initialize the MsBackend
 be <- backendInitialize(MsBackendTimsTof(), fl)
+be
 ```
 
 In a real use case, we would however directly load the data into a `Spectra`
 object:
 
-```{r}
+```{r load-spectra}
 sps <- Spectra(fl, source = MsBackendTimsTof())
 sps
 ```
 
 We thus have access to all spectra variables within the file:
 
-```{r}
-spectraVariables(be)
+```{r spectra-variables}
+spectraVariables(sps)
 ```
 
-And the full data can be retrieved with `spectraData`:
+And the full data for spectra variables can be retrieved with `spectraData`:
 
-```{r}
-all <- spectraData(be)
+```{r full-spectra-data}
+all <- spectraData(sps)
 all
 ```
 
 The data is organized by individual spectra, all spectra measured within the
-same *frame* have the same value in the spectra variable `"frameId"`. Spectra
-variable `"inv_ion_mobility"` provides the *inverse ion mobility*
-information. This variable is available as a spectra variable, but also as a
-*peaks variable* along with e.g. `"tof"`. Available peaks variables can be
-listed with the `peaksVariables()` function.
+same *frame* have the same value in the spectra variable `"frameId"`. This also
+means that the `scanIndex` is **not** unique within a file, only within one
+*frame*:
 
-```{r}
-peaksVariables(sps)
+```{r duplicated-scan}
+sps$scanIndex |> anyDuplicated()
 ```
 
-Below we subset the backend to a range of spectra and extract their `peaksData`.
+The combination of `frameId` and `scanIndex` identifies each spectrum uniquely
+within the same file:
 
-```{r}
-sps_sub <- sps[224:227]
-peaksData(sps_sub, columns = c("mz", "intensity", "tof", "inv_ion_mobility",
-                               "retention_time")) |> as.list()
+```{r frame-scan}
+spectraData(sps, c("frameId", "scanIndex", "file"))
 ```
 
-Note however that both the `"inv_ion_mobility"` and `"retention_time"` have the
+The *inverse ion mobility* data is provided by the `"inv_ion_mobility"`
+variable. This information can be extracted as a *spectra variable* (i.e.,
+one value per spectrum):
+
+```{r ion-mobility-spectra-variable}
+## Get the ion mobility information
+sps$inv_ion_mobility |> head()
+```
+
+But can also be requested to be added to the `peaksData()`. Below we extract the
+full peaks data (i.e., all *peaks variables* for all spectra) and show the
+information of one selected spectrum:
+
+```{r peaks-data}
+## Request all supported peaks variables
+pd <- peaksData(sps, peaksVariables(sps))
+## Show the data for the spectrum number 10
+pd[[10L]]
+```
+
+Note however that `"inv_ion_mobility"` and `"retention_time"` have the
 same value for all peaks in each spectrum. Thus, these variables should be
 accessed not through `peaksData()`, but through `spectraData()` or using the `$`
-operator or the dedicated `rtime()` function. Below we extract the inverse ion
-mobility values and display the first 6 of them.
-
-```{r}
-head(sps$inv_ion_mobility)
-```
+operator or the dedicated `rtime()` function.
 
 The `MsBackendTimsTof` is a *on-disk* backend, hence reading peaks and spectra
 variables from the original data file(s) upon request. Modifying spectra
@@ -149,22 +156,23 @@ by directly extending the `MsBackendCached` backend from the
 spectra variables by *caching* them locally within the object. Below we add a
 new spectra variable to the object.
 
-```{r}
+```{r add-variable}
+## Add a new spectra variable
 sps$new_variable <- seq_along(sps)
 ```
 
 This new variable is now available within the object and can be extract like
 any other spectra variable.
 
-```{r}
+```{r show-variables}
 spectraVariables(sps)
 sps$new_variable |> head()
 ```
 
 Analogously it is also possible to change existing spectra variables. Below we
-add a value to each retention time.
+shift each retention time by 10 seconds.
 
-```{r}
+```{r shift-rtime}
 rtime(sps) |> head()
 sps$rtime <- rtime(sps) + 10
 rtime(sps) |> head()

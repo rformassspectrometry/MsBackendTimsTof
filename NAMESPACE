@@ -11,6 +11,7 @@ exportMethods(tic)
 importClassesFrom(Spectra,MsBackendCached)
 importFrom(BiocParallel,
   bplapply,
+  bpmapply,
   bpparam
 )
 importFrom(IRanges,NumericList)
@@ -19,6 +20,7 @@ importFrom(MsCoreUtils,
   rbindFill,
   vapply1d
 )
+importFrom(RSQLite,SQLite)
 importFrom(S4Vectors,
   DataFrame,
   cbind.DataFrame,
@@ -29,6 +31,8 @@ importFrom(Spectra,
   coreSpectraVariables,
   intensity
 )
+importFrom(data.table,rbindlist)
+importFrom(dplyr,left_join)
 importFrom(methods,
   "slot<-",
   as,
@@ -48,13 +52,15 @@ importFrom(opentimsr,
 )
 importFrom(stats,setNames)
 importFrom(utils,capture.output)
+importMethodsFrom(DBI,dbConnect)
+importMethodsFrom(DBI,dbDisconnect)
+importMethodsFrom(DBI,dbGetQuery)
 importMethodsFrom(ProtGenerics,extractByIndex)
 importMethodsFrom(ProtGenerics,precScanNum)
 importMethodsFrom(ProtGenerics,spectraNames)
 importMethodsFrom(ProtGenerics,tic)
 importMethodsFrom(Spectra,backendInitialize)
 importMethodsFrom(Spectra,dataStorage)
-importMethodsFrom(Spectra,msLevel)
 importMethodsFrom(Spectra,peaksVariables)
 importMethodsFrom(Spectra,spectraData)
 importMethodsFrom(Spectra,spectraVariables)
