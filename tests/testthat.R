@@ -1,12 +1,5 @@
 library("testthat")
 library("MsBackendTimsTof")
-library(opentimsr)
-so_folder <- tempdir()
-so_file <- download_bruker_proprietary_code(so_folder, method = "wget")
-
-## For offline tests...
-## so_file <- "/home/jo/data/TimsTOF/so/unix/libtimsdata.so"
-setup_bruker_so(so_file)
 
 register(SerialParam())
 path_d_folder <- system.file("ddaPASEF.d",

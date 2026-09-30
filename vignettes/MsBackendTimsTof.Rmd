@@ -42,23 +42,23 @@ Some variables in the data files can only be accessed after setting up a
 converter library. Two options are available.
 The first is to use the open-source library built into *opentimsr*:
 
-```{r, eval = FALSE}
+```{r setup-opensource, eval = FALSE}
 library(MsBackendTimsTof)
 
 setup_converter_library()
 ```
 
-The `setup_converter_library()` is also run on package startup to set up the
-open-soruce library. This function does not need to be called manually to use
-the open-source converter.
-The second is to use the proprietary Bruker library, which can be cached via
-*BiocFileCache* or downloaded to a personal folder. Note that this library is
-currently **only available for Windows and Linux** (no macOS support).
+The `setup_converter_library()` function is also run on package startup hence,
+to use the default, no manual call to `setup_converter_library()` is needed.
 
-```{r, eval = FALSE}
+Alternatively it is possible to use the proprietary Bruker converter library,
+which can be downloaded and cached through *BiocFileCache* or downloaded to a
+personal folder. Note that this library is currently **only available for
+Windows and Linux** (no macOS support).
+
+```{r setup-bruker, eval = FALSE}
 setup_converter_library(opensource = FALSE)
 ```
-
 
 
 # Accessing data from Bruker TimsTOF files

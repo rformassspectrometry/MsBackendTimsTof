@@ -623,27 +623,39 @@ MsBackendTimsTof <- function() {
 }
 
 
-#' @title Setuo converter library for Bruker files
+#' @title Setup converter library for Bruker files
 #'
 #' @description
+#'
 #' Function to setup the required built-in open-source converters or the Bruker
 #' library to convert tof-to-mz and scan-to-inv_ion_mobility.
 #' When the Burker option is selected the library is downloaded automatically
 #' using `opentimsr::download_bruker_proprietary_code()`.
 #'
+#' @note
+#'
+#' This function is called during package startup, thus it most cases it is not
+#' required to be used. This will use the [opentimsr::setup_opensource()]
+#' function. To use Bruker's proprietary library, call
+#' `setup_converter_library()` with parameter `opensource = FALSE`. This will
+#' download the library with [opentimsr::download_bruker_proprietary_code()] and
+#' cache the file in the local *BiocFileCache*.
+#'
 #' @param opensource `logical(1)` determine if use the built-in open-source
 #'     converters of *opentimsr* (defaults) or the proprietary library from
-#'     Bruker.
+#'     Bruker. Defaults to `opensource = TRUE`.
 #'
 #' @param path `character(1)` where save the Bruker library. If `NULL` the
 #'     library is cached using *BiocFileCache*. Used only with the Bruker
-#'     library.
+#'     library. Defaults to `path = NULL`.
 #'
 #' @param force `logical(1)` force to redownload the Bruker library (default:
 #'     `FALSE`).
 #'
 #' @importFrom opentimsr download_bruker_proprietary_code
+#'
 #' @importFrom opentimsr setup_bruker_so
+#'
 #' @importFrom opentimsr setup_opensource
 #'
 #' @author Gabriele Tomè
@@ -653,12 +665,11 @@ MsBackendTimsTof <- function() {
 #' ## To setup the open-source built-in library
 #' setup_converter_library()
 #'
-#' ## To use the Bruker library and cache it
-#' setup_converter_library(opensource = FALSE)
-#'
-#' ## To use the Bruker library and save it in a personal folder:
-#' ## setup_converter_library(opensource = FALSE, path = tempdir())
-#'
+#' ## Use `setup_converter_library(opensource = FALSE)` to download and use the
+#' ## proprietary library from Bruker. The library file is downloaded and
+#' ## cached with *BiocFileCache* package. Alternatively, to download the
+#' ## library to a specific local path use the `path` parameter.
+#' #'
 #' @export
 setup_converter_library <- function(opensource = TRUE, path = NULL,
                                     force = FALSE) {
@@ -675,7 +686,7 @@ setup_converter_library <- function(opensource = TRUE, path = NULL,
 
             bfc <- BiocFileCache::BiocFileCache()
             cached <- BiocFileCache::bfcquery(bfc, bruker_libs_name,
-                                            exact = TRUE)
+                                              exact = TRUE)
             if(!nrow(cached) | force){
                 if(nrow(cached) & force)
                     BiocFileCache::bfcremove(bfc, cached$rid)
@@ -690,7 +701,7 @@ setup_converter_library <- function(opensource = TRUE, path = NULL,
             }
         } else {
             cached <- list.files(path, pattern = bruker_libs_name,
-                                full.names = TRUE)
+                                 full.names = TRUE)
             if(!length(cached) | force){
                 if(length(cached) & force)
                     file.remove(cached)
