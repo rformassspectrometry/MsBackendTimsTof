@@ -368,20 +368,23 @@ MsBackendTimsTof <- function() {
 }
 
 
+#' @title Setuo converter library for Bruker files
+#'
+#' @description
 #' Function to setup the required built-in open-source converters or the Bruker
 #' library to convert tof-to-mz and scan-to-inv_ion_mobility.
 #' When the Burker option is selected the library is downloaded automatically
 #' using `opentimsr::download_bruker_proprietary_code()`.
 #'
-#' @param opensource `logical` determine if use the built-in open-source
-#'     converters of `opentimsr` (defaults) or the proprietary library from
+#' @param opensource `logical(1)` determine if use the built-in open-source
+#'     converters of *opentimsr* (defaults) or the proprietary library from
 #'     Bruker.
 #'
 #' @param path `character(1)` where save the Bruker library. If `NULL` the
-#'     library is cached using `BiocFileCache`. Used only with the Bruker
+#'     library is cached using *BiocFileCache*. Used only with the Bruker
 #'     library.
 #'
-#' @param force `logical` force to redownload the Bruker library (default:
+#' @param force `logical(1)` force to redownload the Bruker library (default:
 #'     `FALSE`).
 #'
 #' @importFrom opentimsr download_bruker_proprietary_code
@@ -398,8 +401,8 @@ MsBackendTimsTof <- function() {
 #' ## To use the Bruker library and cache it
 #' setup_converter_library(opensource = FALSE)
 #'
-#' ## To use the Bruker library and save it in a personal folder
-#' setup_converter_library(opensource = FALSE, path = tempdir())
+#' ## To use the Bruker library and save it in a personal folder:
+#' ## setup_converter_library(opensource = FALSE, path = tempdir())
 #'
 #' @export
 setup_converter_library <- function(opensource = TRUE, path = NULL,
@@ -411,9 +414,9 @@ setup_converter_library <- function(opensource = TRUE, path = NULL,
         if(is.null(path)) {
             ## Cache the library with BiocFileCache
             if(!requireNamespace("BiocFileCache", quietly = TRUE))
-                stop("If `path = NULL` required package `BiocFileCache` to",
-                    " cache the Bruker library. Please install it and",
-                    " try again.", call. = FALSE)
+                stop("The *BiocFileCache* package is required if ",
+                    "`path = NULL`. Please install it and try again.",
+                    call. = FALSE)
 
             bfc <- BiocFileCache::BiocFileCache()
             cached <- BiocFileCache::bfcquery(bfc, bruker_libs_name,
