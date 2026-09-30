@@ -331,3 +331,66 @@ test_that(".ms2_d_empty", {
     expect_equal(colnames(res), c("frame", "scan", "collisionEnergy",
                                   "precursorMz", "file"))
 })
+
+test_that("setup_converter_library with BiocFileCache works", {
+    ## Test BiocFileCache first download
+    skip_if_not_installed("BiocFileCache")
+    expect_no_error(setup_converter_library(opensource = FALSE))
+
+    bruker_libs_name <- c("libtimsdata.so", "timsdata.dll")
+    bfc <- BiocFileCache::BiocFileCache()
+    cached <- BiocFileCache::bfcquery(bfc, bruker_libs_name, exact = TRUE)
+    expect_true(nrow(cached) >= 1)
+
+    ## Retry using the cached file
+    expect_no_error(setup_converter_library(opensource = FALSE))
+
+    cached_2 <- BiocFileCache::bfcquery(bfc, bruker_libs_name, exact = TRUE)
+    expect_true(nrow(cached_2) >= 1)
+    expect_equal(cached$rid, cached_2$rid)
+
+    ## Retry forcing the redownload
+    Sys.sleep(2)
+    expect_no_error(setup_converter_library(opensource = FALSE, force = TRUE))
+
+    cached_3 <- BiocFileCache::bfcquery(bfc, bruker_libs_name, exact = TRUE)
+    expect_true(nrow(cached_3) >= 1)
+    expect_false(cached$rid == cached_3$rid)
+    expect_false(cached$create_time == cached_3$create_time)
+
+})
+
+test_that("setup_converter_library works", {
+    ## Test opensource
+    expect_no_error(setup_converter_library(opensource = TRUE))
+
+    ## Test on selected folder
+    tmp_dir <- tempdir()
+    expect_no_error(setup_converter_library(opensource = FALSE, path = tmp_dir))
+
+    bruker_libs_name <- c("libtimsdata.so", "timsdata.dll")
+    cached <- list.files(tmp_dir, pattern = bruker_libs_name, full.names = TRUE)
+    expect_true(length(cached) >= 1)
+    mtime_cached <- file.mtime(cached)
+
+    ## Retry using the cached file
+    expect_no_error(setup_converter_library(opensource = FALSE, path = tmp_dir))
+
+    cached_2 <- list.files(tmp_dir, pattern = bruker_libs_name,
+                            full.names = TRUE)
+    expect_true(length(cached_2) >= 1)
+    expect_equal(cached, cached_2)
+    mtime_cached_2 <- file.mtime(cached_2)
+    expect_equal(mtime_cached, mtime_cached_2)
+
+    ## Retry forcing the download
+    expect_no_error(setup_converter_library(opensource = FALSE, path = tmp_dir,
+                                            force = TRUE))
+
+    cached_3 <- list.files(tmp_dir, pattern = bruker_libs_name,
+                            full.names = TRUE)
+    expect_true(length(cached_3) >= 1)
+    mtime_cached_3 <- file.mtime(cached_3)
+    expect_false(mtime_cached == mtime_cached_3)
+
+})

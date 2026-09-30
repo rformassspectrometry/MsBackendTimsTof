@@ -621,3 +621,85 @@ MsBackendTimsTof <- function() {
         cols <- c(cols, c("IsolationMz", "IsolationWidth"))
     cols
 }
+
+
+#' @title Setuo converter library for Bruker files
+#'
+#' @description
+#' Function to setup the required built-in open-source converters or the Bruker
+#' library to convert tof-to-mz and scan-to-inv_ion_mobility.
+#' When the Burker option is selected the library is downloaded automatically
+#' using `opentimsr::download_bruker_proprietary_code()`.
+#'
+#' @param opensource `logical(1)` determine if use the built-in open-source
+#'     converters of *opentimsr* (defaults) or the proprietary library from
+#'     Bruker.
+#'
+#' @param path `character(1)` where save the Bruker library. If `NULL` the
+#'     library is cached using *BiocFileCache*. Used only with the Bruker
+#'     library.
+#'
+#' @param force `logical(1)` force to redownload the Bruker library (default:
+#'     `FALSE`).
+#'
+#' @importFrom opentimsr download_bruker_proprietary_code
+#' @importFrom opentimsr setup_bruker_so
+#' @importFrom opentimsr setup_opensource
+#'
+#' @author Gabriele Tomè
+#'
+#' @examples
+#'
+#' ## To setup the open-source built-in library
+#' setup_converter_library()
+#'
+#' ## To use the Bruker library and cache it
+#' setup_converter_library(opensource = FALSE)
+#'
+#' ## To use the Bruker library and save it in a personal folder:
+#' ## setup_converter_library(opensource = FALSE, path = tempdir())
+#'
+#' @export
+setup_converter_library <- function(opensource = TRUE, path = NULL,
+                                    force = FALSE) {
+    if(opensource) {
+        setup_opensource()
+    } else {
+        bruker_libs_name <- c("libtimsdata.so", "timsdata.dll")
+        if(is.null(path)) {
+            ## Cache the library with BiocFileCache
+            if(!requireNamespace("BiocFileCache", quietly = TRUE))
+                stop("The *BiocFileCache* package is required if ",
+                    "`path = NULL`. Please install it and try again.",
+                    call. = FALSE)
+
+            bfc <- BiocFileCache::BiocFileCache()
+            cached <- BiocFileCache::bfcquery(bfc, bruker_libs_name,
+                                            exact = TRUE)
+            if(!nrow(cached) | force){
+                if(nrow(cached) & force)
+                    BiocFileCache::bfcremove(bfc, cached$rid)
+
+                bruker_library <- download_bruker_proprietary_code(tempdir())
+                bruker_location <- BiocFileCache::bfcadd(bfc,
+                                        rname = basename(bruker_library),
+                                        fpath = bruker_library, action = "copy",
+                                        fname = "exact")
+            } else {
+                bruker_location <- BiocFileCache::bfcpath(bfc, cached[1, "rid"])
+            }
+        } else {
+            cached <- list.files(path, pattern = bruker_libs_name,
+                                full.names = TRUE)
+            if(!length(cached) | force){
+                if(length(cached) & force)
+                    file.remove(cached)
+
+                bruker_location <- download_bruker_proprietary_code(path)
+            } else {
+                bruker_location <- cached[1]
+            }
+        }
+        setup_bruker_so(bruker_location)
+    }
+}

@@ -1,5 +1,13 @@
 # MsBackendTimsTof 0.98
 
+## MsBackendTimsTof 0.98.2
+
+- Improve/simplify the way to retrieve the required shared library from Bruker
+  [#27](https://github.com/rformassspectrometry/MsBackendTimsTof/issues/27)
+- Add support for the open source library in addition to the Bruker shared
+  library
+  [#28](https://github.com/rformassspectrometry/MsBackendTimsTof/issues/28)
+
 ## MsBackendTimsTof 0.98.1
 
 - Fix caching mechanism of the `MsBackendTimsTof`.
