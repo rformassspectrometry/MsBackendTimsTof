@@ -189,18 +189,6 @@ for all spectra.
 
 \examples{
 
-## Load the *opentimsr* package to retrieve the required shared library
-## from Bruker. Ideally, this file should be stored in a regular folder,
-## which allows then to point to that existing location with
-## `options(TIMSTOF_LIB = "<path to folder>/libtimsdata.so")`
-## without needing to download the file again
-so_folder <- tempdir()
-library(opentimsr)
-so_file <- download_bruker_proprietary_code(so_folder, method = "wget")
-setup_bruker_so(so_file)
-path_d_folder <- system.file("ddaPASEF.d",
-                             package = "MsBackendTimsTof")
-
 ## Define the test file
 fl <- system.file("ddaPASEF.d", package = "MsBackendTimsTof")
 
