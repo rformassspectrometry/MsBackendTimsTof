@@ -139,6 +139,7 @@ jobs:
           ## https://github.com/r-lib/remotes/issues/296
           ## Ideally, all dependencies should get installed in the first pass.
           install.packages(c("pak", "remotes"))
+          remotes::install_github("michalsta/opentims/src/opentimsr")
           pak::local_install_dev_deps(ask = FALSE)
 
           ## Pass #1 at installing dependencies
