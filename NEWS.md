@@ -1,5 +1,9 @@
 # MsBackendTimsTof 0.98
 
+## MsBackendTimsTof 0.98.3
+
+- Fix connection to *analysis.tdf* database on case-insensitive file systems.
+
 ## MsBackendTimsTof 0.98.2
 
 - Improve/simplify the way to retrieve the required shared library from Bruker

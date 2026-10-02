@@ -438,8 +438,8 @@ MsBackendTimsTof <- function() {
     fl <- file.path(x, c("analysis.tdf", "Analysis.tdf"))
     fl <- fl[file.exists(fl)]
     if (!length(fl))
-        stop("\"analysis.tdf\" not found in \"", x, "\"")
-    dbConnect(SQLite(), fl)
+        stop("\"analysis.tdf\" not found in \"", x, "\"", .call = FALSE)
+    dbConnect(SQLite(), fl[1L]) # non-case sensitive FS will report both paths
 }
 
 #' @description
