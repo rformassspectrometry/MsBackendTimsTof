@@ -1,5 +1,9 @@
 # MsBackendTimsTof 0.98
 
+## MsBackendTimsTof 0.98.4
+
+- Install *opentimsr* from CRAN.
+
 ## MsBackendTimsTof 0.98.3
 
 - Fix connection to *analysis.tdf* database on case-insensitive file systems.

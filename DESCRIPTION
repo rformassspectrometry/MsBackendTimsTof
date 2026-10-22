@@ -1,6 +1,6 @@
 Package: MsBackendTimsTof
 Title: Mass Spectrometry Data Backend for Bruker TimsTOF Files
-Version: 0.98.3
+Version: 0.98.4
 Authors@R:
     c(person(given = "Johannes", family = "Rainer",
              email = "Johannes.Rainer@eurac.edu",
@@ -30,12 +30,13 @@ Authors@R:
 	     )
 Description: Mass spectrometry (MS) data backend supporting import and
              export of (ion mobility) MS data from Bruker TimsTOF files.
-             The backend uses the opentimsr package which relies on the
-             proprietory vendor C++ library for raw data access. The
-             backend thus supports import of MS data from the original
-             raw data files without needing to convert them to an open format.
+             The backend uses the opentimsr R package for raw data access,
+	     using either the proprietary C++ library from Bruker or an open
+	     reimplementation. The backend thus supports import of MS data
+	     from the original raw data files without needing to convert them
+	     to an open format.
 Depends:
-    R (>= 4.1),
+    R (>= 4.6),
     Spectra (>= 1.5.17)
 Imports:
     IRanges,
@@ -56,8 +57,6 @@ Suggests:
     BiocStyle (>= 2.5.19),
     rmarkdown,
     BiocFileCache
-Remotes:
-    michalsta/opentims/src/opentimsr
 License: Artistic-2.0
 LazyData: yes
 Encoding: UTF-8
