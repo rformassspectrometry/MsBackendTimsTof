@@ -673,7 +673,9 @@ MsBackendTimsTof <- function() {
 #' @export
 setup_converter_library <- function(opensource = TRUE, path = NULL,
                                     force = FALSE) {
-    if(opensource) {
+    if(opensource || Sys.info()[["sysname"]] == "Darwin") {
+        if (Sys.info()[["sysname"]] == "Darwin")
+            warning("For MacOS available only opensource library.")
         setup_opensource()
     } else {
         bruker_libs_name <- c("libtimsdata.so", "timsdata.dll")
@@ -688,9 +690,12 @@ setup_converter_library <- function(opensource = TRUE, path = NULL,
             cached <- BiocFileCache::bfcquery(bfc, bruker_libs_name,
                                               exact = TRUE)
             if(!nrow(cached) | force){
-                if(nrow(cached) & force)
+                if(nrow(cached) & force){
+                    ## Temporary set of opensource library to free the
+                    ## Bruker library
+                    setup_opensource()
                     BiocFileCache::bfcremove(bfc, cached$rid)
-
+                }
                 bruker_library <- download_bruker_proprietary_code(tempdir())
                 bruker_location <- BiocFileCache::bfcadd(bfc,
                                         rname = basename(bruker_library),
@@ -700,12 +705,19 @@ setup_converter_library <- function(opensource = TRUE, path = NULL,
                 bruker_location <- BiocFileCache::bfcpath(bfc, cached[1, "rid"])
             }
         } else {
-            cached <- list.files(path, pattern = bruker_libs_name,
-                                 full.names = TRUE)
+            cached <- normalizePath(list.files(path,
+                                            pattern = paste0(bruker_libs_name,
+                                                            collapse = "|"),
+                                            full.names = TRUE))
             if(!length(cached) | force){
-                if(length(cached) & force)
+                if(length(cached) & force){
+                    ## Temporary set of opensource library to free the
+                    ## Bruker library
+                    unloadNamespace("MsBackendTimsTof")
+                    unloadNamespace("opentimsr")
                     file.remove(cached)
-
+                    loadNamespace("MsBackendTimsTof")
+                }
                 bruker_location <- download_bruker_proprietary_code(path)
             } else {
                 bruker_location <- cached[1]
