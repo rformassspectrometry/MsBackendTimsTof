@@ -365,32 +365,43 @@ test_that("setup_converter_library works", {
     expect_no_error(setup_converter_library(opensource = TRUE))
 
     ## Test on selected folder
-    tmp_dir <- tempdir()
-    expect_no_error(setup_converter_library(opensource = FALSE, path = tmp_dir))
+    if(Sys.info()[["sysname"]] == "Darwin") {
+        ## For MacOS available only opensource
+        expect_warning(setup_converter_library(opensource = FALSE,
+                                                path = tmp_dir),
+                        "For MacOS available only opensource library.")
 
-    bruker_libs_name <- c("libtimsdata.so", "timsdata.dll")
-    cached <- list.files(tmp_dir, pattern = bruker_libs_name, full.names = TRUE)
-    expect_true(length(cached) >= 1)
-    mtime_cached <- file.mtime(cached)
+    } else {
+        tmp_dir <- tempdir()
+        expect_no_error(setup_converter_library(opensource = FALSE,
+                                                path = tmp_dir))
 
-    ## Retry using the cached file
-    expect_no_error(setup_converter_library(opensource = FALSE, path = tmp_dir))
-
-    cached_2 <- list.files(tmp_dir, pattern = bruker_libs_name,
+        bruker_libs_name <- paste0(c("libtimsdata.so", "timsdata.dll"), 
+                                    collapse = "|")
+        cached <- list.files(tmp_dir, pattern = bruker_libs_name,
                             full.names = TRUE)
-    expect_true(length(cached_2) >= 1)
-    expect_equal(cached, cached_2)
-    mtime_cached_2 <- file.mtime(cached_2)
-    expect_equal(mtime_cached, mtime_cached_2)
+        expect_true(length(cached) >= 1)
+        mtime_cached <- file.mtime(cached)
 
-    ## Retry forcing the download
-    expect_no_error(setup_converter_library(opensource = FALSE, path = tmp_dir,
-                                            force = TRUE))
+        ## Retry using the cached file
+        expect_no_error(setup_converter_library(opensource = FALSE,
+                                                path = tmp_dir))
 
-    cached_3 <- list.files(tmp_dir, pattern = bruker_libs_name,
-                            full.names = TRUE)
-    expect_true(length(cached_3) >= 1)
-    mtime_cached_3 <- file.mtime(cached_3)
-    expect_false(mtime_cached == mtime_cached_3)
+        cached_2 <- list.files(tmp_dir, pattern = bruker_libs_name,
+                                full.names = TRUE)
+        expect_true(length(cached_2) >= 1)
+        expect_equal(cached, cached_2)
+        mtime_cached_2 <- file.mtime(cached_2)
+        expect_equal(mtime_cached, mtime_cached_2)
 
+        ## Retry forcing the download
+        expect_no_error(setup_converter_library(opensource = FALSE,
+                                                path = tmp_dir, force = TRUE))
+
+        cached_3 <- list.files(tmp_dir, pattern = bruker_libs_name,
+                                full.names = TRUE)
+        expect_true(length(cached_3) >= 1)
+        mtime_cached_3 <- file.mtime(cached_3)
+        expect_false(mtime_cached == mtime_cached_3)
+    }
 })
