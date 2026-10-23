@@ -65,4 +65,4 @@ BugReports: https://github.com/RforMassSpectrometry/MsBackendTimsTof/issues
 URL: https://github.com/RforMassSpectrometry/MsBackendTimsTof
 biocViews: Infrastructure, MassSpectrometry, Metabolomics, DataImport
 Roxygen: list(markdown=TRUE)
-Config/roxygen2/version: 8.1.0
+Config/roxygen2/version: 8.1.1
