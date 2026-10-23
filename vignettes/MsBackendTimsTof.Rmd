@@ -30,11 +30,10 @@ which data can be retrieved from such files.
 
 The package depends on the [OpenTIMS](https://github.com/michalsta/opentims) C++
 library to access data in timsTOF Pro data format (TDF) which is provided by the
-*opentimsr* R package. The *opentimsr* and *MsBackendTimsTof* package can be
-installed with:
+*opentimsr* R package, which gets installed as a dependency when installing
+*MsBackendTimsTof*:
 
 ```{r installation, eval = FALSE}
-BiocManager::install("michalsta/opentims/src/opentimsr")
 BiocManager::install("RforMassSpectrometry/MsBackendTimsTof")
 ```
 

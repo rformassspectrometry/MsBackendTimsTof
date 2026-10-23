@@ -13,13 +13,6 @@ for the [OpenTIMS](https://github.com/michalsta/opentims) C++ library.
 
 ## Installation
 
-The *opentimsr* package is no longer available on CRAN and hence needs to be
-installed from GitHub using:
-
-```r
-remotes::install_github("michalsta/opentims/src/opentimsr")
-```
-
 The *MsBackendTimsTof* package can then be installed from GitHub using
 
 ```r
