@@ -713,8 +713,10 @@ setup_converter_library <- function(opensource = TRUE, path = NULL,
                 if(length(cached) & force){
                     ## Temporary set of opensource library to free the
                     ## Bruker library
-                    setup_opensource()
+                    unloadNamespace("MsBackendTimsTof")
+                    unloadNamespace("opentimsr")
                     file.remove(cached)
+                    loadNamespace("MsBackendTimsTof")
                 }
                 bruker_location <- download_bruker_proprietary_code(path)
             } else {
