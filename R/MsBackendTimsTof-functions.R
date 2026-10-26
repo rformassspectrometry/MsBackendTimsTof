@@ -681,7 +681,8 @@ setup_converter_library <- function(opensource = TRUE, path = NULL,
                                     force = FALSE) {
     if (!opensource && Sys.info()[["sysname"]] == "Darwin") {
         opensource <- TRUE
-        warning("MacOS does not support the Bruker library; setting 'opensource = TRUE'.")
+        warning("MacOS does not support the Bruker library;
+                setting 'opensource = TRUE'.")
     }
     if (opensource) {
         setup_opensource()

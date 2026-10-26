@@ -367,7 +367,7 @@ test_that("setup_converter_library in MacOS", {
     ## For MacOS available only opensource
     expect_warning(setup_converter_library(opensource = FALSE,
                                             path = tmp_dir),
-                    "For MacOS available only opensource library.")
+                    "MacOS does not support the Bruker library")
 
 })
 
@@ -381,7 +381,7 @@ test_that("setup_converter_library works", {
     expect_no_error(setup_converter_library(opensource = FALSE,
                                             path = tmp_dir))
 
-    bruker_libs_name <- paste0(c("libtimsdata.so", "timsdata.dll"), 
+    bruker_libs_name <- paste0(c("libtimsdata.so", "timsdata.dll"),
                                 collapse = "|")
     cached <- list.files(tmp_dir, pattern = bruker_libs_name,
                         full.names = TRUE)
