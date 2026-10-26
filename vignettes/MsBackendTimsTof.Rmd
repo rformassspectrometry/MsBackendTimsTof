@@ -29,12 +29,12 @@ which data can be retrieved from such files.
 # Installation
 
 The package depends on the [OpenTIMS](https://github.com/michalsta/opentims) C++
-library to access data in timsTOF Pro data format (TDF) which is provided by the
-*opentimsr* R package, which gets installed as a dependency when installing
-*MsBackendTimsTof*:
+library to access data in timsTOF Pro data format (TDF). This support is
+provided by the *opentimsr* R package, which gets installed as a dependency when
+installing *MsBackendTimsTof*:
 
 ```{r installation, eval = FALSE}
-BiocManager::install("RforMassSpectrometry/MsBackendTimsTof")
+BiocManager::install("MsBackendTimsTof")
 ```
 
 Some variables in the data files can only be accessed after setting up a
@@ -59,7 +59,6 @@ Windows and Linux** (no macOS support).
 setup_converter_library(opensource = FALSE)
 ```
 
-
 # Accessing data from Bruker TimsTOF files
 
 The `r Biocpkg("MsBackendTimsTof")` package adds support for Bruker TimsTOF
@@ -70,25 +69,14 @@ will also automatically setup the use of the open-source converter library.
 library(MsBackendTimsTof)
 ```
 
-As detailed in the installation section, the code to download the shared library
-would only be necessary once, if the path to this file is defined in a
-environment variable `TIMSTOF_LIB`.
-
-We next load the TDF test file which is bundled within this package.
+We next load the TDF test file which is bundled within this package using the
+`Spectra()` constructor function specifying to use a `MsBackendTimsTof` as data
+backend with parameter `source`.
 
 ```{r initialize}
 ## Get the path/file name of the example file
 fl <- system.file("ddaPASEF.d", package = "MsBackendTimsTof")
 
-## Initialize the MsBackend
-be <- backendInitialize(MsBackendTimsTof(), fl)
-be
-```
-
-In a real use case, we would however directly load the data into a `Spectra`
-object:
-
-```{r load-spectra}
 sps <- Spectra(fl, source = MsBackendTimsTof())
 sps
 ```
@@ -142,18 +130,86 @@ pd <- peaksData(sps, peaksVariables(sps))
 pd[[10L]]
 ```
 
+In addition to the default `"mz"` and `"intensity"` columns with the individual
+peaks' m/z and intensity values many more columns are reported.
+
 Note however that `"inv_ion_mobility"` and `"retention_time"` have the
 same value for all peaks in each spectrum. Thus, these variables should be
 accessed not through `peaksData()`, but through `spectraData()` or using the `$`
 operator or the dedicated `rtime()` function.
 
-The `MsBackendTimsTof` is a *on-disk* backend, hence reading peaks and spectra
-variables from the original data file(s) upon request. Modifying spectra
-variables within the raw data files is not possible (and also not desired), but,
-by directly extending the `MsBackendCached` backend from the
-`r Biocpkg("Spectra")` package `MsBackendTimsTof` supports changing or adding
-spectra variables by *caching* them locally within the object. Below we add a
-new spectra variable to the object.
+Each of the `Spectra` object represents the signal from a single *scan* within a
+TimsTOF *frame*. Thus, in TimsTOF data we have multiple spectra for the same
+retention time (frame). Below we plot the first 4 spectra from the first frame.
+
+```{r plot-spectra-frame}
+plotSpectra(sps[1:4])
+```
+
+The first 3 spectra contain only a single peak, the spectrum number 4 2
+peaks. All of them are recorded in the same *frame*, with the same retention
+time, but a different inverse ion mobility time:
+
+```{r spectra-data-first-four}
+spectraData(sps[1:4], columns = c("frameId", "scanIndex",
+                                  "rtime", "inv_ion_mobility"))
+```
+
+This first frame has `r sum(sps$frameId == 1L)` spectra, all with the same
+retention time, but different inverse ion mobility time.
+
+We can also *collapse* the ion mobility time dimension of the `Spectra` object
+to simulate and generate a *classical* LC-MS data with one spectrum per
+retention time. This can be done using the `combineSpectra()` from the *Spectra*
+package. Below we first define a factor to assign all spectra from the same
+frame (and original data file) to one *spectra group* that should be combined
+into a single spectrum.
+
+```{r combine-spectra-factor}
+## Define a factor assigning all spectra from the same frame to one group
+f <- paste0(sps$frameId, sps$dataOrigin)
+```
+
+We can now combine the spectra within each such defined group using
+`combineSpectra()`. With parameter `peaks = "union"` we merge all mass (or
+fragment) peaks of all spectra per group into the representative spectrum. Peaks
+with a difference in their *m/z* smaller than 10 ppm (parameter `ppm = 10`) are
+reported as a single peak, with the median *m/z* reported as its *m/z* (`mzFun =
+median`) and the largest intensity as the peak's intensity (`intensityFun =
+max`; see also the help pages for `combineSpectra()` and `combinePeaksData()`
+for other options and parameters).
+
+```{r combine-spectra}
+## Combine all spectra per frame into a single spectrum
+sps_merged <- combineSpectra(sps, f = f, peaks = "union", ppm = 10,
+                             mzFun = median, intensityFun = max)
+sps_merged
+```
+
+There is now one spectrum per frame. Below we plot the (MS1) spectrum from the
+first frame.
+
+```{r combine-spectra-plot}
+plotSpectra(sps_merged[1L])
+grid()
+```
+
+Importantly, for each such combined spectrum the metadata of its **first**
+spectrum is reported (in this case the first spectrum per frame).
+
+```{r spectra-data-combined}
+spectraData(sps_merged)
+```
+
+Also, `combineSpectra` returns a `Spectra` object with an *in-memory* backend,
+hence all data is loaded into memory. The original `MsBackendTimsTof` however is
+an *on-disk* backend, which reads peaks and spectra variables from the original
+data file(s) upon request. Modifying spectra variables within the raw data files
+is not possible (and also not desired), but, by directly extending the
+`MsBackendCached` backend from the `r Biocpkg("Spectra")` package
+`MsBackendTimsTof` supports changing or adding spectra variables by *caching*
+them locally within the object. Below we add a new spectra variable to the
+object.
 
 ```{r add-variable}
 ## Add a new spectra variable
@@ -180,6 +236,6 @@ rtime(sps) |> head()
 
 # Session information
 
-```{r}
+```{r session-information}
 sessionInfo()
 ```

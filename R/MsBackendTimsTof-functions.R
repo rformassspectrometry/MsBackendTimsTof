@@ -10,8 +10,6 @@
 #'
 #' @importFrom BiocParallel bplapply
 #'
-#' @importFrom MsCoreUtils rbindFill
-#'
 #' @importFrom opentimsr OpenTIMS CloseTIMS
 #'
 #' @return initialized `MsBackendTimsTOF` object
@@ -26,8 +24,8 @@
         tms <- opentimsr::OpenTIMS(file[fl_idx])
         on.exit(opentimsr::CloseTIMS(tms))
         frames <- cbind(tms@frames, file = fl_idx)
-        indices <- unique(.query_tims(tms, frames = frames$Id,
-                                      columns = c("frame", "scan")))
+        indices <- unique(
+            .query_tims(tms, frames = frames$Id, columns = c("frame", "scan")))
         indices$file <- fl_idx
         list(frames, as.matrix(indices, rownames.force = FALSE))
     }, BPPARAM = BPPARAM)
@@ -137,8 +135,6 @@ MsBackendTimsTof <- function() {
 #'
 #' @importFrom opentimsr OpenTIMS CloseTIMS query opentims_set_threads
 #'
-#' @importFrom MsCoreUtils rbindFill
-#'
 #' @noRd
 .get_tims_columns <- function(x, columns, drop = TRUE) {
     ## Disable parallel processing in opentimsr as that breaks BiocParallel
@@ -152,7 +148,7 @@ MsBackendTimsTof <- function() {
         ## subset tmp if we're about to extract only few scans.
         if (length(i_frame) < (nrow(tmp) / 10)) {
             i_scan <- x@indices[I, "scan"]
-            tmp <- tmp[tmp$scan %in% i_scan, ]
+            tmp <- tmp[tmp$scan %in% i_scan, , drop = FALSE]
             rownames(tmp) <- NULL
             ids <- paste(i_frame, i_scan)
         } else ids <- paste(i_frame, x@indices[I, "scan"])
@@ -163,13 +159,13 @@ MsBackendTimsTof <- function() {
         ##     tmp <- rbindFill(tmp, data.frame(frame = 0L))
         f <- factor(paste(tmp$frame, tmp$scan), levels = unique(ids))
         if (anyDuplicated(ids)) {
-            if (length(columns) == 1)
+            if (drop && length(columns) == 1)
                 res[I] <- unname(split(tmp[, columns, drop], f)[ids])
             else
                 res[I] <- unname(
                     split.data.frame(as.matrix(tmp[, columns, drop]), f)[ids])
         } else {
-            if (length(columns) == 1) {
+            if (drop && length(columns) == 1) {
                 res[I] <- unname(split(tmp[, columns, drop], f))
             } else {
                 res[I] <- unname(
@@ -339,33 +335,25 @@ MsBackendTimsTof <- function() {
 #' @noRd
 .spectra_data <- function(x, columns = spectraVariables(x)) {
     if (length(miss <- setdiff(columns, spectraVariables(x)))) {
-        msg <- paste0("\"", miss, "\"")
+        msg <- paste0("\"", miss, "\"", collapse = ", ")
         stop("Column(s) ", msg, " not available.", call. = FALSE)
     }
-    ## Get cached data and data for core variables not provided through .d
     res <- getMethod("spectraData", "MsBackendCached")(x, columns = columns)
-    if (is.null(res))
-        res <- make_zero_col_DFrame(length(x))
-    ## define columns that are not retrieved from the cache.
-    cols <- setdiff(columns, colnames(res))
-    ## Columns stored in @frames
-    frames_cols <- intersect(cols, colnames(x@frames))
-    ## Columns retrieved with querying through opentimsr
+    if (is.null(res)) res <- make_zero_col_DFrame(length(x))
+    cols <- setdiff(columns, colnames(res)) # columns not in cache
+    fr_cols <- intersect(cols, colnames(x@frames)) # columns in @frames
+    ## Columns retrieved querying through opentimsr
     tims_cols <- intersect(cols, setdiff(.TIMSTOF_COLUMNS, "inv_ion_mobility"))
-
-    if ("scanIndex" %in% cols)
-        res$scanIndex <- x@indices[, "scan"]
-    if (length(frames_cols))
-        res <- cbind.DataFrame(
-            res, .get_frame_columns(x, frames_cols, drop = FALSE))
+    if ("scanIndex" %in% cols) res$scanIndex <- x@indices[, "scan"]
+    if (length(fr_cols))
+        res <- cbind.DataFrame(res, .get_frame_columns(x, fr_cols, drop =FALSE))
     if (length(tims_cols)) {
         if ("inv_ion_mobility" %in% cols) {
             pks <- .get_tims_columns(x, c(tims_cols, "inv_ion_mobility"),
                                      drop = FALSE)
             res$inv_ion_mobility <- vapply(
                 pks, function(m) unname(m[1L, "inv_ion_mobility"]), numeric(1))
-        } else
-            pks <- .get_tims_columns(x, tims_cols, drop = FALSE)
+        } else pks <- .get_tims_columns(x, tims_cols, drop = FALSE)
         tms <- vector("list", length(tims_cols))
         names(tms) <- tims_cols
         for (col in tims_cols)
@@ -377,13 +365,12 @@ MsBackendTimsTof <- function() {
             res$inv_ion_mobility <- .inv_ion_mobility(x)
     }
     if ("msLevel" %in% cols) {
-        if ("MsMsType" %in% frames_cols)
+        if ("MsMsType" %in% fr_cols)
             res[["msLevel"]] <- .get_msLevel(res[["MsMsType"]], TRUE)
         else
             res[["msLevel"]] <- .get_msLevel(x)
     }
-    if ("dataOrigin" %in% cols)
-        res[["dataOrigin"]] <- dataStorage(x)
+    if ("dataOrigin" %in% cols) res[["dataOrigin"]] <- dataStorage(x)
     ## DDA MS2 columns
     if (length(ms2_cols <- cols[cols %in% .MS2_COLUMNS]))
         res <- cbind(res, .ms2_spectra_data(x, columns = ms2_cols))
@@ -622,7 +609,6 @@ MsBackendTimsTof <- function() {
     cols
 }
 
-
 #' @title Setup converter library for Bruker files
 #'
 #' @description
@@ -664,6 +650,9 @@ MsBackendTimsTof <- function() {
 #'
 #' @importFrom opentimsr setup_opensource
 #'
+#' @return The function is called to register and load a converter library
+#'     and does not return a value.
+#'
 #' @author Gabriele Tomè
 #'
 #' @examples
@@ -675,7 +664,7 @@ MsBackendTimsTof <- function() {
 #' ## proprietary library from Bruker. The library file is downloaded and
 #' ## cached with *BiocFileCache* package. Alternatively, to download the
 #' ## library to a specific local path use the `path` parameter.
-#' #'
+#'
 #' @export
 setup_converter_library <- function(opensource = TRUE, path = NULL,
                                     force = FALSE) {
@@ -687,57 +676,43 @@ setup_converter_library <- function(opensource = TRUE, path = NULL,
     if (opensource) {
         setup_opensource()
     } else {
-        bruker_libs_name <- c("libtimsdata.so", "timsdata.dll")
+        bruker_libs <- c("libtimsdata.so", "timsdata.dll")
         if(is.null(path)) {
-            ## Cache the library with BiocFileCache
             if(!requireNamespace("BiocFileCache", quietly = TRUE))
-                stop("The *BiocFileCache* package is required if ",
-                    "`path = NULL`. Please install it and try again.",
-                    call. = FALSE)
-
+                stop("The *BiocFileCache* package is required if `path = NULL`",
+                    ". Please install it and try again.",call. = FALSE)
             bfc <- BiocFileCache::BiocFileCache()
-            cached <- BiocFileCache::bfcquery(bfc, bruker_libs_name,
-                                              exact = TRUE)
+            cached <- BiocFileCache::bfcquery(bfc, bruker_libs, exact = TRUE)
             if(!nrow(cached) | force){
                 if(nrow(cached) & force){
-                    ## Temporary set of opensource library to free the
-                    ## Bruker library
-                    setup_opensource()
+                    setup_opensource() # needed to allow removing cached file
                     BiocFileCache::bfcremove(bfc, cached$rid)
                 }
                 bruker_library <- download_bruker_proprietary_code(tempdir())
-                bruker_location <- BiocFileCache::bfcadd(bfc,
+                bruker_loc <- BiocFileCache::bfcadd(bfc,
                                         rname = basename(bruker_library),
                                         fpath = bruker_library, action = "copy",
                                         fname = "exact")
-            } else {
-                bruker_location <- BiocFileCache::bfcpath(bfc, cached[1, "rid"])
-            }
+            } else bruker_loc <- BiocFileCache::bfcpath(bfc, cached[1, "rid"])
         } else {
-            cached <- normalizePath(list.files(path,
-                                            pattern = paste0(bruker_libs_name,
-                                                            collapse = "|"),
-                                            full.names = TRUE))
-            if(!length(cached) | force){
-                if(length(cached) & force){
-                    if (Sys.info()[["sysname"]] == "Windows"){
-                        ## Temporary detach opentimsr to unbind the old .dll
-                        unloadNamespace("MsBackendTimsTof")
+            cached <- normalizePath(
+                list.files(path, pattern = paste0(bruker_libs, collapse = "|"),
+                           full.names = TRUE))
+            if (!length(cached) | force) {
+                if (length(cached) & force) {
+                    if (Sys.info()[["sysname"]] == "Windows") {
+                        unloadNamespace("MsBackendTimsTof") # detach to rem .dll
                         unloadNamespace("opentimsr")
                         file.remove(cached)
                         loadNamespace("MsBackendTimsTof")
                     } else {
-                        ## Temporary set of opensource library to free the
-                        ## Bruker library
                         setup_opensource()
                         file.remove(cached)
                     }
                 }
-                bruker_location <- download_bruker_proprietary_code(path)
-            } else {
-                bruker_location <- cached[1]
-            }
+                bruker_loc <- download_bruker_proprietary_code(path)
+            } else bruker_loc <- cached[1]
         }
-        setup_bruker_so(bruker_location)
+        setup_bruker_so(bruker_loc)
     }
 }

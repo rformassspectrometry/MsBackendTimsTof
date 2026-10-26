@@ -1,4 +1,16 @@
+# MsBackendTimsTof 0.99
+
+## MsBackendTimsTof 0.99.0
+
+- Setup and prepare for Bioconductor submission.
+
 # MsBackendTimsTof 0.98
+
+## MsBackendTimsTof 0.98.6
+
+- Fix `peaksData()` for spectra with a single peak: ensure results are
+  **always** returned as a `matrix` with rows being peaks and columns peak
+  variables.
 
 ## MsBackendTimsTof 0.98.5
 
