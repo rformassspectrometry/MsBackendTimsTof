@@ -5,6 +5,7 @@
 \name{MsBackendTimsTof}
 \alias{MsBackendTimsTof}
 \alias{MsBackendTimsTof-class}
+\alias{[,MsBackendTimsTof-method}
 \alias{backendInitialize,MsBackendTimsTof-method}
 \alias{length,MsBackendTimsTof-method}
 \alias{peaksData,MsBackendTimsTof-method}
@@ -12,7 +13,7 @@
 \alias{mz,MsBackendTimsTof-method}
 \alias{intensity,MsBackendTimsTof-method}
 \alias{rtime,MsBackendTimsTof-method}
-\alias{[,MsBackendTimsTof-method}
+\alias{[,MsBackendTimsTof,ANY,ANY-method}
 \alias{extractByIndex,MsBackendTimsTof,ANY-method}
 \alias{dataStorage,MsBackendTimsTof-method}
 \alias{spectraData,MsBackendTimsTof-method}
@@ -41,7 +42,7 @@ MsBackendTimsTof()
 
 \S4method{rtime}{MsBackendTimsTof}(object)
 
-\S4method{[}{MsBackendTimsTof}(x, i, j, ..., drop = FALSE)
+\S4method{[}{MsBackendTimsTof,ANY,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{extractByIndex}{MsBackendTimsTof,ANY}(object, i)
 
@@ -97,6 +98,9 @@ that should be retained in the returned object.}
 should be returned (\code{initial = TRUE}, the default) or whether it
 should be calculated on the spectras' intensities (\code{initial = FALSE}).}
 }
+\value{
+See information for the respective function.
+}
 \description{
 The \code{MsBackendTimsTof} class adds support for Bruker TimsTOF data files (\emph{.d}
 files) to \code{\link[Spectra:Spectra]{Spectra()}} objects. New objects are created with the
@@ -121,6 +125,12 @@ The reported \code{isolationWindowLowerMz} and \code{isolationWindowUpperMz} are
 calculated based on the \code{"IsolationMz"} and \code{"IsolationWidth"} database
 columns, i.e., \code{isolationWindowLowerMz <- IsolationMz - IsolationWidth / 2}
 and \code{isolationWindowUpperMz <- IsolationMz + IsolationWidth / 2}.
+}
+\note{
+For some of the information a dedicated \emph{converter library} is required. By
+default an open source library from the \emph{opentimsr} package is used, but
+alternatively also the shared C++ library from Bruker can be selected. See
+\code{\link[=setup_converter_library]{setup_converter_library()}} for more information.
 }
 \section{Available methods}{
 

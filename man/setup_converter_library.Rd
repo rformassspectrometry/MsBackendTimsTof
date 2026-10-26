@@ -18,6 +18,10 @@ library. Defaults to \code{path = NULL}.}
 \item{force}{\code{logical(1)} force to redownload the Bruker library (default:
 \code{FALSE}). See the notes section for the use of \code{force = TRUE} on Windows.}
 }
+\value{
+The function is called to register and load a converter library
+and does not return a value.
+}
 \description{
 Function to setup the required built-in open-source converters or the Bruker
 library to convert tof-to-mz and scan-to-inv_ion_mobility.
@@ -46,7 +50,7 @@ setup_converter_library()
 ## proprietary library from Bruker. The library file is downloaded and
 ## cached with *BiocFileCache* package. Alternatively, to download the
 ## library to a specific local path use the `path` parameter.
-#'
+
 }
 \author{
 Gabriele Tomè

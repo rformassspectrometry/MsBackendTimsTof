@@ -2,7 +2,7 @@
 #'
 #' @name MsBackendTimsTof
 #'
-#' @aliases MsBackendTimsTof MsBackendTimsTof-class
+#' @aliases MsBackendTimsTof MsBackendTimsTof-class [,MsBackendTimsTof-method
 #'
 #' @description
 #'
@@ -30,6 +30,13 @@
 #' calculated based on the `"IsolationMz"` and `"IsolationWidth"` database
 #' columns, i.e., `isolationWindowLowerMz <- IsolationMz - IsolationWidth / 2`
 #' and `isolationWindowUpperMz <- IsolationMz + IsolationWidth / 2`.
+#'
+#' @note
+#'
+#' For some of the information a dedicated *converter library* is required. By
+#' default an open source library from the *opentimsr* package is used, but
+#' alternatively also the shared C++ library from Bruker can be selected. See
+#' [setup_converter_library()] for more information.
 #'
 #' @section Available methods:
 #'
@@ -146,6 +153,8 @@
 #'
 #' @exportClass MsBackendTimsTof
 #'
+#' @return See information for the respective function.
+#'
 #' @examples
 #'
 #' ## Define the test file
@@ -254,7 +263,7 @@ setMethod("length", "MsBackendTimsTof", function(x) {
 setMethod(
     "peaksData", "MsBackendTimsTof",
     function(object, columns = c("mz", "intensity")) {
-        .get_tims_columns(object, columns)
+        .get_tims_columns(object, columns, drop = FALSE)
 })
 
 #' @rdname MsBackendTimsTof

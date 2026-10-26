@@ -17,7 +17,6 @@ importFrom(BiocParallel,
 importFrom(IRanges,NumericList)
 importFrom(MsCoreUtils,
   i2index,
-  rbindFill,
   vapply1d
 )
 importFrom(RSQLite,SQLite)

@@ -1,7 +1,7 @@
 # Bruker TimsTOF data file format support for *Spectra*
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![R-CMD-check-bioc](https://github.com/RforMassSpectrometry/MsBackendTimsTof/workflows/R-CMD-check-bioc/badge.svg)](https://github.com/RforMassSpectrometry/MsBackendTimsTof/actions?query=workflow%3AR-CMD-check-bioc)
+[![Test-R-universe](https://github.com/rformassspectrometry/MsBackendTimsTof/actions/workflows/r-universe.yml/badge.svg)](https://github.com/rformassspectrometry/MsBackendTimsTof/actions/workflows/r-universe.yml)
 [![codecov](https://codecov.io/gh/rformassspectrometry/MsBackendTimsTof/graph/badge.svg?token=DMFOBVJFJQ)](https://codecov.io/gh/rformassspectrometry/MsBackendTimsTof)
 [![license](https://img.shields.io/badge/license-Artistic--2.0-brightgreen.svg)](https://opensource.org/licenses/Artistic-2.0)
 
@@ -13,10 +13,10 @@ for the [OpenTIMS](https://github.com/michalsta/opentims) C++ library.
 
 ## Installation
 
-The *MsBackendTimsTof* package can then be installed from GitHub using
+The *MsBackendTimsTof* package can then be installed using:
 
 ```r
-remotes::install_github("RforMassSpectrometry/MsBackendTimsTof")
+BiocManager::install("MsBackendTimsTof")
 ```
 
 For extraction of all spectra and peaks variables from the TimsTOF file format a
