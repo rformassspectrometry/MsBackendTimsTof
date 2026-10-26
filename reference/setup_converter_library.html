@@ -20,7 +20,7 @@ using opentimsr::download_bruker_proprietary_code()."><!-- mathjax --><script sr
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MsBackendTimsTof</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.98.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.98.5</span>
       </span>
     </div>
 
@@ -83,7 +83,7 @@ library. Defaults to <code>path = NULL</code>.</p></dd>
 
 <dt id="arg-force">force<a class="anchor" aria-label="anchor" href="#arg-force"></a></dt>
 <dd><p><code>logical(1)</code> force to redownload the Bruker library (default:
-<code>FALSE</code>).</p></dd>
+<code>FALSE</code>). See the notes section for the use of <code>force = TRUE</code> on Windows.</p></dd>
 
 </dl></div>
     <div id="note">
@@ -94,6 +94,10 @@ function. To use Bruker's proprietary library, call
 <code>setup_converter_library()</code> with parameter <code>opensource = FALSE</code>. This will
 download the library with <code><a href="https://rdrr.io/pkg/opentimsr/man/download_bruker_proprietary_code.html" class="external-link">opentimsr::download_bruker_proprietary_code()</a></code> and
 cache the file in the local <em>BiocFileCache</em>.</p>
+<p>On Windows, the Bruker DLL is bound to the <code>opentimsr</code> package. To allow
+the Bruker library to be re-downloaded, the package must be temporarily
+detached so the old file can be deleted, then reattached afterwards. This
+is done automatically.</p>
     </div>
     <div id="author">
     <h2>Author</h2>
