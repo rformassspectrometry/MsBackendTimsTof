@@ -25,7 +25,7 @@ caching spectra variables."><!-- mathjax --><script src="https://cdnjs.cloudflar
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MsBackendTimsTof</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.98.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.0</span>
       </span>
     </div>
 
@@ -95,7 +95,7 @@ caching spectra variables.</p>
 <span><span class="co"># S4 method for class 'MsBackendTimsTof'</span></span>
 <span><span class="fu">rtime</span><span class="op">(</span><span class="va">object</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># S4 method for class 'MsBackendTimsTof'</span></span>
+<span><span class="co"># S4 method for class 'MsBackendTimsTof,ANY,ANY'</span></span>
 <span><span class="va">x</span><span class="op">[</span><span class="va">i</span>, <span class="va">j</span>, <span class="va">...</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'MsBackendTimsTof,ANY'</span></span>
@@ -192,6 +192,10 @@ should be returned (<code>initial = TRUE</code>, the default) or whether it
 should be calculated on the spectras' intensities (<code>initial = FALSE</code>).</p></dd>
 
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>See information for the respective function.</p>
+    </div>
     <div id="details">
     <h2>Details</h2>
     <p>The (DDA) MS2 data for MS2 spectra is retrieved from the <em>analytis.tdf</em>
@@ -205,6 +209,13 @@ column <code>"LargestPeakMz"</code>). Alternatively, the content of database col
 calculated based on the <code>"IsolationMz"</code> and <code>"IsolationWidth"</code> database
 columns, i.e., <code>isolationWindowLowerMz &lt;- IsolationMz - IsolationWidth / 2</code>
 and <code>isolationWindowUpperMz &lt;- IsolationMz + IsolationWidth / 2</code>.</p>
+    </div>
+    <div id="note">
+    <h2>Note</h2>
+    <p>For some of the information a dedicated <em>converter library</em> is required. By
+default an open source library from the <em>opentimsr</em> package is used, but
+alternatively also the shared C++ library from Bruker can be selected. See
+<code><a href="setup_converter_library.html">setup_converter_library()</a></code> for more information.</p>
     </div>
     <div id="available-methods">
     <h2>Available methods</h2>
