@@ -641,6 +641,12 @@ MsBackendTimsTof <- function() {
 #' download the library with [opentimsr::download_bruker_proprietary_code()] and
 #' cache the file in the local *BiocFileCache*.
 #'
+#' @note
+#' On Windows, the Bruker DLL is bound to the `opentimsr` package. To allow
+#' the Bruker library to be re-downloaded, the package must be temporarily
+#' detached so the old file can be deleted, then reattached afterwards. This
+#' is done automatically.
+#'
 #' @param opensource `logical(1)` determine if use the built-in open-source
 #'     converters of *opentimsr* (defaults) or the proprietary library from
 #'     Bruker. Defaults to `opensource = TRUE`.
@@ -650,7 +656,7 @@ MsBackendTimsTof <- function() {
 #'     library. Defaults to `path = NULL`.
 #'
 #' @param force `logical(1)` force to redownload the Bruker library (default:
-#'     `FALSE`).
+#'     `FALSE`). See the notes section for the use of `force = TRUE` on Windows.
 #'
 #' @importFrom opentimsr download_bruker_proprietary_code
 #'
@@ -673,7 +679,11 @@ MsBackendTimsTof <- function() {
 #' @export
 setup_converter_library <- function(opensource = TRUE, path = NULL,
                                     force = FALSE) {
-    if(opensource) {
+    if (!opensource && Sys.info()[["sysname"]] == "Darwin") {
+        opensource <- TRUE
+        warning("MacOS does not support the Bruker library; setting 'opensource = TRUE'.")
+    }
+    if (opensource) {
         setup_opensource()
     } else {
         bruker_libs_name <- c("libtimsdata.so", "timsdata.dll")
@@ -688,9 +698,12 @@ setup_converter_library <- function(opensource = TRUE, path = NULL,
             cached <- BiocFileCache::bfcquery(bfc, bruker_libs_name,
                                               exact = TRUE)
             if(!nrow(cached) | force){
-                if(nrow(cached) & force)
+                if(nrow(cached) & force){
+                    ## Temporary set of opensource library to free the
+                    ## Bruker library
+                    setup_opensource()
                     BiocFileCache::bfcremove(bfc, cached$rid)
-
+                }
                 bruker_library <- download_bruker_proprietary_code(tempdir())
                 bruker_location <- BiocFileCache::bfcadd(bfc,
                                         rname = basename(bruker_library),
@@ -700,12 +713,25 @@ setup_converter_library <- function(opensource = TRUE, path = NULL,
                 bruker_location <- BiocFileCache::bfcpath(bfc, cached[1, "rid"])
             }
         } else {
-            cached <- list.files(path, pattern = bruker_libs_name,
-                                 full.names = TRUE)
+            cached <- normalizePath(list.files(path,
+                                            pattern = paste0(bruker_libs_name,
+                                                            collapse = "|"),
+                                            full.names = TRUE))
             if(!length(cached) | force){
-                if(length(cached) & force)
-                    file.remove(cached)
-
+                if(length(cached) & force){
+                    if (Sys.info()[["sysname"]] == "Windows"){
+                        ## Temporary detach opentimsr to unbind the old .dll
+                        unloadNamespace("MsBackendTimsTof")
+                        unloadNamespace("opentimsr")
+                        file.remove(cached)
+                        loadNamespace("MsBackendTimsTof")
+                    } else {
+                        ## Temporary set of opensource library to free the
+                        ## Bruker library
+                        setup_opensource()
+                        file.remove(cached)
+                    }
+                }
                 bruker_location <- download_bruker_proprietary_code(path)
             } else {
                 bruker_location <- cached[1]

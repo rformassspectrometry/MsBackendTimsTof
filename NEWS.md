@@ -1,5 +1,9 @@
 # MsBackendTimsTof 0.98
 
+## MsBackendTimsTof 0.98.5
+
+- Fix cache Bruker library in MacOS and Windows.
+
 ## MsBackendTimsTof 0.98.4
 
 - Install *opentimsr* from CRAN.

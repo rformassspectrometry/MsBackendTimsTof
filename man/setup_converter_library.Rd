@@ -16,7 +16,7 @@ library is cached using \emph{BiocFileCache}. Used only with the Bruker
 library. Defaults to \code{path = NULL}.}
 
 \item{force}{\code{logical(1)} force to redownload the Bruker library (default:
-\code{FALSE}).}
+\code{FALSE}). See the notes section for the use of \code{force = TRUE} on Windows.}
 }
 \description{
 Function to setup the required built-in open-source converters or the Bruker
@@ -31,6 +31,11 @@ function. To use Bruker's proprietary library, call
 \code{setup_converter_library()} with parameter \code{opensource = FALSE}. This will
 download the library with \code{\link[opentimsr:download_bruker_proprietary_code]{opentimsr::download_bruker_proprietary_code()}} and
 cache the file in the local \emph{BiocFileCache}.
+
+On Windows, the Bruker DLL is bound to the \code{opentimsr} package. To allow
+the Bruker library to be re-downloaded, the package must be temporarily
+detached so the old file can be deleted, then reattached afterwards. This
+is done automatically.
 }
 \examples{
 
