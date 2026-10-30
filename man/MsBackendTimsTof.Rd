@@ -13,7 +13,6 @@
 \alias{mz,MsBackendTimsTof-method}
 \alias{intensity,MsBackendTimsTof-method}
 \alias{rtime,MsBackendTimsTof-method}
-\alias{[,MsBackendTimsTof,ANY,ANY-method}
 \alias{extractByIndex,MsBackendTimsTof,ANY-method}
 \alias{dataStorage,MsBackendTimsTof-method}
 \alias{spectraData,MsBackendTimsTof-method}
@@ -42,7 +41,7 @@ MsBackendTimsTof()
 
 \S4method{rtime}{MsBackendTimsTof}(object)
 
-\S4method{[}{MsBackendTimsTof,ANY,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{MsBackendTimsTof}(x, i, j, ..., drop = FALSE)
 
 \S4method{extractByIndex}{MsBackendTimsTof,ANY}(object, i)
 

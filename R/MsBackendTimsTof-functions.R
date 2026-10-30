@@ -499,7 +499,7 @@ MsBackendTimsTof <- function() {
                       scan = sequence(rp, from = db$ScanNumBegin))
     ## add info depending on `columnns`
     if ("precursorMz" %in% columns)
-        res$precursorMz <- rep(db[[.precursor_mz_column()]])
+        res$precursorMz <- rep(db[[.precursor_mz_column()]], rp)
     if ("precursorIntensity" %in% columns)
         res$precursorIntensity <- rep(as.numeric(db$Intensity), rp)
     if ("collisionEnergy" %in% columns)
