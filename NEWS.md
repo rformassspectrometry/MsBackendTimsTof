@@ -1,5 +1,10 @@
 # MsBackendTimsTof 0.99
 
+## MsBackendTimsTof 0.99.1
+
+- Fix bug in assigning precursor m/z to individual spectra (issue
+  [#38](https://github.com/rformassspectrometry/MsBackendTimsTof/issues/38)).
+
 ## MsBackendTimsTof 0.99.0
 
 - Setup and prepare for Bioconductor submission.
