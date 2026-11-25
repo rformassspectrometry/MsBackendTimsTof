@@ -54,7 +54,7 @@ MsBackendTimsTof()
 
 \S4method{$}{MsBackendTimsTof}(x, name)
 
-\S4method{selectSpectraVariables}{MsBackendTimsTof}(object, spectraVariables = spectraVariables(object))
+\S4method{selectSpectraVariables}{MsBackendTimsTof}(object, spectraVariables. = spectraVariables(object))
 
 \S4method{$}{MsBackendTimsTof}(x, name) <- value
 
@@ -89,7 +89,7 @@ Defaults to \code{columns = c("mz", "intensity")}.}
 
 \item{name}{For \code{$}: the name of the variable to access.}
 
-\item{spectraVariables}{\code{character} with the names of the spectra variables
+\item{spectraVariables.}{\code{character} with the names of the spectra variables
 that should be retained in the returned object.}
 
 \item{value}{For \verb{$<-}: the value to assign to the spectra variable.}
@@ -177,7 +177,7 @@ backend.
 vector (length equal to the number of spectra) with the retention time
 for each spectrum.
 \item \code{selectSpectraVariables()}: reduces the available spectra variables to the
-ones specified with parameter \code{spectraVariables}. For \emph{core spectra
+ones specified with parameter \code{spectraVariables.}. For \emph{core spectra
 variables} (\code{\link[Spectra:coreSpectraVariables]{coreSpectraVariables()}}) only their values will be removed,
 but not the variable itself.
 \item \code{spectraData()}: gets spectra variables (specified by \code{columns}) from

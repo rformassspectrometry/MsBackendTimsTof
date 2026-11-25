@@ -299,7 +299,7 @@ test_that("$<-,MsBackendTimsTof works", {
 
 test_that("selectSpectraVariables works", {
     res <- selectSpectraVariables(
-        be, spectraVariables = c("msLevel", "rtime", "mz", "TimsId"))
+        be, spectraVariables. = c("msLevel", "rtime", "mz", "TimsId"))
     expect_true(validObject(res))
     expect_true(all(c("msLevel", "rtime", "mz", "TimsId") %in%
                     spectraVariables(res)))
@@ -336,6 +336,13 @@ test_that("selectSpectraVariables works", {
     expect_false("new_var" %in% spectraVariables(res))
     expect_false("new_var" %in% colnames(sdat))
     expect_error(res$new_var, "not available")
+
+    ## Without passing spectraVariables.
+    res <- selectSpectraVariables(be)
+    sdat <- spectraData(res)
+    expect_true(validObject(res))
+    expect_equal(sdat$intensity, intensity(res))
+    expect_equal(sdat$mz, mz(res))
 })
 
 test_that("$<-,MsBackendTimsTof works", {
