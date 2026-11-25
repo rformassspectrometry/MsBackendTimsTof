@@ -92,7 +92,7 @@
 #'   for each spectrum.
 #'
 #' - `selectSpectraVariables()`: reduces the available spectra variables to the
-#'   ones specified with parameter `spectraVariables`. For *core spectra
+#'   ones specified with parameter `spectraVariables.`. For *core spectra
 #'   variables* ([coreSpectraVariables()]) only their values will be removed,
 #'   but not the variable itself.
 #'
@@ -138,7 +138,7 @@
 #'
 #' @param object `MsBackendTimsTof` object.
 #'
-#' @param spectraVariables `character` with the names of the spectra variables
+#' @param spectraVariables. `character` with the names of the spectra variables
 #'     that should be retained in the returned object.
 #'
 #' @param value For `$<-`: the value to assign to the spectra variable.
@@ -383,12 +383,13 @@ setMethod("$", "MsBackendTimsTof", function(x, name) {
 #' @rdname MsBackendTimsTof
 setMethod(
     "selectSpectraVariables", "MsBackendTimsTof",
-    function(object, spectraVariables = spectraVariables(object)) {
+    function(object, spectraVariables. = spectraVariables(object)) {
         req_cols <- c("frameId", "file")
-        if ("msLevel" %in% spectraVariables) req_cols <- c(req_cols, "MsMsType")
-        keep <- colnames(object@frames) %in% union(spectraVariables, req_cols)
+        if ("msLevel" %in% spectraVariables.)
+            req_cols <- c(req_cols, "MsMsType")
+        keep <- colnames(object@frames) %in% union(spectraVariables., req_cols)
         object@frames <- object@frames[, keep, drop = FALSE]
-        callNextMethod(object, spectraVariables)
+        callNextMethod(object, spectraVariables.)
     })
 
 #' @rdname MsBackendTimsTof

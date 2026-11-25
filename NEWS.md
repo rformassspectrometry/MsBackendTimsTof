@@ -1,5 +1,11 @@
 # MsBackendTimsTof 0.99
 
+## MsBackendTimsTof 0.99.1
+
+- Fix bug: change parameter from `spectraVariables` to `spectraVariables.` in
+  `selectSpectraVariables()` to avoid error when the parameter is not given in
+  input.
+
 ## MsBackendTimsTof 0.99.0
 
 - Setup and prepare for Bioconductor submission.
