@@ -409,3 +409,32 @@ test_that("setup_converter_library works", {
     mtime_cached_3 <- file.mtime(cached_3)
     expect_false(mtime_cached == mtime_cached_3)
 })
+
+test_that("ionMobilityToCrossSection works", {
+    expect_error(ionMobilityToCrossSection("a"), "`charge` must be `numeric`")
+    expect_error(ionMobilityToCrossSection(1, "a"),
+                "`ion_mass` must be `numeric`")
+    expect_error(ionMobilityToCrossSection(1, 1, "a"),
+                "`K0` must be `numeric`")
+    expect_error(ionMobilityToCrossSection(1, 1, 1, molWeightGas = "a"),
+                "`molWeightGas` must be `numeric`")
+    expect_error(ionMobilityToCrossSection(1, 1, 1, roomTemp = "a"),
+                "`roomTemp` must be `numeric`")
+
+    expect_equal(ionMobilityToCrossSection(1, 758.57150, 1/1.402),
+                 285.886, tolerance = 10^-3)
+    expect_equal(ionMobilityToCrossSection(1, 369.34511, 1/1.416),
+                 294.1093, tolerance = 10^-3)
+
+    expect_equal(ionMobilityToCrossSection(c(1, 1), c(758.57150, 369.34511),
+                                            1/c(1.402, 1.416)),
+                c(285.886, 294.1093), tolerance = 10^-3)
+
+
+    expect_equal(ionMobilityToCrossSection(1, 758.57150, 1/1.402,
+                                            roomTemp = 290),
+                 293.1864, tolerance = 10^-3)
+    expect_equal(ionMobilityToCrossSection(1, 758.57150, 1/1.402,
+                                            molWeightGas = 4.003),
+                 744.6486, tolerance = 10^-3)
+})

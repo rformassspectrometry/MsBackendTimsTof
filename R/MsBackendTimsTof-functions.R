@@ -716,3 +716,56 @@ setup_converter_library <- function(opensource = TRUE, path = NULL,
         setup_bruker_so(bruker_loc)
     }
 }
+
+#' @title Convert ion mobility to collision cross section
+#'
+#' @description
+#'
+#' Applies the Mason-Schamp equation to convert ion mobility (K0) to collision
+#' cross section (CCS).
+#' The code is based on the method provided by Bruker.
+#'
+#' @param charge `numeric` with ion charge. Its absolute value is used.
+#'
+#' @param ion_mass `numeric` with ion mass, **not** the m/z value.
+#'
+#' @param K0 `numeric` with reduced ion mobility K0 (**not** 1/K0).
+#'
+#' @param molWeightGas `numeric(1)` with molecular weight of drift gas. Default
+#'     is Nitrogen2 (`N2 = 14,0067*2 = 28.0134`)
+#'
+#' @param roomTemp `numeric(1)` with estimated room temperature in Kelvin
+#'     (Default: `305 K`)
+#'
+#' @return `numeric` with collision cross section (CCS) in Å²
+#'
+#' @author Gabriele Tomè
+#'
+#' @examples
+#'
+#' ion_charge <- 1
+#' ion_mass <- 369.34511
+#' K0 <- 1/1.416
+#' ionMobilityToCrossSection(ion_charge, ion_mass, K0)
+#'
+#' @export
+ionMobilityToCrossSection <- function(charge, ion_mass, K0,
+                                      molWeightGas = 28.0134, roomTemp = 305) {
+    if (!inherits(charge, "numeric"))
+        stop("`charge` must be `numeric`.")
+    if (!inherits(ion_mass, "numeric"))
+        stop("`ion_mass` must be `numeric`.")
+    if (!inherits(K0, "numeric"))
+        stop("`K0` must be `numeric`.")
+    if (!inherits(molWeightGas, "numeric"))
+        stop("`molWeightGas` must be `numeric`.")
+    if (!inherits(roomTemp, "numeric"))
+        stop("`roomTemp` must be `numeric`.")
+    ## Precomputent physical constant and unit conversion
+    conversionFactor <- 18509.863216340458
+
+    reducedMass <- ion_mass * molWeightGas / (ion_mass + molWeightGas)
+
+    ccs <- conversionFactor * abs(charge) / (sqrt(reducedMass * roomTemp) * K0)
+    ccs
+}
